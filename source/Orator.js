@@ -164,7 +164,6 @@ var Orator = function()
 			_WebServer.listen
 			(
 				_Settings.APIServerPort,
-				'localhost',
 				function ()
 				{
 					_Log.info(_WebServer.name+' listening at '+_WebServer.url);
