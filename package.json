@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "description": "Restful web API server.",
   "main": "source/Orator.js",
   "scripts": {
@@ -31,8 +31,8 @@
     "supertest": "0.15.0"
   },
   "dependencies": {
-    "fable-log": "0.1.0",
-    "fable-uuid": "0.0.0",
+    "fable-log": "0.1.1",
+    "fable-uuid": "0.1.1",
     "nodegrind": "0.4.0",
     "restify": "2.8.5",
     "underscore": "1.8.2"
