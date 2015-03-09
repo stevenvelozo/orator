@@ -64,10 +64,6 @@ var Orator = function()
 		});
 		var _Settings = libUnderscore.extend(_SettingsDefaults, pSettings);
 
-		// Create the log file
-		var _Log = require('fable-log').new(_Settings);
-		_Log.initialize();
-
 		// The Request UUID Generator
 		var libRequestUUID = require('fable-uuid').new(_Settings, _Log);
 
@@ -91,7 +87,6 @@ var Orator = function()
 		(
 			function (pRequest, pResponse, fNext)
 			{
-				console.log(_Settings.Profiling.TraceLog)
 				pRequest.RequestUUID = 'REQ'+libRequestUUID.getUUID();
 
 				if (_Settings.Profiling.TraceLog)
@@ -102,7 +97,7 @@ var Orator = function()
 				if (_Settings.Profiling.Enabled)
 				{
 					// If profiling is enabled, build a callgrind file
-					_Log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...')
+					_Log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
 					pRequest.ProfilerName = _Settings.Product+'-'+_Settings.ProductVersion+'-'+pRequest.RequestUUID;
 					libNodegrind.startCPU(pRequest.RequestUUID);
 				}
@@ -149,6 +144,8 @@ var Orator = function()
 						_Log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Settings.Profiling.Folder+pRequest.ProfilerName);
 					}
 				}
+
+				return fNext();
 			}
 		);
 		/*
