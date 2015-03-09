@@ -7,8 +7,6 @@
 * @module Orator Web Server
 */
 
-
-
 /**
 * Orator Web API Server
 *
@@ -27,7 +25,6 @@ var Orator = function()
 
 		// TODO: Validate pSettings and pLogProvider more.
 
-		var _Settings = pSettings;
 		var _Log = pLogProvider;
 
 		// Underscore for utility
@@ -43,7 +40,7 @@ var Orator = function()
 		var _SettingsDefaults = (
 		{
 			Product: 'Orator',
-			ProductVersion: '00.00.001',
+			ProductVersion: '0.0.1',
 			APIServerPort: 8080,
 
 			// Turning these on decreases speed dramatically, and generates a cachegrind file for each request.
@@ -65,29 +62,18 @@ var Orator = function()
 					Worker: 0
 				})
 		});
-		var _SettingsFile = {};
-		try
-		{
-			_SettingsFile = require(__dirname+'/MicroService-Config.json');
-		}
-		catch (pException)
-		{
-			console.log('Microservice Warning: Configuration file found but there was a problem loading it.  Using defaults.');
-			console.log('       Loading Exception: '+pException);
-		}
-		var _Settings = libUnderscore.extend(_SettingsDefaults, _SettingsFile);
+		var _Settings = libUnderscore.extend(_SettingsDefaults, pSettings);
 
 		// Create the log file
 		var _Log = require('fable-log').new(_Settings);
 		_Log.initialize();
 
-		// The Router API object
-		var libRouter = require("./source/Headlight-Router.js").new(_Settings, _Log);
-
 		// The Request UUID Generator
 		var libRequestUUID = require('fable-uuid').new(_Settings, _Log);
 
-		// Create a simple echoing web server
+		/*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+		 * This block of code begins the initialization of the web server.
+		 */
 		var _WebServer = libRestify.createServer(
 		{
 		  name: _Settings.Product,
@@ -105,14 +91,15 @@ var Orator = function()
 		(
 			function (pRequest, pResponse, fNext)
 			{
+				console.log(_Settings.Profiling.TraceLog)
 				pRequest.RequestUUID = 'REQ'+libRequestUUID.getUUID();
 
-				if (_Settings.RequestTraceLog)
+				if (_Settings.Profiling.TraceLog)
 				{
 					_Log.trace('Request start...',{RequestUUID: pRequest.RequestUUID});
 				}
 
-				if (_Settings.RequestProfiling)
+				if (_Settings.Profiling.Enabled)
 				{
 					// If profiling is enabled, build a callgrind file
 					_Log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...')
@@ -124,14 +111,16 @@ var Orator = function()
 			}
 		);
 
-
 		_WebServer.on
 		(
 			'after',
 			function (pRequest, pResponse, fNext)
 			{
 
-				_Log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID});
+				if (_Settings.Profiling.TraceLog)
+				{
+					_Log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID});
+				}
 
 				if (typeof(pRequest.ProfilerName) === 'string')
 				{
@@ -139,7 +128,7 @@ var Orator = function()
 					var tmpRequestProfilePrefix = '';
 					var tmpRequestProfilePostfix = '';
 
-					if (_Settings.RequestProfileType === 'CallGrinder')
+					if (_Settings.Profiling.Type === 'CallGrinder')
 					{
 						// Get the callgrind profile as a string
 						tmpRequestProfile = libNodegrind.stopCPU(pRequest.RequestUUID);
@@ -153,33 +142,60 @@ var Orator = function()
 						tmpRequestProfilePostfix = '.cpuprofile';
 					}
 
-					libFS.writeFileSync(_Settings.RequestProfilingFolder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix, tmpRequestProfile);
+					libFS.writeFileSync(_Settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix, tmpRequestProfile);
 
-					if (_Settings.RequestTraceLog)
+					if (_Settings.Profiling.TraceLog)
 					{
-						_Log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Settings.RequestProfilingFolder+pRequest.ProfilerName);
+						_Log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Settings.Profiling.Folder+pRequest.ProfilerName);
 					}
 				}
 			}
 		);
+		/*
+		 * This ends the initialization of the web server object.
+		 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***/
 
 
-		_WebServer.listen
-		(
-			_Settings.APIServerPort,
-			function ()
-			{
-				_Log.info(_WebServer.name+' listening at '+_WebServer.url);
-			}
-		);
+		/**
+		* Start the Web Server
+		*
+		* @method startWebServer
+		*/
+		function startWebServer(fNext)
+		{
+			var tmpNext = (typeof(fNext) === 'function') ? fNext : function() {};
+			_WebServer.listen
+			(
+				_Settings.APIServerPort,
+				'localhost',
+				function ()
+				{
+					_Log.info(_WebServer.name+' listening at '+_WebServer.url);
+					tmpNext();
+				}
+			);
+		}
+
 
 		/**
 		* Container Object for our Factory Pattern
 		*/
 		var tmpNewOrator = (
 		{
+			startWebServer: startWebServer,
 			new: createNew
 		});
+
+		/**
+		 * The Web Server
+		 *
+		 * @property webServer
+		 * @type Object
+		 */
+		Object.defineProperty(tmpNewOrator, 'webServer',
+			{
+				get: function() { return _WebServer; }
+			});
 
 		return tmpNewOrator;
 	}
