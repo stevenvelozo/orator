@@ -111,7 +111,6 @@ var Orator = function()
 			'after',
 			function (pRequest, pResponse, fNext)
 			{
-
 				if (_Settings.Profiling.TraceLog)
 				{
 					_Log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID});
@@ -144,8 +143,6 @@ var Orator = function()
 						_Log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Settings.Profiling.Folder+pRequest.ProfilerName);
 					}
 				}
-
-				return fNext();
 			}
 		);
 		/*
