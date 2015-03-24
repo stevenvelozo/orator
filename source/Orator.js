@@ -15,7 +15,7 @@
 */
 var Orator = function()
 {
-	function createNew(pSettings, pLogProvider)
+	var createNew = function(pSettings, pLogProvider)
 	{
 		// This generates an object that requires you to construct it with new(Settings,Provider) before using it...
 		if ((typeof(pSettings) !== 'object') || (typeof(pLogProvider) !== 'object'))
