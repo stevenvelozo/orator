@@ -135,49 +135,80 @@ var Orator = function()
 		/*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 		 * This block of code begins the initialization of the web server.
 		 */
+
+		// Create the actual web server object
 		var _WebServer = libRestify.createServer(
 		{
 		  name: _Settings.Product,
 		  version: _Settings.ProductVersion
 		});
 
-		// Load the built-in parser modules
-		if (_Settings.RestifyParsers.AcceptParser)
+		/**
+		* Connect any configured restify modules that automatically map header content into the request object
+		*
+		* @method inititalizeHeaderParsers
+		*/
+		var initializeHeaderParsers = function(pSettings, pWebServer)
 		{
-			_WebServer.use(libRestify.acceptParser(_WebServer.acceptable));
-		}
-		if (_Settings.RestifyParsers.Authorization)
+			if (pSettings.RestifyParsers.AcceptParser)
+			{
+				pWebServer.use(libRestify.acceptParser(pWebServer.acceptable));
+			}
+			if (pSettings.RestifyParsers.Authorization)
+			{
+				pWebServer.use(libRestify.authorizationParser());
+			}
+			if (pSettings.RestifyParsers.Date)
+			{
+				pWebServer.use(libRestify.dateParser());
+			}
+		};
+
+		/**
+		* Connect any configured restify modules that work directly with the query/body/response data
+		*
+		* @method initializeContentParsers
+		*/
+		var initializeContentParsers = function(pSettings, pWebServer)
 		{
-			_WebServer.use(libRestify.authorizationParser());
-		}
-		if (_Settings.RestifyParsers.Date)
+			if (pSettings.RestifyParsers.Query)
+			{
+				pWebServer.use(libRestify.queryParser());
+			}
+			if (pSettings.RestifyParsers.JsonP)
+			{
+				pWebServer.use(libRestify.jsonp());
+			}
+			if (pSettings.RestifyParsers.GZip)
+			{
+				pWebServer.use(libRestify.gzipResponse());
+			}
+			if (pSettings.RestifyParsers.Body)
+			{
+				pWebServer.use(libRestify.bodyParser(pSettings.BodyParserParameters));
+			}
+		};
+
+		/**
+		* Connect any configured restify modules that affect load capability and route branching
+		*
+		* @method initializeLogicParsers
+		*/
+		var initializeLogicParsers = function(pSettings, pWebServer)
 		{
-			_WebServer.use(libRestify.dateParser());
-		}
-		if (_Settings.RestifyParsers.Query)
-		{
-			_WebServer.use(libRestify.queryParser());
-		}
-		if (_Settings.RestifyParsers.JsonP)
-		{
-			_WebServer.use(libRestify.jsonp());
-		}
-		if (_Settings.RestifyParsers.GZip)
-		{
-			_WebServer.use(libRestify.gzipResponse());
-		}
-		if (_Settings.RestifyParsers.Body)
-		{
-			_WebServer.use(libRestify.bodyParser(_Settings.BodyParserParameters));
-		}
-		if (_Settings.RestifyParsers.Throttle)
-		{
-			_WebServer.use(libRestify.throttle(_Settings.ThrottleParserParameters));
-		}
-		if (_Settings.RestifyParsers.Conditional)
-		{
-			_WebServer.use(libRestify.conditionalRequest());
-		}
+			if (pSettings.RestifyParsers.Throttle)
+			{
+				pWebServer.use(libRestify.throttle(pSettings.ThrottleParserParameters));
+			}
+			if (pSettings.RestifyParsers.Conditional)
+			{
+				pWebServer.use(libRestify.conditionalRequest());
+			}
+		};
+
+		initializeHeaderParsers(_Settings, _WebServer);
+		initializeContentParsers(_Settings, _WebServer);
+		initializeLogicParsers(_Settings, _WebServer);
 
 		/***
 		 * Hook the profiler in
@@ -208,11 +239,11 @@ var Orator = function()
 		_WebServer.on
 		(
 			'after',
-			function (pRequest, pResponse, fNext)
+			function (pRequest, pResponse)
 			{
 				if (_Settings.Profiling.TraceLog)
 				{
-					_Log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID});
+					_Log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID, ResponseCode: pResponse.code, ResponseLength: pResponse.contentLength});
 				}
 
 				if (typeof(pRequest.ProfilerName) === 'string')
@@ -253,7 +284,7 @@ var Orator = function()
 		*
 		* @method startWebServer
 		*/
-		function startWebServer(fNext)
+		var startWebServer = function(fNext)
 		{
 			var tmpNext = (typeof(fNext) === 'function') ? fNext : function() {};
 			_WebServer.listen
@@ -265,7 +296,7 @@ var Orator = function()
 					tmpNext();
 				}
 			);
-		}
+		};
 
 
 		/**
@@ -289,7 +320,7 @@ var Orator = function()
 			});
 
 		return tmpNewOrator;
-	}
+	};
 
 	return createNew();
 };
