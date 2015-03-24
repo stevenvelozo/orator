@@ -63,8 +63,8 @@ suite
 					function()
 					{
 						_Orator.webServer.get (
-							'/PIN', 
-							function (pRequest, pResponse, fNext) 
+							'/PIN',
+							function (pRequest, pResponse, fNext)
 							{
 								pResponse.send('PON');
 								fNext();
@@ -83,11 +83,58 @@ suite
 						);
 					}
 				);
+			}
+		);
+		suite
+		(
+			'Inverted parameters server start',
+			function()
+			{
 				test
 				(
-					'dynamically turn on tracing',
+					'inverted parameters should work',
 					function()
 					{
+						var _MockSettingsInvertedParameters = (
+							{
+								Product: 'MockOratorInverted',
+								ProductVersion: '0.0.0',
+								RestifyParsers: (
+								{
+									AcceptParser: false,
+									Authorization: false,
+									Date: true,
+									CORS: true,
+									Query: false,
+									JsonP: true,
+									GZip: true,
+									Body: false,
+									Throttle: true,
+									Conditional: true
+								}),
+								APIServerPort: 8089
+							});
+
+						var _OratorInverted = require('../source/Orator.js').new(_MockSettingsInvertedParameters, _Log);
+						_OratorInverted.webServer.get (
+							'/PINGU',
+							function (pRequest, pResponse, fNext)
+							{
+								pResponse.send('PONGU');
+								fNext();
+							}
+						);
+						_OratorInverted.startWebServer();
+						libSuperTest('http://localhost:8089/')
+						.get('PINGU')
+						.end(
+							function (pError, pResponse)
+							{
+								console.log(JSON.stringify(pResponse));
+								Expect(pResponse.text)
+									.to.contain('PONGU');
+							}
+						);
 					}
 				);
 			}

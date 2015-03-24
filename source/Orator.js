@@ -43,6 +43,71 @@ var Orator = function()
 			ProductVersion: '0.0.1',
 			APIServerPort: 8080,
 
+			RestifyParsers: (
+			{
+				AcceptParser: true,   // Limit requests to well-formed content types.
+				Authorization: true,  // Parse the authorization header (Basic and Signature auth types).
+				Date: false,          // Parses out the HTTP Date header (if present) and checks for clock skew (default allowed clock skew is 300s, like Kerberos).
+				CORS: false,          // Supports tacking CORS headers into actual requests (as defined by the spec).
+				Query: true,          // Parses the HTTP query string (i.e., /foo?id=bar&name=mark). If you use this, the parsed content will always be available in
+				                      // req.query, additionally params are merged into req.params. You can disable by passing in mapParams: false in the options object.
+				JsonP: false,         // Supports checking the query string for callback or jsonp and ensuring that the content-type is appropriately set.
+				GZip: false,          // If the client sends an accept-encoding: gzip header (or one with an appropriate q-val), then the server will automatically gzip all response data.
+				Body: true,           // Blocks your chain on reading and parsing the HTTP request body. Switches on Content-Type and does the appropriate logic.
+				Throttle: false,      // You define "global" request rate and burst rate, and you can define overrides for specific keys.  (this can also be done per route)
+				Conditional: false    // You can use this handler to let clients do nice HTTP semantics with the "match" headers.
+			}),
+
+			// By default don't map parameters from the query string to the param string
+			BodyParserParameters: (
+			{
+				//maxBodySize: 0,
+				//mapFiles: false,
+				//overrideParams: false,
+				//multipartHandler: function(pPart)
+				//	{
+				//		pPart.on('data',
+				//			function(pData)
+				//			{
+				//				// Do something with pData
+				//			}
+				//		);
+				//	},
+				//multipartFileHandler: function(pPart)
+				//	{
+				//		pPart.on('data',
+				//			function(pData)
+				//			{
+				//				// Do something with pData
+				//			}
+				//		);
+				//	},
+				//keepExtensions: false,
+				//uploadDir: os.tmpdir(),
+				//multiples: true,
+				mapParams: false
+			}),
+
+			QueryParserParameters: (
+			{
+				mapParams: true
+			}),
+
+			ThrottleParserParameters: (
+			{
+				burst: 100,
+				rate: 50,
+				ip: true,
+				overrides: (
+				{
+					'127.0.0.1': (
+					{
+						rate: 0,  // Unlimited throttle for this IP
+						burst: 0
+					})
+				})
+			}),
+
 			// Turning these on decreases speed dramatically, and generates a cachegrind file for each request.
 			Profiling: (
 			{
@@ -76,9 +141,43 @@ var Orator = function()
 		  version: _Settings.ProductVersion
 		});
 
-		_WebServer.use(libRestify.acceptParser(_WebServer.acceptable));
-		_WebServer.use(libRestify.queryParser());
-		_WebServer.use(libRestify.bodyParser());
+		// Load the built-in parser modules
+		if (_Settings.RestifyParsers.AcceptParser)
+		{
+			_WebServer.use(libRestify.acceptParser(_WebServer.acceptable));
+		}
+		if (_Settings.RestifyParsers.Authorization)
+		{
+			_WebServer.use(libRestify.authorizationParser());
+		}
+		if (_Settings.RestifyParsers.Date)
+		{
+			_WebServer.use(libRestify.dateParser());
+		}
+		if (_Settings.RestifyParsers.Query)
+		{
+			_WebServer.use(libRestify.queryParser());
+		}
+		if (_Settings.RestifyParsers.JsonP)
+		{
+			_WebServer.use(libRestify.jsonp());
+		}
+		if (_Settings.RestifyParsers.GZip)
+		{
+			_WebServer.use(libRestify.gzipResponse());
+		}
+		if (_Settings.RestifyParsers.Body)
+		{
+			_WebServer.use(libRestify.bodyParser(_Settings.BodyParserParameters));
+		}
+		if (_Settings.RestifyParsers.Throttle)
+		{
+			_WebServer.use(libRestify.throttle(_Settings.ThrottleParserParameters));
+		}
+		if (_Settings.RestifyParsers.Conditional)
+		{
+			_WebServer.use(libRestify.conditionalRequest());
+		}
 
 		/***
 		 * Hook the profiler in
@@ -148,7 +247,6 @@ var Orator = function()
 		/*
 		 * This ends the initialization of the web server object.
 		 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***/
-
 
 		/**
 		* Start the Web Server
