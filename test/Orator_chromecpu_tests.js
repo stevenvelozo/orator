@@ -77,6 +77,16 @@ suite
 									.to.contain('PONGO');
 							}
 						);
+						libSuperTest('http://localhost:8081/')
+						.get('PINGO')
+						.end(
+							function (pError, pResponse)
+							{
+								console.log(JSON.stringify(pResponse));
+								Expect(pResponse.text)
+									.to.contain('PONGO');
+							}
+						);
 					}
 				);
 				test

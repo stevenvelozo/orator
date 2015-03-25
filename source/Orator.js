@@ -32,7 +32,7 @@ var Orator = function()
 		// Restify for the routing and API serving
 		var libRestify = require('restify');
 		// NodeGrind for request profiling
-		var libNodegrind = require('nodegrind');
+		var libNodegrind = false;
 		// FS for writing out profiling information
 		var libFS = require('fs');
 
@@ -226,6 +226,9 @@ var Orator = function()
 
 				if (_Settings.Profiling.Enabled)
 				{
+					// Lazily load NodeGrind
+					if (!libNodegrind)
+						libNodegrind = require('nodegrind');
 					// If profiling is enabled, build a callgrind file
 					_Log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
 					pRequest.ProfilerName = _Settings.Product+'-'+_Settings.ProductVersion+'-'+pRequest.RequestUUID;
