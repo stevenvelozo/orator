@@ -36,6 +36,9 @@ var Orator = function()
 		// FS for writing out profiling information
 		var libFS = require('fs');
 
+		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
+		var _RestifyParsersInitialized = false;
+
 		// Build the server settings
 		var _SettingsDefaults = (
 		{
@@ -49,6 +52,7 @@ var Orator = function()
 				Authorization: true,  // Parse the authorization header (Basic and Signature auth types).
 				Date: false,          // Parses out the HTTP Date header (if present) and checks for clock skew (default allowed clock skew is 300s, like Kerberos).
 				CORS: false,          // Supports tacking CORS headers into actual requests (as defined by the spec).
+				FullResponse: false,  // Automatically parse the OPTIONS headers for CORS to work
 				Query: true,          // Parses the HTTP query string (i.e., /foo?id=bar&name=mark). If you use this, the parsed content will always be available in
 				                      // req.query, additionally params are merged into req.params. You can disable by passing in mapParams: false in the options object.
 				JsonP: false,         // Supports checking the query string for callback or jsonp and ensuring that the content-type is appropriately set.
@@ -150,6 +154,14 @@ var Orator = function()
 		*/
 		var initializeHeaderParsers = function(pSettings, pWebServer)
 		{
+			if (pSettings.RestifyParsers.CORS)
+			{
+				pWebServer.use(libRestify.CORS());
+			}
+			if (pSettings.RestifyParsers.FullResponse)
+			{
+				pWebServer.use(libRestify.fullResponse());
+			}
 			if (pSettings.RestifyParsers.AcceptParser)
 			{
 				pWebServer.use(libRestify.acceptParser(pWebServer.acceptable));
@@ -206,9 +218,26 @@ var Orator = function()
 			}
 		};
 
-		initializeHeaderParsers(_Settings, _WebServer);
-		initializeContentParsers(_Settings, _WebServer);
-		initializeLogicParsers(_Settings, _WebServer);
+		/**
+		* Check that modules are initialized, initialize them if they aren't.
+		*
+		* @method checkModules
+		*/
+		var checkModules = function()
+		{
+			// Lazily initialize the Restify parsers the first time we access this object.
+			// This creates a behavior where changing the "enabledModules" property does not
+			//     do anything after routes have been created.  We may want to eventually
+			//     throw a warning (and ignroe the change) if someone accesses the property 
+			//     after _RestifyParsersInitialized is true.
+			if (!_RestifyParsersInitialized)
+			{
+				initializeHeaderParsers(_Settings, _WebServer);
+				initializeContentParsers(_Settings, _WebServer);
+				initializeLogicParsers(_Settings, _WebServer);
+				_RestifyParsersInitialized = true;
+			}
+		}
 
 		/***
 		 * Hook the profiler in
@@ -290,6 +319,7 @@ var Orator = function()
 		var startWebServer = function(fNext)
 		{
 			var tmpNext = (typeof(fNext) === 'function') ? fNext : function() {};
+			checkModules();
 			_WebServer.listen
 			(
 				_Settings.APIServerPort,
@@ -319,7 +349,23 @@ var Orator = function()
 		 */
 		Object.defineProperty(tmpNewOrator, 'webServer',
 			{
-				get: function() { return _WebServer; }
+				get: function() 
+						{
+							checkModules();
+							return _WebServer;
+						}
+			});
+
+		/**
+		 * The enabled web modules
+		 *
+		 * @property webServer
+		 * @type Object
+		 */
+		Object.defineProperty(tmpNewOrator, 'enabledModules',
+			{
+				get: function() { return _Settings.RestifyParsers; },
+				set: function(pRestifyParsers) { _Settings.RestifyParsers = pRestifyParsers; }
 			});
 
 		return tmpNewOrator;

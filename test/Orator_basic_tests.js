@@ -70,6 +70,14 @@ suite
 								fNext();
 							}
 						);
+						_Orator.webServer.get (
+							'/SecondAPI',
+							function (pRequest, pResponse, fNext)
+							{
+								pResponse.send('RAWR');
+								fNext();
+							}
+						);
 						_Orator.startWebServer();
 						libSuperTest('http://localhost:8080/')
 						.get('PIN')
@@ -99,23 +107,31 @@ suite
 							{
 								Product: 'MockOratorInverted',
 								ProductVersion: '0.0.0',
-								RestifyParsers: (
-								{
-									AcceptParser: false,
-									Authorization: false,
-									Date: true,
-									CORS: true,
-									Query: false,
-									JsonP: true,
-									GZip: true,
-									Body: false,
-									Throttle: true,
-									Conditional: true
-								}),
 								APIServerPort: 8089
 							});
 
 						var _OratorInverted = require('../source/Orator.js').new(_MockSettingsInvertedParameters, _Log);
+						// Test twiddling parameters
+						Expect(_OratorInverted.enabledModules.Date)
+							.to.equal(false);
+						_OratorInverted.enabledModules.Date = true;
+						Expect(_OratorInverted.enabledModules.Date)
+							.to.equal(true);
+						// Testing assignment of parameters
+						_OratorInverted.enabledModules = (
+							{
+								AcceptParser: false,
+								Authorization: false,
+								Date: true,
+								CORS: true,
+								FullResponse: true,
+								Query: false,
+								JsonP: true,
+								GZip: true,
+								Body: false,
+								Throttle: true,
+								Conditional: true
+							});
 						_OratorInverted.webServer.get (
 							'/PINGU',
 							function (pRequest, pResponse, fNext)

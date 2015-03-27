@@ -5,3 +5,11 @@
 
 #### 2015-03-09: Steven Velozo
 * Test coverage, worked out kinks
+
+#### 2015-03-25
+* Added matrix for enabling Restify Native Modules
+* Changed the nodegrind module to optional so we can run in Windows (no dtrace/c++ there)
+
+#### 2015-03-27
+* Added a property for accessing Restify Native Modules
+* Added the FullResponse restify parser
