@@ -15,17 +15,13 @@
 */
 var Orator = function()
 {
-	var createNew = function(pSettings, pLogProvider)
+	var createNew = function(pSettings)
 	{
-		// This generates an object that requires you to construct it with new(Settings,Provider) before using it...
-		if ((typeof(pSettings) !== 'object') || (typeof(pLogProvider) !== 'object'))
+		// This object requires a settings object
+		if (typeof(pSettings) !== 'object')
 		{
 			return {new: createNew};
 		}
-
-		// TODO: Validate pSettings and pLogProvider more.
-
-		var _Log = pLogProvider;
 
 		// Underscore for utility
 		var libUnderscore = require('underscore');
@@ -43,8 +39,6 @@ var Orator = function()
 		var _SettingsDefaults = (
 		{
 			Product: 'Orator',
-			ProductVersion: '0.0.1',
-			APIServerPort: 8080,
 
 			RestifyParsers: (
 			{
@@ -125,16 +119,16 @@ var Orator = function()
 				Type: 'CallGrinder'
 			}),
 
-			UUID: (
-				{
-					DataCenter: 0,
-					Worker: 0
-				})
+			// Turning this on logs stack traces
+			LogStackTraces: true
 		});
-		var _Settings = libUnderscore.extend(_SettingsDefaults, pSettings);
+
+		var _Fable = require('fable').new(_SettingsDefaults);
+		// Merge in passed-in settings
+		_Fable.settingsManager.merge(pSettings);
 
 		// The Request UUID Generator
-		var libRequestUUID = require('fable-uuid').new(_Settings, _Log);
+		var libRequestUUID = require('fable-uuid').new(_Fable.settings);
 
 		/*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 		 * This block of code begins the initialization of the web server.
@@ -143,8 +137,8 @@ var Orator = function()
 		// Create the actual web server object
 		var _WebServer = libRestify.createServer(
 		{
-		  name: _Settings.Product,
-		  version: _Settings.ProductVersion
+		  name: _Fable.settings.Product,
+		  version: _Fable.settings.ProductVersion
 		});
 
 		/**
@@ -232,10 +226,21 @@ var Orator = function()
 			//     after _RestifyParsersInitialized is true.
 			if (!_RestifyParsersInitialized)
 			{
-				initializeHeaderParsers(_Settings, _WebServer);
-				initializeContentParsers(_Settings, _WebServer);
-				initializeLogicParsers(_Settings, _WebServer);
 				_RestifyParsersInitialized = true;
+				initializeHeaderParsers(_Fable.settings, _WebServer);
+				initializeContentParsers(_Fable.settings, _WebServer);
+				initializeLogicParsers(_Fable.settings, _WebServer);
+				if (_Fable.settings.LogStackTraces)
+				{
+					_WebServer.on
+					(
+						'uncaughtException',
+						function (pRequest, pResponse, pRoute, pError)
+						{
+							_Fable.log.error('Request error', {Error:true, Stack:pError.stack});
+						}
+					);
+				}
 			}
 		}
 
@@ -248,19 +253,19 @@ var Orator = function()
 			{
 				pRequest.RequestUUID = 'REQ'+libRequestUUID.getUUID();
 
-				if (_Settings.Profiling.TraceLog)
+				if (_Fable.settings.Profiling.TraceLog)
 				{
-					_Log.trace('Request start...',{RequestUUID: pRequest.RequestUUID});
+					_Fable.log.trace('Request start...',{RequestUUID: pRequest.RequestUUID});
 				}
 
-				if (_Settings.Profiling.Enabled)
+				if (_Fable.settings.Profiling.Enabled)
 				{
 					// Lazily load NodeGrind
 					if (!libNodegrind)
 						libNodegrind = require('nodegrind');
 					// If profiling is enabled, build a callgrind file
-					_Log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
-					pRequest.ProfilerName = _Settings.Product+'-'+_Settings.ProductVersion+'-'+pRequest.RequestUUID;
+					_Fable.log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
+					pRequest.ProfilerName = _Fable.settings.Product+'-'+_Fable.settings.ProductVersion+'-'+pRequest.RequestUUID;
 					libNodegrind.startCPU(pRequest.RequestUUID);
 				}
 
@@ -273,9 +278,9 @@ var Orator = function()
 			'after',
 			function (pRequest, pResponse)
 			{
-				if (_Settings.Profiling.TraceLog)
+				if (_Fable.settings.Profiling.TraceLog)
 				{
-					_Log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID, ResponseCode: pResponse.code, ResponseLength: pResponse.contentLength});
+					_Fable.log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID, ResponseCode: pResponse.code, ResponseLength: pResponse.contentLength});
 				}
 
 				if (typeof(pRequest.ProfilerName) === 'string')
@@ -284,7 +289,7 @@ var Orator = function()
 					var tmpRequestProfilePrefix = '';
 					var tmpRequestProfilePostfix = '';
 
-					if (_Settings.Profiling.Type === 'CallGrinder')
+					if (_Fable.settings.Profiling.Type === 'CallGrinder')
 					{
 						// Get the callgrind profile as a string
 						tmpRequestProfile = libNodegrind.stopCPU(pRequest.RequestUUID);
@@ -298,11 +303,11 @@ var Orator = function()
 						tmpRequestProfilePostfix = '.cpuprofile';
 					}
 
-					libFS.writeFileSync(_Settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix, tmpRequestProfile);
+					libFS.writeFileSync(_Fable.settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix, tmpRequestProfile);
 
-					if (_Settings.Profiling.TraceLog)
+					if (_Fable.settings.Profiling.TraceLog)
 					{
-						_Log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Settings.Profiling.Folder+pRequest.ProfilerName);
+						_Fable.log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Fable.settings.Profiling.Folder+pRequest.ProfilerName);
 					}
 				}
 			}
@@ -322,10 +327,10 @@ var Orator = function()
 			checkModules();
 			_WebServer.listen
 			(
-				_Settings.APIServerPort,
+				_Fable.settings.APIServerPort,
 				function ()
 				{
-					_Log.info(_WebServer.name+' listening at '+_WebServer.url);
+					_Fable.log.info(_WebServer.name+' listening at '+_WebServer.url);
 					tmpNext();
 				}
 			);
@@ -350,10 +355,10 @@ var Orator = function()
 		Object.defineProperty(tmpNewOrator, 'webServer',
 			{
 				get: function() 
-						{
-							checkModules();
-							return _WebServer;
-						}
+					{
+						checkModules();
+						return _WebServer;
+					}
 			});
 
 		/**
@@ -364,9 +369,12 @@ var Orator = function()
 		 */
 		Object.defineProperty(tmpNewOrator, 'enabledModules',
 			{
-				get: function() { return _Settings.RestifyParsers; },
-				set: function(pRestifyParsers) { _Settings.RestifyParsers = pRestifyParsers; }
+				get: function() { return _Fable.settings.RestifyParsers; },
+				set: function(pRestifyParsers) { _Fable.settings.RestifyParsers = pRestifyParsers; }
 			});
+
+		// Add fable services to the object, for sharing with other modules.
+		_Fable.addServices(tmpNewOrator);
 
 		return tmpNewOrator;
 	};

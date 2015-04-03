@@ -18,12 +18,10 @@ var _MockSettings = (
 	ProductVersion: '0.0.0',
 	APIServerPort: 8080
 });
-var _Log = require('fable-log').new(_MockSettings);
-_Log.initialize();
 
 suite
 (
-	'Fable-Log',
+	'Orator',
 	function()
 	{
 		var _Orator;
@@ -32,7 +30,7 @@ suite
 		(
 			function()
 			{
-				_Orator = require('../source/Orator.js').new(_MockSettings, _Log);
+				_Orator = require('../source/Orator.js').new(_MockSettings);
 			}
 		);
 
@@ -60,7 +58,7 @@ suite
 				test
 				(
 					'simple routes should work',
-					function()
+					function(fDone)
 					{
 						_Orator.webServer.get (
 							'/PIN',
@@ -78,15 +76,20 @@ suite
 								fNext();
 							}
 						);
-						_Orator.startWebServer();
-						libSuperTest('http://localhost:8080/')
-						.get('PIN')
-						.end(
-							function (pError, pResponse)
+						_Orator.startWebServer
+						(
+							function ()
 							{
-								console.log(JSON.stringify(pResponse));
-								Expect(pResponse.text)
-									.to.contain('PON');
+								libSuperTest('http://localhost:8080/')
+								.get('PIN')
+								.end(
+									function (pError, pResponse)
+									{
+										Expect(pResponse.text)
+											.to.contain('PON');
+										fDone();
+									}
+								);
 							}
 						);
 					}
@@ -101,7 +104,7 @@ suite
 				test
 				(
 					'inverted parameters should work',
-					function()
+					function(fDone)
 					{
 						var _MockSettingsInvertedParameters = (
 							{
@@ -109,8 +112,7 @@ suite
 								ProductVersion: '0.0.0',
 								APIServerPort: 8089
 							});
-
-						var _OratorInverted = require('../source/Orator.js').new(_MockSettingsInvertedParameters, _Log);
+						var _OratorInverted = require('../source/Orator.js').new(_MockSettingsInvertedParameters);
 						// Test twiddling parameters
 						Expect(_OratorInverted.enabledModules.Date)
 							.to.equal(false);
@@ -146,9 +148,17 @@ suite
 						.end(
 							function (pError, pResponse)
 							{
-								console.log(JSON.stringify(pResponse));
-								Expect(pResponse.text)
-									.to.contain('PONGU');
+								if (pError)
+								{
+									console.log('Error on Inverted Results: '+JSON.stringify(pError));
+									Expect('Inverted Settings Request Error').to.equal('Nothing');
+								}
+								else
+								{
+									Expect(pResponse.text)
+										.to.contain('PONGU');
+								}
+								fDone();
 							}
 						);
 					}

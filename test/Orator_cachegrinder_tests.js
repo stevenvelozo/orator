@@ -30,12 +30,10 @@ var _MockSettings = (
 		})
 
 });
-var _Log = require('fable-log').new(_MockSettings);
-_Log.initialize();
 
 suite
 (
-	'Fable-Log',
+	'Orator',
 	function()
 	{
 		var _Orator;
@@ -44,7 +42,7 @@ suite
 		(
 			function()
 			{
-				_Orator = require('../source/Orator.js').new(_MockSettings, _Log);
+				_Orator = require('../source/Orator.js').new(_MockSettings);
 			}
 		);
 
@@ -56,7 +54,7 @@ suite
 				test
 				(
 					'simple routes should work',
-					function()
+					function(fDone)
 					{
 						_Orator.webServer.get (
 							'/PING', 
@@ -74,22 +72,23 @@ suite
 								.end(
 									function (pError, pResponse)
 									{
-										console.log(JSON.stringify(pResponse));
-										Expect(pResponse.text)
-											.to.contain('PONG');
+										if (pError)
+										{
+											console.log('Error on Inverted Results: '+JSON.stringify(pError));
+											Expect('CacheGrinder Request Error').to.equal('Nothing');
+										}
+										else
+										{
+											Expect(pResponse.text)
+												.to.contain('PONG');
+										}
+										fDone();
 									}
 								);
 							}
 						);
 						Expect(_Orator)
 							.to.be.an('object', 'Orator should initialize as an object directly from the require statement.');
-					}
-				);
-				test
-				(
-					'dynamically turn on tracing',
-					function()
-					{
 					}
 				);
 			}

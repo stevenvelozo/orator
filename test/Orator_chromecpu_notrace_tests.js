@@ -15,7 +15,6 @@ var libSuperTest = require('supertest');
 var _MockSettings = (
 {
 	Product: 'MockOratorCHROMENOTRACE',
-	ProductVersion: '0.0.0',
 	APIServerPort: 8083,
 	Profiling: (
 		{
@@ -30,12 +29,10 @@ var _MockSettings = (
 		})
 
 });
-var _Log = require('fable-log').new(_MockSettings);
-_Log.initialize();
 
 suite
 (
-	'Fable-Log',
+	'Orator',
 	function()
 	{
 		var _Orator;
@@ -44,7 +41,7 @@ suite
 		(
 			function()
 			{
-				_Orator = require('../source/Orator.js').new(_MockSettings, _Log);
+				_Orator = require('../source/Orator.js').new(_MockSettings);
 			}
 		);
 
@@ -56,7 +53,7 @@ suite
 				test
 				(
 					'simple routes should work',
-					function()
+					function(fDone)
 					{
 						_Orator.webServer.get (
 							'/PI', 
@@ -72,18 +69,19 @@ suite
 						.end(
 							function (pError, pResponse)
 							{
-								console.log(JSON.stringify(pResponse));
-								Expect(pResponse.text)
-									.to.contain('PO');
+								if (pError)
+								{
+									console.log('Error on Inverted Results: '+JSON.stringify(pError));
+									Expect('No Trace Request Error').to.equal('Nothing');
+								}
+								else
+								{
+									Expect(pResponse.text)
+										.to.contain('PO');
+								}
+								fDone();
 							}
 						);
-					}
-				);
-				test
-				(
-					'dynamically turn on tracing',
-					function()
-					{
 					}
 				);
 			}
