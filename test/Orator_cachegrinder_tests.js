@@ -82,7 +82,10 @@ suite
 											Expect(pResponse.text)
 												.to.contain('PONG');
 										}
-										fDone();
+										// This is just to exercise the lazy loaded cachegrinder module
+										libSuperTest('http://localhost:8082/')
+										.get('PING')
+										.end(function (pError, pResponse) {fDone();});
 									}
 								);
 							}

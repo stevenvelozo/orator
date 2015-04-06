@@ -76,6 +76,15 @@ suite
 								fNext();
 							}
 						);
+						_Orator.webServer.get (
+							'/ThirdAPI',
+							function (pRequest, pResponse, fNext)
+							{
+								pResponse.send('RAWR');
+								throw new Error('The server should give a nice stack trace');
+								fNext();
+							}
+						);
 						_Orator.startWebServer
 						(
 							function ()
@@ -87,7 +96,14 @@ suite
 									{
 										Expect(pResponse.text)
 											.to.contain('PON');
-										fDone();
+										libSuperTest('http://localhost:8080/')
+										.get('ThirdAPI')
+										.end(
+											function (pError, pResponse)
+											{
+												fDone();
+											}
+										);
 									}
 								);
 							}
@@ -110,7 +126,8 @@ suite
 							{
 								Product: 'MockOratorInverted',
 								ProductVersion: '0.0.0',
-								APIServerPort: 8089
+								APIServerPort: 8089,
+								LogStackTraces: false
 							});
 						var _OratorInverted = require('../source/Orator.js').new(_MockSettingsInvertedParameters);
 						// Test twiddling parameters
