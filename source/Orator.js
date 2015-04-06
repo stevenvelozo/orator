@@ -23,8 +23,6 @@ var Orator = function()
 			return {new: createNew};
 		}
 
-		// Underscore for utility
-		var libUnderscore = require('underscore');
 		// Restify for the routing and API serving
 		var libRestify = require('restify');
 		// NodeGrind for request profiling
@@ -123,9 +121,9 @@ var Orator = function()
 			LogStackTraces: true
 		});
 
-		var _Fable = require('fable').new(_SettingsDefaults);
+		var _Fable = require('fable').new(pSettings);
 		// Merge in passed-in settings
-		_Fable.settingsManager.merge(pSettings);
+		_Fable.settingsManager.fill(_SettingsDefaults);
 
 		// The Request UUID Generator
 		var libRequestUUID = require('fable-uuid').new(_Fable.settings);
@@ -242,7 +240,7 @@ var Orator = function()
 					);
 				}
 			}
-		}
+		};
 
 		/***
 		 * Hook the profiler in
@@ -262,7 +260,9 @@ var Orator = function()
 				{
 					// Lazily load NodeGrind
 					if (!libNodegrind)
+					{
 						libNodegrind = require('nodegrind');
+					}
 					// If profiling is enabled, build a callgrind file
 					_Fable.log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
 					pRequest.ProfilerName = _Fable.settings.Product+'-'+_Fable.settings.ProductVersion+'-'+pRequest.RequestUUID;
