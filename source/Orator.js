@@ -110,6 +110,9 @@ var Orator = function()
 				// Tracelog is just log-based request timing encapsulation.
 				TraceLog: false,
 
+				// Requestlog is to log each request ID and Session ID.
+				RequestLog: false,
+
 				// These profiling settings determine if we generate cpu or call graphs
 				Enabled: false,
 				Folder: '/tmp/',
@@ -250,6 +253,11 @@ var Orator = function()
 			function (pRequest, pResponse, fNext)
 			{
 				pRequest.RequestUUID = 'REQ'+libRequestUUID.getUUID();
+
+				if (_Fable.settings.Profiling.RequestLog)
+				{
+					_Fable.log.info('Request', {ClientIP:pRequest.connection.remoteAddress, RequestUUID:pRequest.RequestUUID});
+				}
 
 				if (_Fable.settings.Profiling.TraceLog)
 				{

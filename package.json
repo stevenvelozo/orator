@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Restful web API server.",
   "main": "source/Orator.js",
   "scripts": {
