@@ -104,6 +104,9 @@ var Orator = function()
 				})
 			}),
 
+			// This is used as the base object for instantiating the server.  You can add custom parsers and formatters safely with lambdas here.
+			RawServerParameters: {},
+
 			// Turning these on decreases speed dramatically, and generates a cachegrind file for each request.
 			Profiling: (
 			{
@@ -136,11 +139,11 @@ var Orator = function()
 		 */
 
 		// Create the actual web server object
-		var _WebServer = libRestify.createServer(
-		{
-		  name: _Fable.settings.Product,
-		  version: _Fable.settings.ProductVersion
-		});
+		var _WebServerParameters = _Fable.settings.RawServerParameters
+		// Make sure the Fable settings match the Orator settings
+		_WebServerParameters.name = _Fable.settings.Product,
+		_WebServerParameters.version = _Fable.settings.ProductVersion
+		var _WebServer = libRestify.createServer(_WebServerParameters);
 
 		/**
 		* Connect any configured restify modules that automatically map header content into the request object
