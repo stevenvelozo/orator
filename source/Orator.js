@@ -234,17 +234,21 @@ var Orator = function()
 				initializeHeaderParsers(_Fable.settings, _WebServer);
 				initializeContentParsers(_Fable.settings, _WebServer);
 				initializeLogicParsers(_Fable.settings, _WebServer);
-				if (_Fable.settings.LogStackTraces)
-				{
-					_WebServer.on
-					(
-						'uncaughtException',
-						function (pRequest, pResponse, pRoute, pError)
+				_WebServer.on
+				(
+					'uncaughtException',
+					function (pRequest, pResponse, pRoute, pError)
+					{
+						if (typeof(_Fable.settings.UncaughtExceptionHook) === 'function')
+						{
+							_Fable.settings.UncaughtExceptionHook(pRequest, pResponse, pRoute, pError);
+						}
+						if (_Fable.settings.LogStackTraces)
 						{
 							_Fable.log.error('Request error', {Error:true, Stack:pError.stack});
 						}
-					);
-				}
+					}
+				);
 			}
 		};
 
