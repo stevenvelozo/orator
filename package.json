@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Restful web API server.",
   "main": "source/Orator.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "url": "https://github.com/stevenvelozo/orator.git"
   },
   "keywords": [
-    "logging"
+    "rest", "api", "logging"
   ],
   "author": "Steven Velozo <steven@velozo.com> (http://velozo.com/)",
   "license": "MIT",
