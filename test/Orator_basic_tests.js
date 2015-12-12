@@ -85,6 +85,12 @@ suite
 								fNext();
 							}
 						);
+						// Expect this to fail
+						_Orator.addStaticRoute();
+						// And you can specify a path for bonus
+						_Orator.addStaticRoute(__dirname+'/../', 'LICENSE', /\/content\/(.*)/, '/content/');
+						// You should be able to host files just with a path
+						_Orator.addStaticRoute(__dirname+'/');
 						_Orator.startWebServer
 						(
 							function ()
@@ -101,7 +107,26 @@ suite
 										.end(
 											function (pError, pResponse)
 											{
-												fDone();
+												libSuperTest('http://localhost:8080/')
+												.get('Orator_logging_tests.js')
+												.end(
+													function (pError, pResponse)
+													{
+														_Orator.settings.Profiling.TraceLog = true;
+														Expect(pResponse.text)
+															.to.contain('Error on Logfile Results');
+														libSuperTest('http://localhost:8080/')
+														.get('content/')
+														.end(
+															function (pError, pResponse)
+															{
+																Expect(pResponse.text)
+																	.to.contain('MIT');
+																fDone();
+															}
+														);
+													}
+												);
 											}
 										);
 									}

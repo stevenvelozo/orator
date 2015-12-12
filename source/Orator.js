@@ -1,10 +1,7 @@
+// ##### Part of the **[retold](https://stevenvelozo.github.io/retold/)** system
 /**
-* Orator Web API Server
-*
 * @license MIT
-*
-* @author Steven Velozo <steven@velozo.com>
-* @module Orator Web Server
+* @author <steven@velozo.com>
 */
 
 /**
@@ -352,12 +349,58 @@ var Orator = function()
 		};
 
 
+		var addStaticRoute = function(pFilePath, pDefaultFile, pRoute, pRouteStrip)
+		{
+			if (typeof(pFilePath) !== 'string')
+			{
+				_WebServer.log.error('A file path must be passed in as part of the server.');
+				return false;
+			}
+
+			// Default to just serving from root
+			var tmpRoute = (typeof(pRoute) === 'undefined') ? /\/.*/ : pRoute;
+			var tmpRouteStrip = (typeof(pRouteStrip) === 'undefined') ? '/' : pRouteStrip;
+
+			// Default to serving index.html
+			var tmpDefaultFile = (typeof(pDefaultFile) === 'undefined') ? 'index.html' : pDefaultFile;
+
+			console.log('--> Orator mapping static route to files: '+tmpRoute+' ==> '+pFilePath+' '+tmpDefaultFile);
+
+			// Add the route
+			_WebServer.get
+			(
+				tmpRoute,
+				function(pRequest, pResponse, fNext)
+				{
+					// The split removes query string parameters so they are ignored by our static web server.
+					// The substring cuts that out from the file path so relative files serve from the folders and server
+					pRequest.url = pRequest.url.split("?")[0].substr(tmpRouteStrip.length);
+					pRequest.path = function() { return pRequest.url; };
+					if (_Fable.settings.Profiling.TraceLog)
+					{
+						_WebServer.log.trace('Serving content: '+pRequest.url);
+					}
+					var tmpServe = libRestify.serveStatic
+					(
+						{
+							directory: pFilePath,
+							default: tmpDefaultFile
+						}
+					);
+					tmpServe(pRequest, pResponse, fNext);
+				}
+			);
+		};
+
 		/**
 		* Container Object for our Factory Pattern
 		*/
 		var tmpNewOrator = (
 		{
 			startWebServer: startWebServer,
+
+			addStaticRoute: addStaticRoute,
+
 			new: createNew
 		});
 

@@ -13,3 +13,6 @@
 #### 2015-03-27
 * Added a property for accessing Restify Native Modules
 * Added the FullResponse restify parser
+
+#### 2015-12-12
+* Added a simple mechanism for adding static routes
