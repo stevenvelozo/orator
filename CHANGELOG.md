@@ -16,3 +16,5 @@
 
 #### 2015-12-12
 * Added a simple mechanism for adding static routes
+* Added static formatter configuration for legacy ie and CSS
+* Changed web server to be lazily loaded the first time the webServer object is accessed, so raw settings can be twiddled outside the config file

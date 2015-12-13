@@ -135,12 +135,10 @@ var Orator = function()
 		 * This block of code begins the initialization of the web server.
 		 */
 
-		// Create the actual web server object
-		var _WebServerParameters = _Fable.settings.RawServerParameters
-		// Make sure the Fable settings match the Orator settings
-		_WebServerParameters.name = _Fable.settings.Product,
-		_WebServerParameters.version = _Fable.settings.ProductVersion
-		var _WebServer = libRestify.createServer(_WebServerParameters);
+		// Create the raw web server parameters object
+		var _WebServerParameters = _Fable.settings.RawServerParameters;
+		// We are lazily initializing this now, so parameters can change before init.
+		var _WebServer;
 
 		/**
 		* Connect any configured restify modules that automatically map header content into the request object
@@ -249,81 +247,85 @@ var Orator = function()
 			}
 		};
 
-		/***
-		 * Hook the profiler in
-		 */
-		_WebServer.pre
-		(
-			function (pRequest, pResponse, fNext)
-			{
-				pRequest.RequestUUID = 'REQ'+libRequestUUID.getUUID();
 
-				if (_Fable.settings.Profiling.RequestLog)
+		var initializeInstrumentation = function()
+		{
+			/***
+			 * Hook the profiler in
+			 */
+			_WebServer.pre
+			(
+				function (pRequest, pResponse, fNext)
 				{
-					_Fable.log.info('Request', {ClientIP:pRequest.connection.remoteAddress, RequestUUID:pRequest.RequestUUID});
-				}
+					pRequest.RequestUUID = 'REQ'+libRequestUUID.getUUID();
 
-				if (_Fable.settings.Profiling.TraceLog)
-				{
-					_Fable.log.trace('Request start...',{RequestUUID: pRequest.RequestUUID});
-				}
-
-				if (_Fable.settings.Profiling.Enabled)
-				{
-					// Lazily load NodeGrind
-					if (!libNodegrind)
+					if (_Fable.settings.Profiling.RequestLog)
 					{
-						libNodegrind = require('nodegrind');
+						_Fable.log.info('Request', {ClientIP:pRequest.connection.remoteAddress, RequestUUID:pRequest.RequestUUID});
 					}
-					// If profiling is enabled, build a callgrind file
-					_Fable.log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
-					pRequest.ProfilerName = _Fable.settings.Product+'-'+_Fable.settings.ProductVersion+'-'+pRequest.RequestUUID;
-					libNodegrind.startCPU(pRequest.RequestUUID);
-				}
-
-				return fNext();
-			}
-		);
-
-		_WebServer.on
-		(
-			'after',
-			function (pRequest, pResponse)
-			{
-				if (_Fable.settings.Profiling.TraceLog)
-				{
-					_Fable.log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID, ResponseCode: pResponse.code, ResponseLength: pResponse.contentLength});
-				}
-
-				if (typeof(pRequest.ProfilerName) === 'string')
-				{
-					var tmpRequestProfile = '';
-					var tmpRequestProfilePrefix = '';
-					var tmpRequestProfilePostfix = '';
-
-					if (_Fable.settings.Profiling.Type === 'CallGrinder')
-					{
-						// Get the callgrind profile as a string
-						tmpRequestProfile = libNodegrind.stopCPU(pRequest.RequestUUID);
-						tmpRequestProfilePrefix = 'callgrind.';
-					}
-					else
-					{
-						// Alternatively, get a Chrome *.cpuprofile that you can load into the Chrome
-						// profiler (right-click on 'Profiles' in left pane in the 'Profiles' tab)
-						tmpRequestProfile = libNodegrind.stopCPU(pRequest.RequestUUID, 'cpuprofile');
-						tmpRequestProfilePostfix = '.cpuprofile';
-					}
-
-					libFS.writeFileSync(_Fable.settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix, tmpRequestProfile);
 
 					if (_Fable.settings.Profiling.TraceLog)
 					{
-						_Fable.log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Fable.settings.Profiling.Folder+pRequest.ProfilerName);
+						_Fable.log.trace('Request start...',{RequestUUID: pRequest.RequestUUID});
+					}
+
+					if (_Fable.settings.Profiling.Enabled)
+					{
+						// Lazily load NodeGrind
+						if (!libNodegrind)
+						{
+							libNodegrind = require('nodegrind');
+						}
+						// If profiling is enabled, build a callgrind file
+						_Fable.log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
+						pRequest.ProfilerName = _Fable.settings.Product+'-'+_Fable.settings.ProductVersion+'-'+pRequest.RequestUUID;
+						libNodegrind.startCPU(pRequest.RequestUUID);
+					}
+
+					return fNext();
+				}
+			);
+
+			_WebServer.on
+			(
+				'after',
+				function (pRequest, pResponse)
+				{
+					if (_Fable.settings.Profiling.TraceLog)
+					{
+						_Fable.log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID, ResponseCode: pResponse.code, ResponseLength: pResponse.contentLength});
+					}
+
+					if (typeof(pRequest.ProfilerName) === 'string')
+					{
+						var tmpRequestProfile = '';
+						var tmpRequestProfilePrefix = '';
+						var tmpRequestProfilePostfix = '';
+
+						if (_Fable.settings.Profiling.Type === 'CallGrinder')
+						{
+							// Get the callgrind profile as a string
+							tmpRequestProfile = libNodegrind.stopCPU(pRequest.RequestUUID);
+							tmpRequestProfilePrefix = 'callgrind.';
+						}
+						else
+						{
+							// Alternatively, get a Chrome *.cpuprofile that you can load into the Chrome
+							// profiler (right-click on 'Profiles' in left pane in the 'Profiles' tab)
+							tmpRequestProfile = libNodegrind.stopCPU(pRequest.RequestUUID, 'cpuprofile');
+							tmpRequestProfilePostfix = '.cpuprofile';
+						}
+
+						libFS.writeFileSync(_Fable.settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix, tmpRequestProfile);
+
+						if (_Fable.settings.Profiling.TraceLog)
+						{
+							_Fable.log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Fable.settings.Profiling.Folder+pRequest.ProfilerName);
+						}
 					}
 				}
-			}
-		);
+			);
+		}
 		/*
 		 * This ends the initialization of the web server object.
 		 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***/
@@ -336,8 +338,8 @@ var Orator = function()
 		var startWebServer = function(fNext)
 		{
 			var tmpNext = (typeof(fNext) === 'function') ? fNext : function() {};
-			checkModules();
-			_WebServer.listen
+
+			getWebServer().listen
 			(
 				_Fable.settings.APIServerPort,
 				function ()
@@ -346,6 +348,56 @@ var Orator = function()
 					tmpNext();
 				}
 			);
+		};
+
+
+		// ### Static content formatter (useful to manage content lengths of large text media files)
+		var staticContentFormatter = function(pRequest, pResponse, pBody)
+		{
+			// This is specifically used to serve CSS which the older internet explorers treat ... strangely.
+			if (pBody instanceof Error)
+			{
+				pResponse.statusCode = pBody.statusCode || 500;
+				pBody = pBody.message;
+			}
+			else if (typeof (pBody) === 'object')
+			{
+				pBody = JSON.stringify(pBody);
+			}
+			else
+			{
+				pBody = pBody.toString();
+			}
+
+			pResponse.setHeader('Content-Length', Buffer.byteLength(pBody));
+			return (pBody);
+		};
+
+
+		// ### Configure static formatters to work with ie (specifically CSS)
+		var setupStaticFormatters = function()
+		{
+			_WebServerParameters = (
+			{
+				formatters:
+				{
+					'application/javascript; q=0.1': require('../node_modules/restify/lib/formatters/jsonp'),
+					'application/json; q=0.4': require('../node_modules/restify/lib/formatters/json'),
+					'text/plain; q=0.3': require('../node_modules/restify/lib/formatters/text'),
+					// It is really important for this to be equal to text/plain in priority!
+					'text/css; q=0.3': staticContentFormatter,
+					'application/octet-stream; q=0.2': require('../node_modules/restify/lib/formatters/binary')
+				},
+				acceptable:
+				[
+					'text/css',
+					'text/plain',
+					'application/octet-stream',
+					'application/javascript',
+					'application/json'
+				]
+			});
+			_Fable.settings.RawServerParameters = _WebServerParameters;
 		};
 
 
@@ -401,6 +453,9 @@ var Orator = function()
 
 			addStaticRoute: addStaticRoute,
 
+			staticContentFormatter: staticContentFormatter,
+			setupStaticFormatters: setupStaticFormatters,
+
 			new: createNew
 		});
 
@@ -410,14 +465,21 @@ var Orator = function()
 		 * @property webServer
 		 * @type Object
 		 */
-		Object.defineProperty(tmpNewOrator, 'webServer',
-			{
-				get: function() 
+		var getWebServer = function() 
 					{
+						// Lazily load the webserver the first time it is accessed
+						if (typeof(_WebServer) === 'undefined')
+						{
+							// Make sure the Fable settings match the Orator settings
+							_WebServerParameters.name = _Fable.settings.Product;
+							_WebServerParameters.version = _Fable.settings.ProductVersion;
+							_WebServer = libRestify.createServer(_WebServerParameters);
+							initializeInstrumentation();
+						}
 						checkModules();
 						return _WebServer;
 					}
-			});
+		Object.defineProperty(tmpNewOrator, 'webServer', {get: getWebServer });
 
 		/**
 		 * The enabled web modules

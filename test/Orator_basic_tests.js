@@ -48,6 +48,18 @@ suite
 							.to.be.an('object', 'Orator should initialize as an object directly from the require statement.');
 					}
 				);
+				test
+				(
+					'exercise the static formatters',
+					function()
+					{
+						var tmpRequest = {};
+						var tmpResponse = {setHeader:function(pHeader, pValue){console.log('---> Header '+pHeader+' set to '+pValue)}};
+						_Orator.staticContentFormatter(tmpRequest, tmpResponse, new Error());
+						_Orator.staticContentFormatter(tmpRequest, tmpResponse, 'pBody');
+						_Orator.staticContentFormatter(tmpRequest, tmpResponse, {});
+					}
+				);
 			}
 		);
 		suite
@@ -60,6 +72,8 @@ suite
 					'simple routes should work',
 					function(fDone)
 					{
+						// Setup the static formatters... this must happen before we access the webServer object.
+						_Orator.setupStaticFormatters();
 						_Orator.webServer.get (
 							'/PIN',
 							function (pRequest, pResponse, fNext)
@@ -108,13 +122,13 @@ suite
 											function (pError, pResponse)
 											{
 												libSuperTest('http://localhost:8080/')
-												.get('Orator_logging_tests.js')
+												.get('Test.css')
 												.end(
 													function (pError, pResponse)
 													{
 														_Orator.settings.Profiling.TraceLog = true;
 														Expect(pResponse.text)
-															.to.contain('Error on Logfile Results');
+															.to.contain('50000px');
 														libSuperTest('http://localhost:8080/')
 														.get('content/')
 														.end(
