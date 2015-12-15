@@ -381,12 +381,12 @@ var Orator = function()
 			{
 				formatters:
 				{
-					'application/javascript; q=0.1': require('../node_modules/restify/lib/formatters/jsonp'),
-					'application/json; q=0.4': require('../node_modules/restify/lib/formatters/json'),
-					'text/plain; q=0.3': require('../node_modules/restify/lib/formatters/text'),
+					'application/javascript; q=0.1': libRestify.formatters['application/javascript; q=0.1'],
+					'application/json; q=0.4': libRestify.formatters['application/json; q=0.4'],
+					'text/plain; q=0.3': libRestify.formatters['text/plain; q=0.3'],
 					// It is really important for this to be equal to text/plain in priority!
 					'text/css; q=0.3': staticContentFormatter,
-					'application/octet-stream; q=0.2': require('../node_modules/restify/lib/formatters/binary')
+					'application/octet-stream; q=0.2': libRestify.formatters['application/octet-stream; q=0.2']
 				},
 				acceptable:
 				[
@@ -405,7 +405,7 @@ var Orator = function()
 		{
 			if (typeof(pFilePath) !== 'string')
 			{
-				_WebServer.log.error('A file path must be passed in as part of the server.');
+				_Fable.log.error('A file path must be passed in as part of the server.');
 				return false;
 			}
 
@@ -416,10 +416,10 @@ var Orator = function()
 			// Default to serving index.html
 			var tmpDefaultFile = (typeof(pDefaultFile) === 'undefined') ? 'index.html' : pDefaultFile;
 
-			console.log('--> Orator mapping static route to files: '+tmpRoute+' ==> '+pFilePath+' '+tmpDefaultFile);
+			_Fable.log.info('Orator mapping static route to files: '+tmpRoute+' ==> '+pFilePath+' '+tmpDefaultFile);
 
 			// Add the route
-			_WebServer.get
+			getWebServer().get
 			(
 				tmpRoute,
 				function(pRequest, pResponse, fNext)
