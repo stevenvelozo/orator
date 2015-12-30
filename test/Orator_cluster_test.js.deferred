@@ -44,6 +44,8 @@ suite
 			'Object Sanity',
 			function()
 			{
+				this.timeout(3000);
+				
 				test
 				(
 					'initialize should build a happy little object',
@@ -106,7 +108,7 @@ suite
 								if (!libCluster.isMaster)
 								{
 									//keep child running until master has chance to run through tests
-									setTimeout(fDone, 1500);
+									setTimeout(fDone, 2500);
 								}
 								else
 								{
