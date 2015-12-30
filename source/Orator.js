@@ -340,11 +340,16 @@ var Orator = function()
 		*/
 		 var startWorkers = function(pWorkers, fCallback)
 		 {
-		 	if (pWorkers <= 0)
+		 	if (pWorkers === 0)
+		 	{
 		 		return fCallback();
+		 	}
+		 	else if (pWorkers < 0)
+		 	{
+		 		pWorkers = require('os').cpus().length;
+		 	}
 
-			var tmpCPUCount = require('os').cpus().length;
-			for (var i=0; i<pWorkers && i<tmpCPUCount; i++)
+			for (var i=0; i<pWorkers; i++)
 			{
 				libCluster.fork();
 			}
