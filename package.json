@@ -6,14 +6,18 @@
   "scripts": {
     "start": "node source/Orator.js",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -u tdd -R spec",
-    "test": "./node_modules/mocha/bin/_mocha -u tdd -R spec"
+    "test": "npm run test-normal && npm run test-cluster",
+    "test-normal": "./node_modules/mocha/bin/_mocha -u tdd -R spec",
+    "test-cluster": "./node_modules/mocha/bin/_mocha -u tdd -R spec ./test/Orator_cluster_test.js.deferred"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/stevenvelozo/orator.git"
   },
   "keywords": [
-    "rest", "api", "logging"
+    "rest",
+    "api",
+    "logging"
   ],
   "author": "Steven Velozo <steven@velozo.com> (http://velozo.com/)",
   "license": "MIT",
@@ -31,9 +35,10 @@
     "supertest": "1.1.0"
   },
   "optionalDependencies": {
-        "nodegrind": "git+https://github.com/stevenvelozo/nodegrind.git"
+    "nodegrind": "git+https://github.com/stevenvelozo/nodegrind.git"
   },
   "dependencies": {
+    "cluster": "^0.7.7",
     "fable": "~1.0.1",
     "fable-uuid": "~1.0.1",
     "restify": "4.0.3"
