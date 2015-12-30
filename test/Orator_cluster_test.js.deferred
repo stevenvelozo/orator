@@ -1,0 +1,231 @@
+/**
+* Unit tests for the Orator Server
+*
+* @license     MIT
+*
+* @author      Steven Velozo <steven@velozo.com>
+*/
+
+var Chai = require("chai");
+var Expect = Chai.expect;
+var Assert = Chai.assert;
+
+var libSuperTest = require('supertest');
+var libCluster = require('cluster');
+
+var _MockSettings = (
+{
+	Product: 'MockOratorAlternate',
+	ProductVersion: '0.0.0',
+	APIServerPort: 8080,
+	APIWorkers: 3,
+	APIWorkerRestart: false
+});
+
+var DISTRIBUTION_LOAD_COUNT = 50;
+
+suite
+(
+	'Orator',
+	function()
+	{
+		var _Orator;
+
+		suiteSetup
+		(
+			function()
+			{
+				_Orator = require('../source/Orator.js').new(_MockSettings);
+			}
+		);
+
+		suite
+		(
+			'Object Sanity',
+			function()
+			{
+				this.timeout(3000);
+				
+				test
+				(
+					'initialize should build a happy little object',
+					function()
+					{
+						Expect(_Orator)
+							.to.be.an('object', 'Orator should initialize as an object directly from the require statement.');
+					}
+				);
+				test
+				(
+					'setup basic routes and start server with worker',
+					function(fDone)
+					{
+						//Setup basic routes
+						// Setup the static formatters... this must happen before we access the webServer object.
+						_Orator.setupStaticFormatters();
+						_Orator.webServer.get (
+							'/PIN',
+							function (pRequest, pResponse, fNext)
+							{
+								pResponse.send('PON');
+								fNext();
+							}
+						);
+						_Orator.webServer.get (
+							'/SecondAPI',
+							function (pRequest, pResponse, fNext)
+							{
+								pResponse.send('RAWR');
+								fNext();
+							}
+						);
+						_Orator.webServer.get (
+							'/ThirdAPI',
+							function (pRequest, pResponse, fNext)
+							{
+								pResponse.send('RAWR');
+								throw new Error('The server should give a nice stack trace');
+								fNext();
+							}
+						);
+						_Orator.webServer.get (
+							'/GetPID',
+							function (pRequest, pResponse, fNext)
+							{
+								pResponse.send({workerPid: process.pid});
+								fNext();
+							}
+						);
+						// Expect this to fail
+						_Orator.addStaticRoute();
+						// And you can specify a path for bonus
+						_Orator.addStaticRoute(__dirname+'/../', 'LICENSE', /\/content\/(.*)/, '/content/');
+						// You should be able to host files just with a path
+						_Orator.addStaticRoute(__dirname+'/');
+				
+						return _Orator.startWebServer(function()
+							{
+								if (!libCluster.isMaster)
+								{
+									//keep child running until master has chance to run through tests
+									setTimeout(fDone, 2500);
+								}
+								else
+								{
+									return fDone();
+								}
+							});
+					}
+				);
+			}
+		);
+
+		if (libCluster.isMaster)
+		{
+			suite
+			(
+				'Basic Server Tests',
+				function()
+				{
+					test
+					(
+						'exercise the basic routes',
+						function(fDone)
+						{
+							
+							libSuperTest('http://localhost:8080/')
+							.get('PIN')
+							.end(
+								function (pError, pResponse)
+								{
+									Expect(pResponse.text)
+										.to.contain('PON');
+									libSuperTest('http://localhost:8080/')
+									.get('ThirdAPI')
+									.end(
+										function (pError, pResponse)
+										{
+											libSuperTest('http://localhost:8080/')
+											.get('Test.css')
+											.end(
+												function (pError, pResponse)
+												{
+													_Orator.settings.Profiling.TraceLog = true;
+													Expect(pResponse.text)
+														.to.contain('50000px');
+													libSuperTest('http://localhost:8080/')
+													.get('content/')
+													.end(
+														function (pError, pResponse)
+														{
+															Expect(pResponse.text)
+																.to.contain('MIT');
+															
+															return fDone();
+														}
+													);
+												}
+											);
+										}
+									);
+								}
+							);
+						}
+					);
+				}
+			);
+			suite
+			(
+				'Server request distribution test',
+				function()
+				{
+					test
+					(
+						'request worker pid from server, x' + DISTRIBUTION_LOAD_COUNT,
+						function(fDone)
+						{
+							var tmpResponseCount = 0;
+							var tmpResponseStats = {};
+
+							for(var i=0; i<DISTRIBUTION_LOAD_COUNT; i++)
+							{
+								libSuperTest('http://localhost:8080/')
+									.get('GetPID')
+									.end(
+										function (pError, pResponse)
+										{
+											if (pError)
+												return fDone(pError);
+
+											var tmpWorkerId = 'Worker_' + pResponse.body.workerPid;
+
+											if (!tmpResponseStats[tmpWorkerId])
+												tmpResponseStats[tmpWorkerId] = 0;
+											tmpResponseStats[tmpWorkerId]++;
+
+											if (++tmpResponseCount === DISTRIBUTION_LOAD_COUNT)
+											{
+												console.log('Process request distribution results:', tmpResponseStats);
+
+												//verify that all workers reported in
+												var tmpResultKeyCounter = 0;
+												Object.keys(tmpResponseStats).forEach(function(key)
+												{
+													tmpResultKeyCounter++;
+													if (tmpResponseStats[key] < 1)
+														return fDone('Not all workers received a request!');
+												});
+												if (tmpResultKeyCounter < _MockSettings.APIWorkers)
+													return fDone('Not all workers received a request!');
+
+												return fDone();
+											}
+										});
+							}
+						}
+					);
+				}
+			);
+		}
+	}
+);

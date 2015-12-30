@@ -26,6 +26,8 @@ var Orator = function()
 		var libNodegrind = false;
 		// FS for writing out profiling information
 		var libFS = require('fs');
+		// Cluster API for spawning multiple worker processes
+		var libCluster = require('cluster');
 
 		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
 		var _RestifyParsersInitialized = false;
@@ -330,6 +332,49 @@ var Orator = function()
 		 * This ends the initialization of the web server object.
 		 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***/
 
+
+		/**
+		* Start worker processes (called from startWebServer)
+		*
+		* @method startWorkers
+		*/
+		 var startWorkers = function(pWorkers, fCallback)
+		 {
+		 	if (pWorkers <= 0)
+		 		return fCallback();
+
+			var tmpCPUCount = require('os').cpus().length;
+			for (var i=0; i<pWorkers && i<tmpCPUCount; i++)
+			{
+				libCluster.fork();
+			}
+
+			var tmpActiveWorkers = 0;
+
+			libCluster.on('message', function(message)
+			{
+			    _Fable.log.trace('Orator Worker ' + message.pid + ' started.');
+
+			    if (++tmpActiveWorkers === pWorkers)
+			    {
+			    	//The Master process fires the callback when all
+			    	// the workers have started. This is used by
+			    	// unit tests.
+			    	return fCallback();
+			    }
+			});
+			libCluster.on('exit', function(worker, code, signal)
+			{
+			    _Fable.log.trace('Orator Worker ' + worker.id + '/' + worker.process.pid + ' died');
+
+			    // APIWorkerRestart flag auto-restarts a worker if it crashes
+			    if (_Fable.settings.APIWorkerRestart)
+			    {
+			    	libCluster.fork();
+			    }
+			});
+		}
+
 		/**
 		* Start the Web Server
 		*
@@ -339,15 +384,33 @@ var Orator = function()
 		{
 			var tmpNext = (typeof(fNext) === 'function') ? fNext : function() {};
 
-			getWebServer().listen
-			(
-				_Fable.settings.APIServerPort,
-				function ()
-				{
-					_Fable.log.info(_WebServer.name+' listening at '+_WebServer.url);
-					tmpNext();
-				}
-			);
+			// Create # worker processes if configured. The master
+			//  process will hold the handle for the listening port
+			//  (see https://nodejs.org/api/cluster.html#cluster_how_it_works)
+			//  So we only call the listener on spawned workers.
+			if (libCluster.isMaster &&
+				_Fable.settings.APIWorkers &&
+				_Fable.settings.APIWorkers > 0)
+			{
+				return startWorkers(_Fable.settings.APIWorkers, tmpNext);
+			}
+			else
+			{
+				getWebServer().listen
+				(
+					_Fable.settings.APIServerPort,
+					function ()
+					{
+						_Fable.log.info(_WebServer.name+' listening at '+_WebServer.url);
+						if (!libCluster.isMaster)
+						{
+							// notify master about the request
+    						process.send({ signal: 'notifyListening', pid: process.pid });
+						}
+						return tmpNext();
+					}
+				);
+			}
 		};
 
 
