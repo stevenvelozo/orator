@@ -5,7 +5,10 @@
   "main": "source/Orator.js",
   "scripts": {
     "start": "node source/Orator.js",
-    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -u tdd -R spec",
+    "coverage": "npm run coverage-normal && npm run coverage-cluster && npm run coverage-report",
+    "coverage-normal": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/normal ./node_modules/mocha/bin/_mocha -- -u tdd -R spec",
+    "coverage-cluster": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/cluster ./node_modules/mocha/bin/_mocha -- -u tdd -R spec ./test/Orator_cluster_test.js.deferred",
+    "coverage-report": "./node_modules/istanbul/lib/cli.js report",
     "test": "npm run test-normal && npm run test-cluster",
     "test-normal": "./node_modules/mocha/bin/_mocha -u tdd -R spec",
     "test-cluster": "./node_modules/mocha/bin/_mocha -u tdd -R spec ./test/Orator_cluster_test.js.deferred"
