@@ -151,7 +151,7 @@ var Orator = function()
 		{
 			if (pSettings.RestifyParsers.CORS)
 			{
-				pWebServer.use(libRestify.CORS());
+				pWebServer.use(libRestify.CORS({credentials:true})); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
 			}
 			if (pSettings.RestifyParsers.FullResponse)
 			{
