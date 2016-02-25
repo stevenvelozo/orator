@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "Restful web API server.",
   "main": "source/Orator.js",
   "scripts": {
@@ -44,6 +44,7 @@
     "cluster": "^0.7.7",
     "fable": "~1.0.1",
     "fable-uuid": "~1.0.1",
+    "request": "^2.69.0",
     "restify": "4.0.3"
   }
 }
