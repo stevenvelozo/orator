@@ -28,6 +28,8 @@ var Orator = function()
 		var libFS = require('fs');
 		// Cluster API for spawning multiple worker processes
 		var libCluster = require('cluster');
+		// Request API for Proxy routes
+		var libRequest = require('request');
 
 		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
 		var _RestifyParsersInitialized = false;
@@ -152,6 +154,12 @@ var Orator = function()
 			if (pSettings.RestifyParsers.CORS)
 			{
 				pWebServer.use(libRestify.CORS({credentials:true})); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
+				//respond with 200 OK to all preflight requests
+				pWebServer.opts(/\.*/, function (req, res, next)
+				{
+				    res.send(200);
+				    next();
+				});
 			}
 			if (pSettings.RestifyParsers.FullResponse)
 			{
@@ -468,6 +476,51 @@ var Orator = function()
 			_Fable.settings.RawServerParameters = _WebServerParameters;
 		};
 
+		/**
+		* Map all routes for a prefix to proxy to a remote server
+		*
+		* @method addProxyRoute
+		*/
+		var addProxyRoute = function(pRoutePrefix, pRemoteServerURL)
+		{
+			if (typeof(pRemoteServerURL) !== 'string')
+			{
+				_Fable.log.error('A remote server URL must be passed in to addProxyRoute().');
+				return false;
+			}
+
+			// be flexible on formatting for route prefix
+			if (pRoutePrefix.indexOf('/') !== 0)
+				pRoutePrefix = '/' + pRoutePrefix;
+			if (pRoutePrefix.lastIndexOf('/') !== pRoutePrefix.length-1)
+				pRoutePrefix += '/';
+
+			// will pick up ANY requests with prefix
+			var tmpRoute = new RegExp(pRoutePrefix + '.*');
+
+			_Fable.log.info('Orator mapping proxy route to server: '+pRoutePrefix+' ==> '+pRemoteServerURL);
+
+			// Add the route
+			getWebServer().get
+			(
+				tmpRoute,
+				function(pRequest, pResponse, fNext)
+				{
+					pRequest.path = function() { return pRequest.url; };
+
+					//built a new URL to request from the remote server
+					var tmpRequestURL = pRemoteServerURL + pRequest.url.replace(pRoutePrefix, '');
+
+					_Fable.log.trace('Proxying request: '+tmpRequestURL);
+
+					// Request library automatically handles Method, Headers, etc to proxy across
+					pRequest.pipe(libRequest(tmpRequestURL)).pipe(pResponse);
+
+					return fNext();
+				}
+			);
+		};
+
 
 		var addStaticRoute = function(pFilePath, pDefaultFile, pRoute, pRouteStrip)
 		{
@@ -519,6 +572,7 @@ var Orator = function()
 		{
 			startWebServer: startWebServer,
 
+			addProxyRoute: addProxyRoute,
 			addStaticRoute: addStaticRoute,
 
 			staticContentFormatter: staticContentFormatter,
