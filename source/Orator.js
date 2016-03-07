@@ -426,6 +426,16 @@ var Orator = function()
 			}
 		};
 
+		/**
+		* Stop the Web Server
+		*
+		* @method stopWebServer
+		*/
+		var stopWebServer = function()
+		{
+			getWebServer().close();
+		}
+
 
 		// ### Static content formatter (useful to manage content lengths of large text media files)
 		var staticContentFormatter = function(pRequest, pResponse, pBody)
@@ -571,6 +581,7 @@ var Orator = function()
 		var tmpNewOrator = (
 		{
 			startWebServer: startWebServer,
+			stopWebServer: stopWebServer,
 
 			addProxyRoute: addProxyRoute,
 			addStaticRoute: addStaticRoute,
