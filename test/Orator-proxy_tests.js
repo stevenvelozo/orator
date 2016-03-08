@@ -167,6 +167,14 @@ suite
 
 					}
 				);
+				test
+				(
+					'Shutdown Orator web server',
+					function()
+					{
+						_Orator.stopWebServer();
+					}
+				);
 			}
 		);
 	}
