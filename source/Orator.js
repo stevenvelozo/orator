@@ -155,10 +155,15 @@ var Orator = function()
 			{
 				pWebServer.use(libRestify.CORS({credentials:true})); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
 				//respond with 200 OK to all preflight requests
-				pWebServer.opts(/\.*/, function (req, res, next)
+				pWebServer.opts(/\.*/, function (pRequest, pResponse, next)
 				{
-				    res.send(200);
-				    next();
+					var origin = pRequest.headers.origin;
+			        pResponse.header('Access-Control-Allow-Origin', origin);
+			        pResponse.header('Access-Control-Allow-Credentials', true);
+			        pResponse.header('Access-Control-Allow-Headers', 'content-type');
+			        pResponse.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+				    pResponse.send(200);
+				    return next();
 				});
 			}
 			if (pSettings.RestifyParsers.FullResponse)
