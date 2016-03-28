@@ -512,28 +512,40 @@ var Orator = function()
 
 			// will pick up ANY requests with prefix
 			var tmpRoute = new RegExp(pRoutePrefix + '.*');
+			var tmpDomain = pRemoteServerURL.match(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/im)[1];
 
-			_Fable.log.info('Orator mapping proxy route to server: '+pRoutePrefix+' ==> '+pRemoteServerURL);
+			_Fable.log.info('Orator mapping proxy route to server: '+pRoutePrefix+' ==> '+pRemoteServerURL + ', Host: ' + tmpDomain);
 
 			// Add the route
-			getWebServer().get
-			(
-				tmpRoute,
-				function(pRequest, pResponse, fNext)
-				{
-					pRequest.path = function() { return pRequest.url; };
+			function proxyRequest(pRequest, pResponse, fNext)
+			{
+				pRequest.path = function() { return pRequest.url; };
 
-					//built a new URL to request from the remote server
-					var tmpRequestURL = pRemoteServerURL + pRequest.url.replace(pRoutePrefix, '');
+				//built a new URL to request from the remote server
+				var tmpRequestURL = pRemoteServerURL + pRequest.url.replace(pRoutePrefix, '');
 
-					_Fable.log.trace('Proxying request: '+tmpRequestURL);
+				_Fable.log.trace('Proxying request: '+tmpRequestURL);
 
-					// Request library automatically handles Method, Headers, etc to proxy across
-					pRequest.pipe(libRequest(tmpRequestURL)).pipe(pResponse);
+				var tmpHeaders = pRequest.headers;
+				tmpHeaders['Host'] = tmpDomain;
 
-					return fNext();
-				}
-			);
+				var tmpBody = (typeof(pRequest.body) === 'String') ? pRequest.body : JSON.stringify(pRequest.body);
+
+				libRequest({
+					url: tmpRequestURL,
+					headers: tmpHeaders,
+					method: pRequest.method,
+					body: tmpBody
+					}).pipe(pResponse);
+
+				return fNext();
+			}
+
+			// Add the route
+			getWebServer().get(tmpRoute, proxyRequest);
+			getWebServer().post(tmpRoute, proxyRequest);
+			getWebServer().put(tmpRoute, proxyRequest);
+			getWebServer().del(tmpRoute, proxyRequest);
 		};
 
 
