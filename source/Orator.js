@@ -28,8 +28,9 @@ var Orator = function()
 		var libFS = require('fs');
 		// Cluster API for spawning multiple worker processes
 		var libCluster = require('cluster');
-		// Request API for Proxy routes
-		var libRequest = require('request');
+		// HTTP Forward Proxy
+		var libHttpForward = require('http-forward')
+		var _ProxyRoutes = {};
 
 		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
 		var _RestifyParsersInitialized = false;
@@ -151,6 +152,9 @@ var Orator = function()
 		*/
 		var initializeHeaderParsers = function(pSettings, pWebServer)
 		{
+			// -- ProxyHandler needs to run before any others manipulate incoming data
+			pWebServer.pre(proxyHandler);
+
 			if (pSettings.RestifyParsers.CORS)
 			{
 				pWebServer.use(libRestify.CORS({credentials:true})); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
@@ -496,8 +500,10 @@ var Orator = function()
 		*
 		* @method addProxyRoute
 		*/
-		var addProxyRoute = function(pRoutePrefix, pRemoteServerURL)
+		var addProxyRoute = function(pRoutePrefix, pRemoteServerURL, pDropPrefix)
 		{
+			pDropPrefix = !(pDropPrefix == false);
+
 			if (typeof(pRemoteServerURL) !== 'string')
 			{
 				_Fable.log.error('A remote server URL must be passed in to addProxyRoute().');
@@ -511,42 +517,57 @@ var Orator = function()
 				pRoutePrefix += '/';
 
 			// will pick up ANY requests with prefix
-			var tmpRoute = new RegExp(pRoutePrefix + '.*');
-			var tmpDomain = pRemoteServerURL.match(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/im)[1];
+			var tmpRouteRegex = new RegExp(pRoutePrefix + '.*');
+			//var tmpDomain = pRemoteServerURL.match(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/im)[1];
 
-			_Fable.log.info('Orator mapping proxy route to server: '+pRoutePrefix+' ==> '+pRemoteServerURL + ', Host: ' + tmpDomain);
+			_ProxyRoutes[pRoutePrefix] = {
+				Prefix: pRoutePrefix,
+				RouteRegex: tmpRouteRegex,
+				RemoteServerURL: pRemoteServerURL,
+				DropPrefix: pDropPrefix
+			};
 
-			// Add the route
-			function proxyRequest(pRequest, pResponse, fNext)
+			_Fable.log.info('Orator mapping proxy route to server: '+pRoutePrefix+' ==> '+pRemoteServerURL);
+		};
+
+		// Add the route
+		var proxyHandler = function(pRequest, pResponse, fNext)
+		{
+			var tmpTargetRoute = null;
+			for(var tmpRoute in _ProxyRoutes)
 			{
-				pRequest.path = function() { return pRequest.url; };
-
-				//built a new URL to request from the remote server
-				var tmpRequestURL = pRemoteServerURL + pRequest.url.replace(pRoutePrefix, '');
-
-				_Fable.log.trace('Proxying request: '+tmpRequestURL);
-
-				var tmpHeaders = pRequest.headers;
-				tmpHeaders['Host'] = tmpDomain;
-
-				var tmpBody = (typeof(pRequest.body) === 'String') ? pRequest.body : JSON.stringify(pRequest.body);
-
-				libRequest({
-					url: tmpRequestURL,
-					headers: tmpHeaders,
-					method: pRequest.method,
-					body: tmpBody
-					}).pipe(pResponse);
-
-				return fNext();
+				var tmpRouteRegex = _ProxyRoutes[tmpRoute].RouteRegex;
+				if (tmpRouteRegex.test(pRequest.url))
+				{
+					tmpTargetRoute = _ProxyRoutes[tmpRoute];
+					break;
+				}
 			}
 
-			// Add the route
-			getWebServer().get(tmpRoute, proxyRequest);
-			getWebServer().post(tmpRoute, proxyRequest);
-			getWebServer().put(tmpRoute, proxyRequest);
-			getWebServer().del(tmpRoute, proxyRequest);
-		};
+			if (!tmpTargetRoute)
+				return fNext();
+
+			if (tmpTargetRoute.DropPrefix)
+				pRequest.url = pRequest.url.replace(tmpTargetRoute.Prefix, '/');
+
+			//built a URL string to log the request
+			var tmpRequestURL = tmpTargetRoute.RemoteServerURL + pRequest.url;
+
+			_Fable.log.trace('Proxying request: '+tmpRequestURL);
+
+			pRequest.forward = {
+				target: tmpTargetRoute.RemoteServerURL,
+				changeOrigin: true,
+				secure: (_Fable.settings['RemoteSSLValidation'] == true)
+			};
+			return libHttpForward(pRequest, pResponse, function(err)
+			{
+				if (err)
+					_Fable.log.error('Proxy error', err);
+
+				return fNext(true);
+			});
+		}
 
 
 		var addStaticRoute = function(pFilePath, pDefaultFile, pRoute, pRouteStrip)

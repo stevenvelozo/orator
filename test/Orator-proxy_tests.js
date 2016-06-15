@@ -100,8 +100,8 @@ suite
 							}
 						);
 						
-						// Create a route to proxy HTTP requests to google
-						_Orator.addProxyRoute('google/', 'https://google.com/');
+						// Create a route to proxy HTTP requests to google, dropping the prefix for the remote request
+						_Orator.addProxyRoute('google/', 'https://www.google.com/');
 						// Expect this to fail
 						_Orator.addStaticRoute();
 						// And you can specify a path for bonus
