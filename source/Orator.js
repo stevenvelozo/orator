@@ -30,7 +30,7 @@ var Orator = function()
 		var libCluster = require('cluster');
 		// HTTP Forward Proxy
 		var libHttpForward = require('http-forward')
-		var _ProxyRoutes = {};
+		var _ProxyRoutes = [];
 
 		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
 		var _RestifyParsersInitialized = false;
@@ -520,26 +520,47 @@ var Orator = function()
 			var tmpRouteRegex = new RegExp(pRoutePrefix + '.*');
 			//var tmpDomain = pRemoteServerURL.match(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/im)[1];
 
-			_ProxyRoutes[pRoutePrefix] = {
+			_ProxyRoutes.push({
 				Prefix: pRoutePrefix,
 				RouteRegex: tmpRouteRegex,
 				RemoteServerURL: pRemoteServerURL,
 				DropPrefix: pDropPrefix
-			};
+			});
 
 			_Fable.log.info('Orator mapping proxy route to server: '+pRoutePrefix+' ==> '+pRemoteServerURL);
 		};
+
+		/**
+		* Add an exception to the route rules for Proxy requests
+		*
+		* @method omitProxyRoute
+		*/
+		var omitProxyRoute = function(pRoutePrefix)
+		{
+			var tmpRouteRegex = new RegExp(pRoutePrefix + '.*');
+
+			//put the rule at the top
+			_ProxyRoutes.splice(0, 0, {
+				Prefix: pRoutePrefix,
+				RouteRegex: tmpRouteRegex,
+				Skip: true
+			});
+
+			_Fable.log.info('Orator omitting proxy route to remote server: '+pRoutePrefix);
+		}
 
 		// Add the route
 		var proxyHandler = function(pRequest, pResponse, fNext)
 		{
 			var tmpTargetRoute = null;
-			for(var tmpRoute in _ProxyRoutes)
+			for(var i=0; i<_ProxyRoutes.length; i++)
 			{
-				var tmpRouteRegex = _ProxyRoutes[tmpRoute].RouteRegex;
+				var tmpRoute = _ProxyRoutes[i];
+				var tmpRouteRegex = tmpRoute.RouteRegex;
 				if (tmpRouteRegex.test(pRequest.url))
 				{
-					tmpTargetRoute = _ProxyRoutes[tmpRoute];
+					if (!tmpRoute.Skip)
+						tmpTargetRoute = tmpRoute;
 					break;
 				}
 			}
@@ -622,6 +643,7 @@ var Orator = function()
 			stopWebServer: stopWebServer,
 
 			addProxyRoute: addProxyRoute,
+			omitProxyRoute: omitProxyRoute,
 			addStaticRoute: addStaticRoute,
 
 			staticContentFormatter: staticContentFormatter,
