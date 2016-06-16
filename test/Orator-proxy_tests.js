@@ -100,8 +100,12 @@ suite
 							}
 						);
 						
-						// Create a route to proxy HTTP requests to google
-						_Orator.addProxyRoute('google/', 'https://google.com/');
+						// Create a route to proxy HTTP requests to google, dropping the prefix for the remote request
+						_Orator.addProxyRoute('google/', 'https://www.google.com/');
+
+						//create a route to be omitted
+						_Orator.addProxyRoute('test/', 'https://www.google.com/');
+						_Orator.omitProxyRoute('test/');
 						// Expect this to fail
 						_Orator.addStaticRoute();
 						// And you can specify a path for bonus
@@ -161,6 +165,26 @@ suite
 								Expect(pResponse.statusCode)
 									.to.equal(405); //MethodNotAllowed (POST query not allowed by google)
 
+								return fDone();
+							}
+						);
+
+					}
+				);
+				test
+				(
+					'Test proxy omitted request',
+					function(fDone)
+					{
+						libSuperTest('http://localhost:' + _MockSettings.APIServerPort + '/')
+						.get('/test/')
+						.end(
+							function (pError, pResponse)
+							{
+								//check for not found
+								Expect(pResponse.statusCode)
+									.to.equal(404);
+									
 								return fDone();
 							}
 						);
