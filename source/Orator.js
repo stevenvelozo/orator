@@ -29,7 +29,7 @@ var Orator = function()
 		// Cluster API for spawning multiple worker processes
 		var libCluster = require('cluster');
 		// HTTP Forward Proxy
-		var libHttpForward = require('http-forward')
+		var libHttpForward = require('http-forward');
 		var _ProxyRoutes = [];
 
 		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
@@ -344,7 +344,7 @@ var Orator = function()
 					}
 				}
 			);
-		}
+		};
 		/*
 		 * This ends the initialization of the web server object.
 		 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***/
@@ -395,7 +395,7 @@ var Orator = function()
 			    	libCluster.fork();
 			    }
 			});
-		}
+		};
 
 		/**
 		* Start the Web Server
@@ -443,7 +443,7 @@ var Orator = function()
 		var stopWebServer = function()
 		{
 			getWebServer().close();
-		}
+		};
 
 
 		// ### Static content formatter (useful to manage content lengths of large text media files)
@@ -547,7 +547,7 @@ var Orator = function()
 			});
 
 			_Fable.log.info('Orator omitting proxy route to remote server: '+pRoutePrefix);
-		}
+		};
 
 		// Add the route
 		var proxyHandler = function(pRequest, pResponse, fNext)
@@ -581,14 +581,16 @@ var Orator = function()
 				changeOrigin: true,
 				secure: (_Fable.settings['RemoteSSLValidation'] == true)
 			};
-			return libHttpForward(pRequest, pResponse, function(err)
+			return libHttpForward(pRequest, pResponse, function(pError)
 			{
-				if (err)
-					_Fable.log.error('Proxy error', err);
+				if (pError)
+				{
+					_Fable.log.error('Proxy error', pError);
+				}
 
 				return fNext(true);
 			});
-		}
+		};
 
 
 		var addStaticRoute = function(pFilePath, pDefaultFile, pRoute, pRouteStrip)
@@ -671,7 +673,7 @@ var Orator = function()
 						}
 						checkModules();
 						return _WebServer;
-					}
+					};
 		Object.defineProperty(tmpNewOrator, 'webServer', {get: getWebServer });
 
 		/**
