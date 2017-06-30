@@ -576,9 +576,14 @@ var Orator = function()
 
 			_Fable.log.trace('Proxying request: '+tmpRequestURL);
 
+			let tmpChangeOrigin = false;
+			//if connecting via FQDN (like sending from local dev box) then we need to change origin header
+			if (tmpTargetRoute.RemoteServerURL.indexOf('.com')>0)
+				tmpChangeOrigin = true;
+
 			pRequest.forward = {
 				target: tmpTargetRoute.RemoteServerURL,
-				changeOrigin: true,
+				changeOrigin: tmpChangeOrigin,
 				secure: (_Fable.settings['RemoteSSLValidation'] == true)
 			};
 			return libHttpForward(pRequest, pResponse, function(pError)
