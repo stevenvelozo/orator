@@ -46,6 +46,7 @@ suite
 					{
 						Expect(_Orator)
 							.to.be.an('object', 'Orator should initialize as an object directly from the require statement.');
+						Expect(_Orator.serveStatic).to.be.an('function');
 					}
 				);
 				test

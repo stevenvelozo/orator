@@ -655,6 +655,7 @@ var Orator = function()
 
 			staticContentFormatter: staticContentFormatter,
 			setupStaticFormatters: setupStaticFormatters,
+			serveStatic: libRestify.serveStatic,
 
 			new: createNew
 		});
@@ -688,14 +689,6 @@ var Orator = function()
 		 * @type Object
 		 */
 		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.bodyParser});
-
-		/**
-		 * The Restify serveStatic function
-		 *
-		 * @property serveStatic
-		 * @type Object
-		 */
-		Object.defineProperty(tmpNewOrator, 'serveStatic', {get: libRestify.serveStatic});
 
 		/**
 		 * The enabled web modules
