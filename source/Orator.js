@@ -684,10 +684,18 @@ var Orator = function()
 		/**
 		 * The Restify body parser (for use when you manually run body parsing)
 		 *
-		 * @property webServer
+		 * @property bodyParser
 		 * @type Object
 		 */
 		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.bodyParser});
+
+		/**
+		 * The Restify library
+		 *
+		 * @property restify
+		 * @type Object
+		 */
+		Object.defineProperty(tmpNewOrator, 'restify', {get: libRestify});
 
 		/**
 		 * The enabled web modules
