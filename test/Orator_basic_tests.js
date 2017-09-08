@@ -46,8 +46,6 @@ suite
 					{
 						Expect(_Orator)
 							.to.be.an('object', 'Orator should initialize as an object directly from the require statement.');
-						Expect(_Orator.restify)
-							.to.be.an('object', 'Restify should pass through as well.');
 					}
 				);
 				test
