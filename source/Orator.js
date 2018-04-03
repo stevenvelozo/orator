@@ -690,12 +690,12 @@ var Orator = function()
 		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.bodyParser});
 
 		/**
-		 * The Restify library
+		 * The Restify serveStatic function
 		 *
-		 * @property restify
+		 * @property serveStatic
 		 * @type Object
 		 */
-		Object.defineProperty(tmpNewOrator, 'restify', {get: libRestify});
+		Object.defineProperty(tmpNewOrator, 'serveStatic', {get: libRestify.serveStatic});
 
 		/**
 		 * The enabled web modules
