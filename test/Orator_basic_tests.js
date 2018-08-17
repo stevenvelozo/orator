@@ -137,8 +137,6 @@ suite
 														.end(
 															function (pError, pResponse)
 															{
-																console.log('BARF '+JSON.stringify(pError));
-																console.log('BARF '+JSON.stringify(pResponse));
 																Expect(pResponse.text)
 																	.to.contain('Um');
 																fDone();
