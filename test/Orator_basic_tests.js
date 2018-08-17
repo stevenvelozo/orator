@@ -103,7 +103,9 @@ suite
 						// Expect this to fail
 						_Orator.addStaticRoute();
 						// And you can specify a path for bonus
-						_Orator.addStaticRoute(__dirname+'/../', 'LICENSE', /\/content\/(.*)/, '/content/');
+						var libPath = require('path');
+						var tmpPath = libPath.normalize(__dirname+'/../');
+						_Orator.addStaticRoute(tmpPath, 'test/Test.html', /\/content\/(.*)/, '/content/');
 						// You should be able to host files just with a path
 						_Orator.addStaticRoute(__dirname+'/');
 						_Orator.startWebServer
@@ -135,8 +137,10 @@ suite
 														.end(
 															function (pError, pResponse)
 															{
+																console.log('BARF '+JSON.stringify(pError));
+																console.log('BARF '+JSON.stringify(pResponse));
 																Expect(pResponse.text)
-																	.to.contain('MIT');
+																	.to.contain('Um');
 																fDone();
 															}
 														);

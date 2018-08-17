@@ -2,7 +2,7 @@
 
 Orator API Server, meant to interact well with Fable, Meadow and FoxHound.
 
-[![Code Climate](https://codeclimate.com/github/stevenvelozo/orator/badges/gpa.svg)](https://codeclimate.com/github/stevenvelozo/orator) [![Coverage Status](https://coveralls.io/repos/stevenvelozo/orator/badge.svg?branch=master)](https://coveralls.io/r/stevenvelozo/orator?branch=master) [![Build Status](https://travis-ci.org/stevenvelozo/orator.svg?branch=master)](https://travis-ci.org/stevenvelozo/orator) [![Dependency Status](https://david-dm.org/stevenvelozo/orator.svg)](https://david-dm.org/stevenvelozo/orator) [![devDependency Status](https://david-dm.org/stevenvelozo/orator/dev-status.svg)](https://david-dm.org/stevenvelozo/orator#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/stevenvelozo/orator/badge.svg?branch=master)](https://coveralls.io/r/stevenvelozo/orator?branch=master) [![Build Status](https://travis-ci.org/stevenvelozo/orator.svg?branch=master)](https://travis-ci.org/stevenvelozo/orator) [![Dependency Status](https://david-dm.org/stevenvelozo/orator.svg)](https://david-dm.org/stevenvelozo/orator) [![devDependency Status](https://david-dm.org/stevenvelozo/orator/dev-status.svg)](https://david-dm.org/stevenvelozo/orator#info=devDependencies)
 
 This is not an attempt to reinvent the wheel.  Nor do we want to make a car with five of them.
 
@@ -29,7 +29,7 @@ var libOrator = require('orator').new(
 	});
 
 // Add an API endpoint
-pOrator.webServer.post
+libOrator.webServer.post
 (
 	'/echo/:name',
 	function(pRequest, pResponse, fNext)
@@ -61,7 +61,7 @@ var libOrator = require('orator').new(
 	});
 
 // Add an API endpoint
-pOrator.webServer.post
+libOrator.webServer.post
 (
 	'/echo/:name',
 	function(pRequest, pResponse, fNext)
