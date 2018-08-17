@@ -100,7 +100,7 @@ suite
 						_Orator.addStaticRoute();
 						// And you can specify a path for bonus
 						var libPath = require('path');
-						var tmpPath = libPath.normalize(__dirname);
+						var tmpPath = libPath.normalize(__dirname+'/');
 						_Orator.addStaticRoute(tmpPath, 'Test.html', /\/content\/(.*)/, '/content/');
 						// You should be able to host files just with a path
 						_Orator.addStaticRoute(__dirname+'/');
