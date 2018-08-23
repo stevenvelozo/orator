@@ -59,6 +59,11 @@ suite
 							'/PINGO', 
 							function (pRequest, pResponse, fNext) 
 							{
+								let tmpMemory = false;
+								for (var i = 0; i < 1000; i++)
+								{
+									tmpMemory = process.memoryUsage();
+								}
 								pResponse.send('PONGO');
 								fNext();
 							}

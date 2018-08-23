@@ -8,13 +8,14 @@ var libOrator = require(__dirname+'/source/Orator.js').new(
 	});
 
 // Add an API endpoint
-libOrator.webServer.post
+libOrator.webServer.get
 (
-	'/echo/:name',
+	'/test/:hash',
 	function(pRequest, pResponse, fNext)
 	{
 		// Send back whatever was sent as "name" in the URI
 		pResponse.send(pRequest.params);
+		libOrator.fable.log.info('WTF');
 		return fNext();
 	}
 );

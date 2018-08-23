@@ -38,9 +38,10 @@
     "supertest": "3.1.0"
   },
   "optionalDependencies": {
-    "nodegrind": "git+https://github.com/stevenvelozo/nodegrind.git"
+    "v8-profiler": "^5.7.0"
   },
   "dependencies": {
+    "cachetrax": "^1.0.0",
     "cluster": "^0.7.7",
     "fable": "~1.0.2",
     "fable-uuid": "~1.0.2",
