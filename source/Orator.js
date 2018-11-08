@@ -172,19 +172,19 @@ var Orator = function()
 			}
 			if (pSettings.RestifyParsers.FullResponse)
 			{
-				pWebServer.use(libRestify.fullResponse());
+				pWebServer.use(libRestify.plugins.fullResponse());
 			}
 			if (pSettings.RestifyParsers.AcceptParser)
 			{
-				pWebServer.use(libRestify.acceptParser(pWebServer.acceptable));
+				pWebServer.use(libRestify.plugins.acceptParser(pWebServer.acceptable));
 			}
 			if (pSettings.RestifyParsers.Authorization)
 			{
-				pWebServer.use(libRestify.authorizationParser());
+				pWebServer.use(libRestify.plugins.authorizationParser());
 			}
 			if (pSettings.RestifyParsers.Date)
 			{
-				pWebServer.use(libRestify.dateParser());
+				pWebServer.use(libRestify.plugins.dateParser());
 			}
 		};
 
@@ -216,19 +216,19 @@ var Orator = function()
 		{
 			if (pSettings.RestifyParsers.Query)
 			{
-				pWebServer.use(libRestify.queryParser());
+				pWebServer.use(libRestify.plugins.queryParser());
 			}
 			if (pSettings.RestifyParsers.JsonP)
 			{
-				pWebServer.use(libRestify.jsonp());
+				pWebServer.use(libRestify.plugins.jsonp());
 			}
 			if (pSettings.RestifyParsers.GZip)
 			{
-				pWebServer.use(libRestify.gzipResponse());
+				pWebServer.use(libRestify.plugins.gzipResponse());
 			}
 			if (pSettings.RestifyParsers.Body)
 			{
-				pWebServer.use(libRestify.bodyParser(pSettings.BodyParserParameters));
+				pWebServer.use(libRestify.plugins.bodyParser(pSettings.BodyParserParameters));
 			}
 		};
 
@@ -241,11 +241,11 @@ var Orator = function()
 		{
 			if (pSettings.RestifyParsers.Throttle)
 			{
-				pWebServer.use(libRestify.throttle(pSettings.ThrottleParserParameters));
+				pWebServer.use(libRestify.plugins.throttle(pSettings.ThrottleParserParameters));
 			}
 			if (pSettings.RestifyParsers.Conditional)
 			{
-				pWebServer.use(libRestify.conditionalRequest());
+				pWebServer.use(libRestify.plugins.conditionalRequest());
 			}
 		};
 
@@ -648,7 +648,7 @@ var Orator = function()
 					{
 						_WebServer.log.trace('Serving content: '+pRequest.url);
 					}
-					var tmpServe = libRestify.serveStatic
+					var tmpServe = libRestify.plugins.serveStatic
 					(
 						{
 							directory: pFilePath,
@@ -674,7 +674,7 @@ var Orator = function()
 
 			staticContentFormatter: staticContentFormatter,
 			setupStaticFormatters: setupStaticFormatters,
-			serveStatic: libRestify.serveStatic,
+			serveStatic: libRestify.plugins.serveStatic,
 			getHeader: getHeader,
 
 			new: createNew
