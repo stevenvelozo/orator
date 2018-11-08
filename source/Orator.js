@@ -164,7 +164,7 @@ var Orator = function()
 					var origin = pRequest.headers.origin;
 			        pResponse.header('Access-Control-Allow-Origin', origin);
 			        pResponse.header('Access-Control-Allow-Credentials', true);
-			        pResponse.header('Access-Control-Allow-Headers', 'content-type');
+			        pResponse.header('Access-Control-Allow-Headers', getHeader(pRequest, "Access-Control-Request-Headers") || "content-type");
 			        pResponse.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
 				    pResponse.send(200);
 				    return next();
@@ -187,6 +187,25 @@ var Orator = function()
 				pWebServer.use(libRestify.dateParser());
 			}
 		};
+
+		/**
+		* Get Request header, regardless of case-sensitivity and whitespace
+		*
+		* @method getHeader
+		*/
+		var getHeader = function(pRequest, pHeaderName)
+		{
+			if (pRequest.headers)
+			{
+				for(var name in pRequest.headers)
+				{
+					if (name.trim().toLowerCase() == pHeaderName.trim().toLowerCase())
+						return pRequest.headers[name];
+				}
+			}
+
+			return "";
+		}
 
 		/**
 		* Connect any configured restify modules that work directly with the query/body/response data
@@ -656,6 +675,7 @@ var Orator = function()
 			staticContentFormatter: staticContentFormatter,
 			setupStaticFormatters: setupStaticFormatters,
 			serveStatic: libRestify.serveStatic,
+			getHeader: getHeader,
 
 			new: createNew
 		});
