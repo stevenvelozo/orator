@@ -1,17 +1,17 @@
 {
   "name": "orator",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Restful web API server. Using restify 6.",
   "main": "source/Orator.js",
   "scripts": {
     "start": "node source/Orator.js",
     "coverage": "npm run coverage-normal && npm run coverage-cluster && npm run coverage-report",
-    "coverage-normal": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/normal ./node_modules/mocha/bin/_mocha -- -u tdd -R spec",
-    "coverage-cluster": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/cluster ./node_modules/mocha/bin/_mocha -- -u tdd -R spec ./test/Orator_cluster_test.js.deferred",
+    "coverage-normal": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/normal ./node_modules/mocha/bin/_mocha -- --exit -u tdd -R spec",
+    "coverage-cluster": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/cluster ./node_modules/mocha/bin/_mocha -- --exit -u tdd -R spec ./test/Orator_cluster_test.js.deferred",
     "coverage-report": "./node_modules/istanbul/lib/cli.js report",
     "test": "npm run test-normal && npm run test-cluster",
-    "test-normal": "./node_modules/mocha/bin/_mocha -u tdd -R spec",
-    "test-cluster": "./node_modules/mocha/bin/_mocha -u tdd -R spec ./test/Orator_cluster_test.js.deferred"
+    "test-normal": "./node_modules/mocha/bin/_mocha --exit -u tdd -R spec",
+    "test-cluster": "./node_modules/mocha/bin/_mocha --exit -u tdd -R spec ./test/Orator_cluster_test.js.deferred"
   },
   "repository": {
     "type": "git",
@@ -29,21 +29,22 @@
   },
   "homepage": "https://github.com/stevenvelozo/orator",
   "devDependencies": {
-    "async": "1.5.0",
-    "chai": "3.4.1",
-    "codeclimate-test-reporter": "0.1.1",
-    "coveralls": "2.11.4",
-    "istanbul": "0.4.1",
-    "mocha": "^5.2.0",
-    "supertest": "1.1.0"
+    "async": "2.6.1",
+    "chai": "4.1.2",
+    "codeclimate-test-reporter": "0.5.0",
+    "coveralls": "3.0.2",
+    "istanbul": "0.4.5",
+    "mocha": "5.2.0",
+    "supertest": "3.1.0"
   },
   "optionalDependencies": {
-    "nodegrind": "git+https://github.com/stevenvelozo/nodegrind.git"
+    "v8-profiler": "^5.7.0"
   },
   "dependencies": {
+    "cachetrax": "^1.0.0",
     "cluster": "^0.7.7",
-    "fable": "~1.0.1",
-    "fable-uuid": "~1.0.1",
+    "fable": "~1.0.2",
+    "fable-uuid": "~1.0.2",
     "http-forward": "^0.1.3",
     "request": "^2.69.0",
     "restify": "^6.4.0",

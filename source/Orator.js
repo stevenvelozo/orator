@@ -26,13 +26,14 @@ var Orator = function()
 		// Restify for the routing and API serving
 		var libRestify = require('restify');
 		// NodeGrind for request profiling
-		var libNodegrind = false;
+		var libV8Profiler = false;
 		// FS for writing out profiling information
 		var libFS = require('fs');
 		// Cluster API for spawning multiple worker processes
 		var libCluster = require('cluster');
 		// HTTP Forward Proxy
 		var libHttpForward = require('http-forward');
+		
 		var _ProxyRoutes = [];
 
 		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
@@ -112,7 +113,7 @@ var Orator = function()
 			// This is used as the base object for instantiating the server.  You can add custom parsers and formatters safely with lambdas here.
 			RawServerParameters: {},
 
-			// Turning these on decreases speed dramatically, and generates a cachegrind file for each request.
+			// Turning these on decreases speed dramatically, and generates a chrome profiling file for each request.
 			Profiling: (
 			{
 				// Tracelog is just log-based request timing encapsulation.
@@ -124,8 +125,8 @@ var Orator = function()
 				// These profiling settings determine if we generate cpu or call graphs
 				Enabled: false,
 				Folder: '/tmp/',
-				// Currently supported profile types: CallGrinder or ChromeCPU
-				Type: 'CallGrinder'
+				// Currently supported profile types: ChromeCPU
+				Type: 'ChromeCPU'
 			}),
 
 			// Turning this on logs stack traces
@@ -302,14 +303,14 @@ var Orator = function()
 					if (_Fable.settings.Profiling.Enabled)
 					{
 						// Lazily load NodeGrind
-						if (!libNodegrind)
+						if (!libV8Profiler)
 						{
-							libNodegrind = require('nodegrind');
+							libV8Profiler = require('v8-profiler');
 						}
 						// If profiling is enabled, build a callgrind file
 						_Fable.log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
 						pRequest.ProfilerName = _Fable.settings.Product+'-'+_Fable.settings.ProductVersion+'-'+pRequest.RequestUUID;
-						libNodegrind.startCPU(pRequest.RequestUUID);
+						libV8Profiler.startProfiling(pRequest.RequestUUID, true);
 					}
 
 					return fNext();
@@ -328,30 +329,24 @@ var Orator = function()
 
 					if (typeof(pRequest.ProfilerName) === 'string')
 					{
-						var tmpRequestProfile = '';
 						var tmpRequestProfilePrefix = '';
 						var tmpRequestProfilePostfix = '';
 
-						if (_Fable.settings.Profiling.Type === 'CallGrinder')
-						{
-							// Get the callgrind profile as a string
-							tmpRequestProfile = libNodegrind.stopCPU(pRequest.RequestUUID);
-							tmpRequestProfilePrefix = 'callgrind.';
-						}
-						else
-						{
-							// Alternatively, get a Chrome *.cpuprofile that you can load into the Chrome
-							// profiler (right-click on 'Profiles' in left pane in the 'Profiles' tab)
-							tmpRequestProfile = libNodegrind.stopCPU(pRequest.RequestUUID, 'cpuprofile');
-							tmpRequestProfilePostfix = '.cpuprofile';
-						}
+						// Get a Chrome *.cpuprofile.json that you can load into the Chrome
+						// profiler (right-click on 'Profiles' in left pane in the 'Profiles' tab)
+						var tmpChromeCPUProfiler = libV8Profiler.stopProfiling();
+						tmpRequestProfilePostfix = '.cpuprofile.json';
 
-						libFS.writeFileSync(_Fable.settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix, tmpRequestProfile);
-
-						if (_Fable.settings.Profiling.TraceLog)
+						tmpChromeCPUProfiler.export(function(pError, pProfileData)
 						{
-							_Fable.log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+_Fable.settings.Profiling.Folder+pRequest.ProfilerName);
-						}
+							var tmpProfilerFileName = _Fable.settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix;
+							libFS.writeFileSync(tmpProfilerFileName, pProfileData);
+							pRequest.CPUProfiler.delete();
+							if (_Fable.settings.Profiling.TraceLog)
+							{
+								_Fable.log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+tmpProfilerFileName);
+							}
+						});
 					}
 				}
 			);

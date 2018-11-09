@@ -16,7 +16,9 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/test/Orator_basic_tests.js"
+                "${workspaceFolder}/test/Orator_basic_tests.js",
+                "${workspaceFolder}/test/Orator_logging_tests.js",
+                "${workspaceFolder}/test/Orator-proxy_tests.js"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }
