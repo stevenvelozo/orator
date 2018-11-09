@@ -96,8 +96,21 @@ suite
 							function (pRequest, pResponse, fNext)
 							{
 								pResponse.send('RAWR');
-								throw new Error('The server should give a nice stack trace');
-								fNext();
+								return fNext('The server should give a nice stack trace');
+							}
+						);
+						_Orator.webServer.get (
+							'/PromiseAPI',
+							async function (pRequest, pResponse)
+							{
+								return Promise.resolve('test promise response');
+							}
+						);
+						_Orator.webServer.get (
+							'/PromiseAPIError',
+							async function (pRequest, pResponse)
+							{
+								return Promise.reject('error promise response');
 							}
 						);
 						// Expect this to fail
@@ -146,6 +159,42 @@ suite
 										);
 									}
 								);
+							}
+						);
+					}
+				);
+				test
+				(
+					'promise routes should work',
+					function(fDone)
+					{
+						libSuperTest('http://localhost:8080/')
+						.get('PromiseAPI')
+						.end(
+							function (pError, pResponse)
+							{
+								Expect(pResponse.text)
+									.to.contain('test promise response');
+
+								return fDone();
+							}
+						);
+					}
+				);
+				test
+				(
+					'promise routes error handling',
+					function(fDone)
+					{
+						libSuperTest('http://localhost:8080/')
+						.get('PromiseAPIError')
+						.end(
+							function (pError, pResponse)
+							{
+								Expect(pResponse.text)
+									.to.contain('error promise response');
+
+								return fDone();
 							}
 						);
 					}

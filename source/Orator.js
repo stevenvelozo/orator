@@ -4,6 +4,9 @@
 * @author <steven@velozo.com>
 */
 
+const libRestifyCORS = require('restify-cors-middleware');
+const restifyPromise = require('restify-await-promise');
+
 /**
 * Orator Web API Server
 *
@@ -157,18 +160,7 @@ var Orator = function()
 
 			if (pSettings.RestifyParsers.CORS)
 			{
-				pWebServer.use(libRestify.CORS({credentials:true})); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
-				//respond with 200 OK to all preflight requests
-				pWebServer.opts(/\.*/, function (pRequest, pResponse, next)
-				{
-					var origin = pRequest.headers.origin;
-			        pResponse.header('Access-Control-Allow-Origin', origin);
-			        pResponse.header('Access-Control-Allow-Credentials', true);
-			        pResponse.header('Access-Control-Allow-Headers', getHeader(pRequest, "Access-Control-Request-Headers") || "content-type");
-			        pResponse.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-				    pResponse.send(200);
-				    return next();
-				});
+				pWebServer.use(libRestifyCORS({credentials:true, origins: [ '*.*' ]}).preflight); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
 			}
 			if (pSettings.RestifyParsers.FullResponse)
 			{
@@ -660,6 +652,19 @@ var Orator = function()
 			);
 		};
 
+		var handleError = function(req, res, err, callback)
+		{
+			//the default for a string error is 'Route not found', though it isn't accurate
+			err.message = err.message.replace('Route not found: ', '');
+			//log error
+			let sessionId = '';
+			if (req.UserSession && req.UserSession.SessionID)
+				sessionId = req.UserSession.SessionID;
+			
+			_Fable.log.error('REQUEST ERROR: ' + err.message, {SessionID: sessionId, Action: 'APIError'});
+			return callback();
+		}
+
 		/**
 		* Container Object for our Factory Pattern
 		*/
@@ -695,6 +700,10 @@ var Orator = function()
 							_WebServerParameters.name = _Fable.settings.Product;
 							_WebServerParameters.version = _Fable.settings.ProductVersion;
 							_WebServer = libRestify.createServer(_WebServerParameters);
+							//enable support for Promise endpoint methods
+							restifyPromise.install(_WebServer);
+							//handle errors - DOES NOT HANDLE uncaught exceptions! (DOES work with Promises however)
+							_WebServer.on('restifyError', handleError);
 							initializeInstrumentation();
 						}
 						checkModules();
@@ -708,7 +717,7 @@ var Orator = function()
 		 * @property bodyParser
 		 * @type Object
 		 */
-		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.bodyParser});
+		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.plugins.bodyParser});
 
 		/**
 		 * The enabled web modules
