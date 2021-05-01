@@ -40,6 +40,14 @@ suite
 			}
 		);
 
+		suiteTeardown
+		(
+			function()
+			{
+				_Orator.stopWebServer();
+			}
+		);
+
 		suite
 		(
 			'Request Logging Server Start',
@@ -51,16 +59,16 @@ suite
 					function(fDone)
 					{
 						_Orator.webServer.get (
-							'/PINGOLo', 
-							function (pRequest, pResponse, fNext) 
+							'/PINGOLo',
+							function (pRequest, pResponse, fNext)
 							{
 								pResponse.send('Loggo');
 								fNext();
 							}
 						);
 						_Orator.webServer.get (
-							'/PINataGOLo', 
-							async function (pRequest, pResponse) 
+							'/PINataGOLo',
+							async function (pRequest, pResponse)
 							{
 								return Promise.reject("Something absolutely dire has occurred.");
 							}

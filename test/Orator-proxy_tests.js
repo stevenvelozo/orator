@@ -34,6 +34,14 @@ suite
 			}
 		);
 
+		suiteTeardown
+		(
+			function()
+			{
+				_Orator.stopWebServer();
+			}
+		);
+
 		suite
 		(
 			'Object Sanity',
@@ -99,7 +107,7 @@ suite
 								fNext();
 							}
 						);
-						
+
 						// Create a route to proxy HTTP requests to google, dropping the prefix for the remote request
 						_Orator.addProxyRoute('google/', 'https://www.google.com/');
 
@@ -112,7 +120,7 @@ suite
 						_Orator.addStaticRoute(__dirname+'/../', 'LICENSE', /\/content\/(.*)/, '/content/');
 						// You should be able to host files just with a path
 						_Orator.addStaticRoute(__dirname+'/');
-						
+
 						_Orator.startWebServer(fDone);
 					}
 				);
@@ -184,7 +192,7 @@ suite
 								//check for not found
 								Expect(pResponse.statusCode)
 									.to.equal(404);
-									
+
 								return fDone();
 							}
 						);
@@ -196,6 +204,7 @@ suite
 					'Shutdown Orator web server',
 					function()
 					{
+						//TODO: this test assumes the order of test execution; is that safe?
 						_Orator.stopWebServer();
 					}
 				);

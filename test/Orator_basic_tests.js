@@ -16,7 +16,7 @@ var _MockSettings = (
 {
 	Product: 'MockOratorAlternate',
 	ProductVersion: '0.0.0',
-	APIServerPort: 8080
+	APIServerPort: 8099
 });
 
 suite
@@ -31,6 +31,14 @@ suite
 			function()
 			{
 				_Orator = require('../source/Orator.js').new(_MockSettings);
+			}
+		);
+
+		suiteTeardown
+		(
+			function()
+			{
+				_Orator.stopWebServer();
 			}
 		);
 
@@ -125,19 +133,19 @@ suite
 						(
 							function ()
 							{
-								libSuperTest('http://localhost:8080/')
+								libSuperTest('http://localhost:8099/')
 								.get('PIN')
 								.end(
 									function (pError, pResponse)
 									{
 										Expect(pResponse.text)
 											.to.contain('PON');
-										libSuperTest('http://localhost:8080/')
+										libSuperTest('http://localhost:8099/')
 										.get('ThirdAPI')
 										.end(
 											function (pError, pResponse)
 											{
-												libSuperTest('http://localhost:8080/')
+												libSuperTest('http://localhost:8099/')
 												.get('Test.css')
 												.end(
 													function (pError, pResponse)
@@ -145,7 +153,7 @@ suite
 														_Orator.settings.Profiling.TraceLog = true;
 														Expect(pResponse.text)
 															.to.contain('50000px');
-														libSuperTest('http://localhost:8080/')
+														libSuperTest('http://localhost:8099/')
 														.get('content/')
 														.end(
 															function (pError, pResponse)
@@ -170,7 +178,7 @@ suite
 					'promise routes should work',
 					function(fDone)
 					{
-						libSuperTest('http://localhost:8080/')
+						libSuperTest('http://localhost:8099/')
 						.get('PromiseAPI')
 						.end(
 							function (pError, pResponse)
@@ -188,7 +196,7 @@ suite
 					'promise routes error handling',
 					function(fDone)
 					{
-						libSuperTest('http://localhost:8080/')
+						libSuperTest('http://localhost:8099/')
 						.get('PromiseAPIError')
 						.end(
 							function (pError, pResponse)
@@ -256,6 +264,7 @@ suite
 						.end(
 							function (pError, pResponse)
 							{
+								_OratorInverted.stopWebServer();
 								if (pError)
 								{
 									console.log('Error on Inverted Results: '+JSON.stringify(pError));
@@ -269,14 +278,6 @@ suite
 								fDone();
 							}
 						);
-					}
-				);
-				test
-				(
-					'Shutdown Orator web server',
-					function()
-					{
-						_Orator.stopWebServer();
 					}
 				);
 			}

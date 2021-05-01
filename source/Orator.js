@@ -25,15 +25,13 @@ var Orator = function()
 
 		// Restify for the routing and API serving
 		var libRestify = require('restify');
-		// NodeGrind for request profiling
-		var libV8Profiler = false;
 		// FS for writing out profiling information
 		var libFS = require('fs');
 		// Cluster API for spawning multiple worker processes
 		var libCluster = require('cluster');
 		// HTTP Forward Proxy
 		var libHttpForward = require('http-forward');
-		
+
 		var _ProxyRoutes = [];
 
 		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
@@ -113,7 +111,7 @@ var Orator = function()
 			// This is used as the base object for instantiating the server.  You can add custom parsers and formatters safely with lambdas here.
 			RawServerParameters: {},
 
-			// Turning these on decreases speed dramatically, and generates a chrome profiling file for each request.
+			// Enable request lifecycle logging if desired, for debugging
 			Profiling: (
 			{
 				// Tracelog is just log-based request timing encapsulation.
@@ -121,12 +119,6 @@ var Orator = function()
 
 				// Requestlog is to log each request ID and Session ID.
 				RequestLog: false,
-
-				// These profiling settings determine if we generate cpu or call graphs
-				Enabled: false,
-				Folder: '/tmp/',
-				// Currently supported profile types: ChromeCPU
-				Type: 'ChromeCPU'
 			}),
 
 			// Turning this on logs stack traces
@@ -252,7 +244,7 @@ var Orator = function()
 			// Lazily initialize the Restify parsers the first time we access this object.
 			// This creates a behavior where changing the "enabledModules" property does not
 			//     do anything after routes have been created.  We may want to eventually
-			//     throw a warning (and ignroe the change) if someone accesses the property 
+			//     throw a warning (and ignroe the change) if someone accesses the property
 			//     after _RestifyParsersInitialized is true.
 			if (!_RestifyParsersInitialized)
 			{
@@ -300,18 +292,6 @@ var Orator = function()
 						_Fable.log.trace('Request start...',{RequestUUID: pRequest.RequestUUID});
 					}
 
-					if (_Fable.settings.Profiling.Enabled)
-					{
-						// Lazily load NodeGrind
-						if (!libV8Profiler)
-						{
-							libV8Profiler = require('v8-profiler');
-						}
-						// If profiling is enabled, build a callgrind file
-						_Fable.log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
-						pRequest.ProfilerName = _Fable.settings.Product+'-'+_Fable.settings.ProductVersion+'-'+pRequest.RequestUUID;
-						libV8Profiler.startProfiling(pRequest.RequestUUID, true);
-					}
 
 					return fNext();
 				}
@@ -326,28 +306,6 @@ var Orator = function()
 					{
 						_Fable.log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID, ResponseCode: pResponse.code, ResponseLength: pResponse.contentLength});
 					}
-
-					if (typeof(pRequest.ProfilerName) === 'string')
-					{
-						var tmpRequestProfilePrefix = '';
-						var tmpRequestProfilePostfix = '';
-
-						// Get a Chrome *.cpuprofile.json that you can load into the Chrome
-						// profiler (right-click on 'Profiles' in left pane in the 'Profiles' tab)
-						var tmpChromeCPUProfiler = libV8Profiler.stopProfiling();
-						tmpRequestProfilePostfix = '.cpuprofile.json';
-
-						tmpChromeCPUProfiler.export(function(pError, pProfileData)
-						{
-							var tmpProfilerFileName = _Fable.settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix;
-							libFS.writeFileSync(tmpProfilerFileName, pProfileData);
-							pRequest.CPUProfiler.delete();
-							if (_Fable.settings.Profiling.TraceLog)
-							{
-								_Fable.log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+tmpProfilerFileName);
-							}
-						});
-					}
 				}
 			);
 		};
@@ -361,16 +319,16 @@ var Orator = function()
 		*
 		* @method startWorkers
 		*/
-		 var startWorkers = function(pWorkers, fCallback)
-		 {
-		 	if (pWorkers === 0)
-		 	{
-		 		return fCallback();
-		 	}
-		 	else if (pWorkers < 0)
-		 	{
-		 		pWorkers = require('os').cpus().length;
-		 	}
+		var startWorkers = function(pWorkers, fCallback)
+		{
+			if (pWorkers === 0)
+			{
+				return fCallback();
+			}
+			else if (pWorkers < 0)
+			{
+				pWorkers = require('os').cpus().length;
+			}
 
 			for (var i=0; i<pWorkers; i++)
 			{
@@ -381,25 +339,25 @@ var Orator = function()
 
 			libCluster.on('message', function(message)
 			{
-			    _Fable.log.trace('Orator Worker ' + message.pid + ' started.');
+				_Fable.log.trace('Orator Worker ' + message.pid + ' started.');
 
-			    if (++tmpActiveWorkers === pWorkers)
-			    {
-			    	//The Master process fires the callback when all
-			    	// the workers have started. This is used by
-			    	// unit tests.
-			    	return fCallback();
-			    }
+				if (++tmpActiveWorkers === pWorkers)
+				{
+					//The Master process fires the callback when all
+					// the workers have started. This is used by
+					// unit tests.
+					return fCallback();
+				}
 			});
 			libCluster.on('exit', function(worker, code, signal)
 			{
-			    _Fable.log.trace('Orator Worker ' + worker.id + '/' + worker.process.pid + ' died');
+				_Fable.log.trace('Orator Worker ' + worker.id + '/' + worker.process.pid + ' died');
 
-			    // APIWorkerRestart flag auto-restarts a worker if it crashes
-			    if (_Fable.settings.APIWorkerRestart)
-			    {
-			    	libCluster.fork();
-			    }
+				// APIWorkerRestart flag auto-restarts a worker if it crashes
+				if (_Fable.settings.APIWorkerRestart)
+				{
+					libCluster.fork();
+				}
 			});
 		};
 
@@ -433,7 +391,7 @@ var Orator = function()
 						if (!libCluster.isMaster)
 						{
 							// notify master about the request
-    						process.send({ signal: 'notifyListening', pid: process.pid });
+							process.send({ signal: 'notifyListening', pid: process.pid });
 						}
 						return tmpNext();
 					}
@@ -496,7 +454,8 @@ var Orator = function()
 					'application/octet-stream',
 					'application/javascript',
 					'application/json'
-				]
+				],
+				handleUncaughtExceptions: true,
 			});
 			_Fable.settings.RawServerParameters = _WebServerParameters;
 		};
@@ -599,7 +558,7 @@ var Orator = function()
 					_Fable.log.error('Proxy error', pError);
 				}
 
-				return fNext(true);
+				return fNext(false);
 			});
 		};
 
@@ -655,7 +614,7 @@ var Orator = function()
 			let sessionId = '';
 			if (req.UserSession && req.UserSession.SessionID)
 				sessionId = req.UserSession.SessionID;
-			
+
 			_Fable.log.error('REQUEST ERROR: ' + err.message, {SessionID: sessionId, Action: 'APIError'});
 			return callback();
 		}
@@ -686,7 +645,7 @@ var Orator = function()
 		 * @property webServer
 		 * @type Object
 		 */
-		var getWebServer = function() 
+		var getWebServer = function()
 					{
 						// Lazily load the webserver the first time it is accessed
 						if (typeof(_WebServer) === 'undefined')
