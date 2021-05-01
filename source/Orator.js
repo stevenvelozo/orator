@@ -4,6 +4,9 @@
 * @author <steven@velozo.com>
 */
 
+const libRestifyCORS = require('restify-cors-middleware');
+const restifyPromise = require('restify-await-promise');
+
 /**
 * Orator Web API Server
 *
@@ -158,36 +161,44 @@ var Orator = function()
 
 			if (pSettings.RestifyParsers.CORS)
 			{
-				pWebServer.use(libRestify.CORS({credentials:true})); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
-				//respond with 200 OK to all preflight requests
-				pWebServer.opts(/\.*/, function (pRequest, pResponse, next)
-				{
-					var origin = pRequest.headers.origin;
-			        pResponse.header('Access-Control-Allow-Origin', origin);
-			        pResponse.header('Access-Control-Allow-Credentials', true);
-			        pResponse.header('Access-Control-Allow-Headers', 'content-type');
-			        pResponse.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-				    pResponse.send(200);
-				    return next();
-				});
+				pWebServer.use(libRestifyCORS({credentials:true, origins: [ '*.*' ]}).preflight); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
 			}
 			if (pSettings.RestifyParsers.FullResponse)
 			{
-				pWebServer.use(libRestify.fullResponse());
+				pWebServer.use(libRestify.plugins.fullResponse());
 			}
 			if (pSettings.RestifyParsers.AcceptParser)
 			{
-				pWebServer.use(libRestify.acceptParser(pWebServer.acceptable));
+				pWebServer.use(libRestify.plugins.acceptParser(pWebServer.acceptable));
 			}
 			if (pSettings.RestifyParsers.Authorization)
 			{
-				pWebServer.use(libRestify.authorizationParser());
+				pWebServer.use(libRestify.plugins.authorizationParser());
 			}
 			if (pSettings.RestifyParsers.Date)
 			{
-				pWebServer.use(libRestify.dateParser());
+				pWebServer.use(libRestify.plugins.dateParser());
 			}
 		};
+
+		/**
+		* Get Request header, regardless of case-sensitivity and whitespace
+		*
+		* @method getHeader
+		*/
+		var getHeader = function(pRequest, pHeaderName)
+		{
+			if (pRequest.headers)
+			{
+				for(var name in pRequest.headers)
+				{
+					if (name.trim().toLowerCase() == pHeaderName.trim().toLowerCase())
+						return pRequest.headers[name];
+				}
+			}
+
+			return "";
+		}
 
 		/**
 		* Connect any configured restify modules that work directly with the query/body/response data
@@ -198,19 +209,19 @@ var Orator = function()
 		{
 			if (pSettings.RestifyParsers.Query)
 			{
-				pWebServer.use(libRestify.queryParser());
+				pWebServer.use(libRestify.plugins.queryParser());
 			}
 			if (pSettings.RestifyParsers.JsonP)
 			{
-				pWebServer.use(libRestify.jsonp());
+				pWebServer.use(libRestify.plugins.jsonp());
 			}
 			if (pSettings.RestifyParsers.GZip)
 			{
-				pWebServer.use(libRestify.gzipResponse());
+				pWebServer.use(libRestify.plugins.gzipResponse());
 			}
 			if (pSettings.RestifyParsers.Body)
 			{
-				pWebServer.use(libRestify.bodyParser(pSettings.BodyParserParameters));
+				pWebServer.use(libRestify.plugins.bodyParser(pSettings.BodyParserParameters));
 			}
 		};
 
@@ -223,11 +234,11 @@ var Orator = function()
 		{
 			if (pSettings.RestifyParsers.Throttle)
 			{
-				pWebServer.use(libRestify.throttle(pSettings.ThrottleParserParameters));
+				pWebServer.use(libRestify.plugins.throttle(pSettings.ThrottleParserParameters));
 			}
 			if (pSettings.RestifyParsers.Conditional)
 			{
-				pWebServer.use(libRestify.conditionalRequest());
+				pWebServer.use(libRestify.plugins.conditionalRequest());
 			}
 		};
 
@@ -624,7 +635,7 @@ var Orator = function()
 					{
 						_WebServer.log.trace('Serving content: '+pRequest.url);
 					}
-					var tmpServe = libRestify.serveStatic
+					var tmpServe = libRestify.plugins.serveStatic
 					(
 						{
 							directory: pFilePath,
@@ -635,6 +646,19 @@ var Orator = function()
 				}
 			);
 		};
+
+		var handleError = function(req, res, err, callback)
+		{
+			//the default for a string error is 'Route not found', though it isn't accurate
+			err.message = err.message.replace('Route not found: ', '');
+			//log error
+			let sessionId = '';
+			if (req.UserSession && req.UserSession.SessionID)
+				sessionId = req.UserSession.SessionID;
+			
+			_Fable.log.error('REQUEST ERROR: ' + err.message, {SessionID: sessionId, Action: 'APIError'});
+			return callback();
+		}
 
 		/**
 		* Container Object for our Factory Pattern
@@ -650,7 +674,8 @@ var Orator = function()
 
 			staticContentFormatter: staticContentFormatter,
 			setupStaticFormatters: setupStaticFormatters,
-			serveStatic: libRestify.serveStatic,
+			serveStatic: libRestify.plugins.serveStatic,
+			getHeader: getHeader,
 
 			new: createNew
 		});
@@ -670,6 +695,10 @@ var Orator = function()
 							_WebServerParameters.name = _Fable.settings.Product;
 							_WebServerParameters.version = _Fable.settings.ProductVersion;
 							_WebServer = libRestify.createServer(_WebServerParameters);
+							//enable support for Promise endpoint methods
+							restifyPromise.install(_WebServer);
+							//handle errors - DOES NOT HANDLE uncaught exceptions! (DOES work with Promises however)
+							_WebServer.on('restifyError', handleError);
 							initializeInstrumentation();
 						}
 						checkModules();
@@ -683,7 +712,7 @@ var Orator = function()
 		 * @property bodyParser
 		 * @type Object
 		 */
-		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.bodyParser});
+		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.plugins.bodyParser});
 
 		/**
 		 * The enabled web modules

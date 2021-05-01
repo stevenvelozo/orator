@@ -60,11 +60,9 @@ suite
 						);
 						_Orator.webServer.get (
 							'/PINataGOLo', 
-							function (pRequest, pResponse, fNext) 
+							async function (pRequest, pResponse) 
 							{
-								throw new Error("Something absolutely dire has occurred.");
-								pResponse.send('Loggso');
-								fNext();
+								return Promise.reject("Something absolutely dire has occurred.");
 							}
 						);
 						_Orator.startWebServer();
@@ -109,7 +107,7 @@ suite
 				);
 				test
 				(
-					'uncaught exceptions should throw properly.',
+					'rejected promises should throw properly.',
 					function(fDone)
 					{
 						libSuperTest('http://localhost:8085/')
