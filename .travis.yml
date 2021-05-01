@@ -2,8 +2,10 @@ services:
   - mongodb
 language: node_js
 node_js:
-  - "6"
   - "8"
+  - "10"
+  - "12"
+  - "14"
 addons:
   code_climate:
     repo_token: 63ba2b0cf307133c314376df4b05fa8f0aa5e98919eb76488ad27a07f163cb77
