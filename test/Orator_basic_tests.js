@@ -16,7 +16,7 @@ var _MockSettings = (
 {
 	Product: 'MockOratorAlternate',
 	ProductVersion: '0.0.0',
-	APIServerPort: 8080
+	APIServerPort: 8099
 });
 
 suite
@@ -31,6 +31,14 @@ suite
 			function()
 			{
 				_Orator = require('../source/Orator.js').new(_MockSettings);
+			}
+		);
+
+		suiteTeardown
+		(
+			function()
+			{
+				_Orator.stopWebServer();
 			}
 		);
 
@@ -95,9 +103,22 @@ suite
 							'/ThirdAPI',
 							function (pRequest, pResponse, fNext)
 							{
-								pResponse.send('RAWR');
 								throw new Error('The server should give a nice stack trace');
 								fNext();
+							}
+						);
+						_Orator.webServer.get (
+							'/PromiseAPI',
+							async function (pRequest, pResponse)
+							{
+								return Promise.resolve('test promise response');
+							}
+						);
+						_Orator.webServer.get (
+							'/PromiseAPIError',
+							async function (pRequest, pResponse)
+							{
+								return Promise.reject('error promise response');
 							}
 						);
 						// Expect this to fail
@@ -112,19 +133,19 @@ suite
 						(
 							function ()
 							{
-								libSuperTest('http://localhost:8080/')
+								libSuperTest('http://localhost:8099/')
 								.get('PIN')
 								.end(
 									function (pError, pResponse)
 									{
 										Expect(pResponse.text)
 											.to.contain('PON');
-										libSuperTest('http://localhost:8080/')
+										libSuperTest('http://localhost:8099/')
 										.get('ThirdAPI')
 										.end(
 											function (pError, pResponse)
 											{
-												libSuperTest('http://localhost:8080/')
+												libSuperTest('http://localhost:8099/')
 												.get('Test.css')
 												.end(
 													function (pError, pResponse)
@@ -132,7 +153,7 @@ suite
 														_Orator.settings.Profiling.TraceLog = true;
 														Expect(pResponse.text)
 															.to.contain('50000px');
-														libSuperTest('http://localhost:8080/')
+														libSuperTest('http://localhost:8099/')
 														.get('content/')
 														.end(
 															function (pError, pResponse)
@@ -148,6 +169,42 @@ suite
 										);
 									}
 								);
+							}
+						);
+					}
+				);
+				test
+				(
+					'promise routes should work',
+					function(fDone)
+					{
+						libSuperTest('http://localhost:8099/')
+						.get('PromiseAPI')
+						.end(
+							function (pError, pResponse)
+							{
+								Expect(pResponse.text)
+									.to.contain('test promise response');
+
+								return fDone();
+							}
+						);
+					}
+				);
+				test
+				(
+					'promise routes error handling',
+					function(fDone)
+					{
+						libSuperTest('http://localhost:8099/')
+						.get('PromiseAPIError')
+						.end(
+							function (pError, pResponse)
+							{
+								Expect(pResponse.text)
+									.to.contain('error promise response');
+
+								return fDone();
 							}
 						);
 					}
@@ -207,6 +264,7 @@ suite
 						.end(
 							function (pError, pResponse)
 							{
+								_OratorInverted.stopWebServer();
 								if (pError)
 								{
 									console.log('Error on Inverted Results: '+JSON.stringify(pError));

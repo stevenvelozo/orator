@@ -4,6 +4,10 @@
 * @author <steven@velozo.com>
 */
 
+const libRestifyCORS = require('restify-cors-middleware');
+const restifyPromise = require('restify-await-promise');
+const RestifyErrors = require('restify-errors');
+
 /**
 * Orator Web API Server
 *
@@ -22,15 +26,13 @@ var Orator = function()
 
 		// Restify for the routing and API serving
 		var libRestify = require('restify');
-		// NodeGrind for request profiling
-		var libV8Profiler = false;
 		// FS for writing out profiling information
 		var libFS = require('fs');
 		// Cluster API for spawning multiple worker processes
 		var libCluster = require('cluster');
 		// HTTP Forward Proxy
 		var libHttpForward = require('http-forward');
-		
+
 		var _ProxyRoutes = [];
 
 		// This state is used to lazily initialize the Native Restify Modules on route creation the first time
@@ -110,7 +112,7 @@ var Orator = function()
 			// This is used as the base object for instantiating the server.  You can add custom parsers and formatters safely with lambdas here.
 			RawServerParameters: {},
 
-			// Turning these on decreases speed dramatically, and generates a chrome profiling file for each request.
+			// Enable request lifecycle logging if desired, for debugging
 			Profiling: (
 			{
 				// Tracelog is just log-based request timing encapsulation.
@@ -118,16 +120,7 @@ var Orator = function()
 
 				// Requestlog is to log each request ID and Session ID.
 				RequestLog: false,
-
-				// These profiling settings determine if we generate cpu or call graphs
-				Enabled: false,
-				Folder: '/tmp/',
-				// Currently supported profile types: ChromeCPU
-				Type: 'ChromeCPU'
 			}),
-
-			// Turning this on logs stack traces
-			LogStackTraces: true
 		});
 
 		var _Fable = require('fable').new(pSettings);
@@ -158,36 +151,44 @@ var Orator = function()
 
 			if (pSettings.RestifyParsers.CORS)
 			{
-				pWebServer.use(libRestify.CORS({credentials:true})); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
-				//respond with 200 OK to all preflight requests
-				pWebServer.opts(/\.*/, function (pRequest, pResponse, next)
-				{
-					var origin = pRequest.headers.origin;
-			        pResponse.header('Access-Control-Allow-Origin', origin);
-			        pResponse.header('Access-Control-Allow-Credentials', true);
-			        pResponse.header('Access-Control-Allow-Headers', 'content-type');
-			        pResponse.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-				    pResponse.send(200);
-				    return next();
-				});
+				pWebServer.use(libRestifyCORS({credentials:true, origins: [ '*.*' ]}).preflight); //by default if CORS is enabled, then also enable 'Allow-Credentials' header for AJAX
 			}
 			if (pSettings.RestifyParsers.FullResponse)
 			{
-				pWebServer.use(libRestify.fullResponse());
+				pWebServer.use(libRestify.plugins.fullResponse());
 			}
 			if (pSettings.RestifyParsers.AcceptParser)
 			{
-				pWebServer.use(libRestify.acceptParser(pWebServer.acceptable));
+				pWebServer.use(libRestify.plugins.acceptParser(pWebServer.acceptable));
 			}
 			if (pSettings.RestifyParsers.Authorization)
 			{
-				pWebServer.use(libRestify.authorizationParser());
+				pWebServer.use(libRestify.plugins.authorizationParser());
 			}
 			if (pSettings.RestifyParsers.Date)
 			{
-				pWebServer.use(libRestify.dateParser());
+				pWebServer.use(libRestify.plugins.dateParser());
 			}
 		};
+
+		/**
+		* Get Request header, regardless of case-sensitivity and whitespace
+		*
+		* @method getHeader
+		*/
+		var getHeader = function(pRequest, pHeaderName)
+		{
+			if (pRequest.headers)
+			{
+				for(var name in pRequest.headers)
+				{
+					if (name.trim().toLowerCase() == pHeaderName.trim().toLowerCase())
+						return pRequest.headers[name];
+				}
+			}
+
+			return "";
+		}
 
 		/**
 		* Connect any configured restify modules that work directly with the query/body/response data
@@ -198,19 +199,19 @@ var Orator = function()
 		{
 			if (pSettings.RestifyParsers.Query)
 			{
-				pWebServer.use(libRestify.queryParser());
+				pWebServer.use(libRestify.plugins.queryParser());
 			}
 			if (pSettings.RestifyParsers.JsonP)
 			{
-				pWebServer.use(libRestify.jsonp());
+				pWebServer.use(libRestify.plugins.jsonp());
 			}
 			if (pSettings.RestifyParsers.GZip)
 			{
-				pWebServer.use(libRestify.gzipResponse());
+				pWebServer.use(libRestify.plugins.gzipResponse());
 			}
 			if (pSettings.RestifyParsers.Body)
 			{
-				pWebServer.use(libRestify.bodyParser(pSettings.BodyParserParameters));
+				pWebServer.use(libRestify.plugins.bodyParser(pSettings.BodyParserParameters));
 			}
 		};
 
@@ -223,11 +224,11 @@ var Orator = function()
 		{
 			if (pSettings.RestifyParsers.Throttle)
 			{
-				pWebServer.use(libRestify.throttle(pSettings.ThrottleParserParameters));
+				pWebServer.use(libRestify.plugins.throttle(pSettings.ThrottleParserParameters));
 			}
 			if (pSettings.RestifyParsers.Conditional)
 			{
-				pWebServer.use(libRestify.conditionalRequest());
+				pWebServer.use(libRestify.plugins.conditionalRequest());
 			}
 		};
 
@@ -241,7 +242,7 @@ var Orator = function()
 			// Lazily initialize the Restify parsers the first time we access this object.
 			// This creates a behavior where changing the "enabledModules" property does not
 			//     do anything after routes have been created.  We may want to eventually
-			//     throw a warning (and ignroe the change) if someone accesses the property 
+			//     throw a warning (and ignore the change) if someone accesses the property
 			//     after _RestifyParsersInitialized is true.
 			if (!_RestifyParsersInitialized)
 			{
@@ -249,21 +250,6 @@ var Orator = function()
 				initializeHeaderParsers(_Fable.settings, _WebServer);
 				initializeContentParsers(_Fable.settings, _WebServer);
 				initializeLogicParsers(_Fable.settings, _WebServer);
-				_WebServer.on
-				(
-					'uncaughtException',
-					function (pRequest, pResponse, pRoute, pError)
-					{
-						if (typeof(_Fable.settings.UncaughtExceptionHook) === 'function')
-						{
-							_Fable.settings.UncaughtExceptionHook(pRequest, pResponse, pRoute, pError);
-						}
-						if (_Fable.settings.LogStackTraces)
-						{
-							_Fable.log.error('Request error', {Error:true, Stack:pError.stack});
-						}
-					}
-				);
 			}
 		};
 
@@ -289,18 +275,6 @@ var Orator = function()
 						_Fable.log.trace('Request start...',{RequestUUID: pRequest.RequestUUID});
 					}
 
-					if (_Fable.settings.Profiling.Enabled)
-					{
-						// Lazily load NodeGrind
-						if (!libV8Profiler)
-						{
-							libV8Profiler = require('v8-profiler');
-						}
-						// If profiling is enabled, build a callgrind file
-						_Fable.log.debug('Request '+pRequest.RequestUUID+' starting with full profiling...');
-						pRequest.ProfilerName = _Fable.settings.Product+'-'+_Fable.settings.ProductVersion+'-'+pRequest.RequestUUID;
-						libV8Profiler.startProfiling(pRequest.RequestUUID, true);
-					}
 
 					return fNext();
 				}
@@ -315,28 +289,6 @@ var Orator = function()
 					{
 						_Fable.log.trace("... Request finished.",{RequestUUID: pRequest.RequestUUID, ResponseCode: pResponse.code, ResponseLength: pResponse.contentLength});
 					}
-
-					if (typeof(pRequest.ProfilerName) === 'string')
-					{
-						var tmpRequestProfilePrefix = '';
-						var tmpRequestProfilePostfix = '';
-
-						// Get a Chrome *.cpuprofile.json that you can load into the Chrome
-						// profiler (right-click on 'Profiles' in left pane in the 'Profiles' tab)
-						var tmpChromeCPUProfiler = libV8Profiler.stopProfiling();
-						tmpRequestProfilePostfix = '.cpuprofile.json';
-
-						tmpChromeCPUProfiler.export(function(pError, pProfileData)
-						{
-							var tmpProfilerFileName = _Fable.settings.Profiling.Folder+tmpRequestProfilePrefix+pRequest.ProfilerName+tmpRequestProfilePostfix;
-							libFS.writeFileSync(tmpProfilerFileName, pProfileData);
-							pRequest.CPUProfiler.delete();
-							if (_Fable.settings.Profiling.TraceLog)
-							{
-								_Fable.log.trace('... Request '+pRequest.RequestUUID+' profile written to: '+tmpProfilerFileName);
-							}
-						});
-					}
 				}
 			);
 		};
@@ -350,16 +302,16 @@ var Orator = function()
 		*
 		* @method startWorkers
 		*/
-		 var startWorkers = function(pWorkers, fCallback)
-		 {
-		 	if (pWorkers === 0)
-		 	{
-		 		return fCallback();
-		 	}
-		 	else if (pWorkers < 0)
-		 	{
-		 		pWorkers = require('os').cpus().length;
-		 	}
+		var startWorkers = function(pWorkers, fCallback)
+		{
+			if (pWorkers === 0)
+			{
+				return fCallback();
+			}
+			else if (pWorkers < 0)
+			{
+				pWorkers = require('os').cpus().length;
+			}
 
 			for (var i=0; i<pWorkers; i++)
 			{
@@ -370,25 +322,25 @@ var Orator = function()
 
 			libCluster.on('message', function(message)
 			{
-			    _Fable.log.trace('Orator Worker ' + message.pid + ' started.');
+				_Fable.log.trace('Orator Worker ' + message.pid + ' started.');
 
-			    if (++tmpActiveWorkers === pWorkers)
-			    {
-			    	//The Master process fires the callback when all
-			    	// the workers have started. This is used by
-			    	// unit tests.
-			    	return fCallback();
-			    }
+				if (++tmpActiveWorkers === pWorkers)
+				{
+					//The Master process fires the callback when all
+					// the workers have started. This is used by
+					// unit tests.
+					return fCallback();
+				}
 			});
 			libCluster.on('exit', function(worker, code, signal)
 			{
-			    _Fable.log.trace('Orator Worker ' + worker.id + '/' + worker.process.pid + ' died');
+				_Fable.log.trace('Orator Worker ' + worker.id + '/' + worker.process.pid + ' died');
 
-			    // APIWorkerRestart flag auto-restarts a worker if it crashes
-			    if (_Fable.settings.APIWorkerRestart)
-			    {
-			    	libCluster.fork();
-			    }
+				// APIWorkerRestart flag auto-restarts a worker if it crashes
+				if (_Fable.settings.APIWorkerRestart)
+				{
+					libCluster.fork();
+				}
 			});
 		};
 
@@ -422,7 +374,7 @@ var Orator = function()
 						if (!libCluster.isMaster)
 						{
 							// notify master about the request
-    						process.send({ signal: 'notifyListening', pid: process.pid });
+							process.send({ signal: 'notifyListening', pid: process.pid });
 						}
 						return tmpNext();
 					}
@@ -485,7 +437,8 @@ var Orator = function()
 					'application/octet-stream',
 					'application/javascript',
 					'application/json'
-				]
+				],
+				handleUncaughtExceptions: true,
 			});
 			_Fable.settings.RawServerParameters = _WebServerParameters;
 		};
@@ -588,7 +541,7 @@ var Orator = function()
 					_Fable.log.error('Proxy error', pError);
 				}
 
-				return fNext(true);
+				return fNext(false);
 			});
 		};
 
@@ -624,7 +577,7 @@ var Orator = function()
 					{
 						_WebServer.log.trace('Serving content: '+pRequest.url);
 					}
-					var tmpServe = libRestify.serveStatic
+					var tmpServe = libRestify.plugins.serveStatic
 					(
 						{
 							directory: pFilePath,
@@ -635,6 +588,19 @@ var Orator = function()
 				}
 			);
 		};
+
+		var handleError = function(req, res, err, callback)
+		{
+			//the default for a string error is 'Route not found', though it isn't accurate
+			err.message = err.message.replace('Route not found: ', '');
+			//log error
+			let sessionId = '';
+			if (req.UserSession && req.UserSession.SessionID)
+				sessionId = req.UserSession.SessionID;
+
+			_Fable.log.error('REQUEST ERROR: ' + err.message, {SessionID: sessionId, Action: 'APIError'});
+			return callback();
+		}
 
 		/**
 		* Container Object for our Factory Pattern
@@ -650,7 +616,8 @@ var Orator = function()
 
 			staticContentFormatter: staticContentFormatter,
 			setupStaticFormatters: setupStaticFormatters,
-			serveStatic: libRestify.serveStatic,
+			serveStatic: libRestify.plugins.serveStatic,
+			getHeader: getHeader,
 
 			new: createNew
 		});
@@ -661,7 +628,7 @@ var Orator = function()
 		 * @property webServer
 		 * @type Object
 		 */
-		var getWebServer = function() 
+		var getWebServer = function()
 					{
 						// Lazily load the webserver the first time it is accessed
 						if (typeof(_WebServer) === 'undefined')
@@ -670,6 +637,29 @@ var Orator = function()
 							_WebServerParameters.name = _Fable.settings.Product;
 							_WebServerParameters.version = _Fable.settings.ProductVersion;
 							_WebServer = libRestify.createServer(_WebServerParameters);
+							//enable support for Promise endpoint methods
+							restifyPromise.install(_WebServer,
+							{
+								/*
+								 * We provide an error transformer here to handle uncaught exceptions, as the
+								 * old code path is broken by this plugin. This at least allows us to send back
+								 * some kind of error to the caller. Without this, you get a 500 with a body of {}
+								 */
+								errorTransformer:
+								{
+									transform: (error) =>
+									{
+										// duck typing for error objects; means an exception was thrown
+										if (error && error.message && error.stack)
+										{
+											return new RestifyErrors.InternalError(error, error.message || 'Unhandled error');
+										}
+										return error;
+									},
+								},
+							});
+							//handle errors - DOES NOT HANDLE uncaught exceptions! (DOES work with Promises however)
+							_WebServer.on('restifyError', handleError);
 							initializeInstrumentation();
 						}
 						checkModules();
@@ -683,7 +673,7 @@ var Orator = function()
 		 * @property bodyParser
 		 * @type Object
 		 */
-		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.bodyParser});
+		Object.defineProperty(tmpNewOrator, 'bodyParser', {get: libRestify.plugins.bodyParser});
 
 		/**
 		 * The enabled web modules

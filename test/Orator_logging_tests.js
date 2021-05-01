@@ -40,6 +40,14 @@ suite
 			}
 		);
 
+		suiteTeardown
+		(
+			function()
+			{
+				_Orator.stopWebServer();
+			}
+		);
+
 		suite
 		(
 			'Request Logging Server Start',
@@ -51,20 +59,27 @@ suite
 					function(fDone)
 					{
 						_Orator.webServer.get (
-							'/PINGOLo', 
-							function (pRequest, pResponse, fNext) 
+							'/PINGOLo',
+							function (pRequest, pResponse, fNext)
 							{
 								pResponse.send('Loggo');
 								fNext();
 							}
 						);
 						_Orator.webServer.get (
-							'/PINataGOLo', 
-							function (pRequest, pResponse, fNext) 
+							'/PINataGOLo',
+							function (pRequest, pResponse, fNext)
 							{
 								throw new Error("Something absolutely dire has occurred.");
 								pResponse.send('Loggso');
 								fNext();
+							}
+						);
+						_Orator.webServer.get (
+							'/PINataGOLo_promise',
+							async function (pRequest, pResponse)
+							{
+								return Promise.reject("Something absolutely dire has occurred.");
 							}
 						);
 						_Orator.startWebServer();
@@ -95,6 +110,8 @@ suite
 										}
 										else
 										{
+											Expect(pResponse.statusCode)
+												.to.equal(500);
 											Expect(pResponse.text)
 												.to.contain('dire');
 										}
@@ -114,6 +131,33 @@ suite
 					{
 						libSuperTest('http://localhost:8085/')
 						.get('PINataGOLo')
+						.end(
+							function (pError, pResponse)
+							{
+								if (pError)
+								{
+									console.log('Error on Logfile Results: '+JSON.stringify(pError));
+									Expect('Logged Request Error').to.equal('Nothing');
+								}
+								else
+								{
+									Expect(pResponse.statusCode)
+										.to.equal(500);
+									Expect(pResponse.text)
+										.to.contain('dire');
+								}
+								fDone();
+							}
+						);
+					}
+				);
+				test
+				(
+					'rejected promises should throw properly.',
+					function(fDone)
+					{
+						libSuperTest('http://localhost:8085/')
+						.get('PINataGOLo_promise')
 						.end(
 							function (pError, pResponse)
 							{
