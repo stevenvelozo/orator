@@ -6,6 +6,7 @@
 
 const libRestifyCORS = require('restify-cors-middleware');
 const restifyPromise = require('restify-await-promise');
+const RestifyErrors = require('restify-errors');
 
 /**
 * Orator Web API Server
@@ -120,9 +121,6 @@ var Orator = function()
 				// Requestlog is to log each request ID and Session ID.
 				RequestLog: false,
 			}),
-
-			// Turning this on logs stack traces
-			LogStackTraces: true
 		});
 
 		var _Fable = require('fable').new(pSettings);
@@ -244,7 +242,7 @@ var Orator = function()
 			// Lazily initialize the Restify parsers the first time we access this object.
 			// This creates a behavior where changing the "enabledModules" property does not
 			//     do anything after routes have been created.  We may want to eventually
-			//     throw a warning (and ignroe the change) if someone accesses the property
+			//     throw a warning (and ignore the change) if someone accesses the property
 			//     after _RestifyParsersInitialized is true.
 			if (!_RestifyParsersInitialized)
 			{
@@ -252,21 +250,6 @@ var Orator = function()
 				initializeHeaderParsers(_Fable.settings, _WebServer);
 				initializeContentParsers(_Fable.settings, _WebServer);
 				initializeLogicParsers(_Fable.settings, _WebServer);
-				_WebServer.on
-				(
-					'uncaughtException',
-					function (pRequest, pResponse, pRoute, pError)
-					{
-						if (typeof(_Fable.settings.UncaughtExceptionHook) === 'function')
-						{
-							_Fable.settings.UncaughtExceptionHook(pRequest, pResponse, pRoute, pError);
-						}
-						if (_Fable.settings.LogStackTraces)
-						{
-							_Fable.log.error('Request error', {Error:true, Stack:pError.stack});
-						}
-					}
-				);
 			}
 		};
 
@@ -655,7 +638,26 @@ var Orator = function()
 							_WebServerParameters.version = _Fable.settings.ProductVersion;
 							_WebServer = libRestify.createServer(_WebServerParameters);
 							//enable support for Promise endpoint methods
-							restifyPromise.install(_WebServer);
+							restifyPromise.install(_WebServer,
+							{
+								/*
+								 * We provide an error transformer here to handle uncaught exceptions, as the
+								 * old code path is broken by this plugin. This at least allows us to send back
+								 * some kind of error to the caller. Without this, you get a 500 with a body of {}
+								 */
+								errorTransformer:
+								{
+									transform: (error) =>
+									{
+										// duck typing for error objects; means an exception was thrown
+										if (error && error.message && error.stack)
+										{
+											return new RestifyErrors.InternalError(error, error.message || 'Unhandled error');
+										}
+										return error;
+									},
+								},
+							});
 							//handle errors - DOES NOT HANDLE uncaught exceptions! (DOES work with Promises however)
 							_WebServer.on('restifyError', handleError);
 							initializeInstrumentation();

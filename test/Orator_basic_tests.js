@@ -103,8 +103,8 @@ suite
 							'/ThirdAPI',
 							function (pRequest, pResponse, fNext)
 							{
-								pResponse.send('RAWR');
-								return fNext('The server should give a nice stack trace');
+								throw new Error('The server should give a nice stack trace');
+								fNext();
 							}
 						);
 						_Orator.webServer.get (
@@ -278,6 +278,14 @@ suite
 								fDone();
 							}
 						);
+					}
+				);
+				test
+				(
+					'Shutdown Orator web server',
+					function()
+					{
+						_Orator.stopWebServer();
 					}
 				);
 			}

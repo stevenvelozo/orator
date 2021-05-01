@@ -68,6 +68,15 @@ suite
 						);
 						_Orator.webServer.get (
 							'/PINataGOLo',
+							function (pRequest, pResponse, fNext)
+							{
+								throw new Error("Something absolutely dire has occurred.");
+								pResponse.send('Loggso');
+								fNext();
+							}
+						);
+						_Orator.webServer.get (
+							'/PINataGOLo_promise',
 							async function (pRequest, pResponse)
 							{
 								return Promise.reject("Something absolutely dire has occurred.");
@@ -101,6 +110,8 @@ suite
 										}
 										else
 										{
+											Expect(pResponse.statusCode)
+												.to.equal(500);
 											Expect(pResponse.text)
 												.to.contain('dire');
 										}
@@ -115,11 +126,38 @@ suite
 				);
 				test
 				(
-					'rejected promises should throw properly.',
+					'uncaught exceptions should throw properly.',
 					function(fDone)
 					{
 						libSuperTest('http://localhost:8085/')
 						.get('PINataGOLo')
+						.end(
+							function (pError, pResponse)
+							{
+								if (pError)
+								{
+									console.log('Error on Logfile Results: '+JSON.stringify(pError));
+									Expect('Logged Request Error').to.equal('Nothing');
+								}
+								else
+								{
+									Expect(pResponse.statusCode)
+										.to.equal(500);
+									Expect(pResponse.text)
+										.to.contain('dire');
+								}
+								fDone();
+							}
+						);
+					}
+				);
+				test
+				(
+					'rejected promises should throw properly.',
+					function(fDone)
+					{
+						libSuperTest('http://localhost:8085/')
+						.get('PINataGOLo_promise')
 						.end(
 							function (pError, pResponse)
 							{
