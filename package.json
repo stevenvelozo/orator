@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Unopinionated restful web API server container",
   "main": "source/Orator.js",
   "scripts": {
@@ -10,6 +10,9 @@
     "build": "./node_modules/.bin/gulp build",
     "docker-dev-build-image": "docker build ./ -f Dockerfile_LUXURYCode -t retold/orator:local",
     "docker-dev-run": "docker run -it -d --name retold-orator-dev -p 40000:8080 -p 48086:8086 -p 48088:8088 -v \"$PWD/.config:/home/coder/.config\"  -v \"$PWD:/home/coder/orator\" -u \"$(id -u):$(id -g)\" -e \"DOCKER_USER=$USER\" retold/orator:local"
+  },
+  "browser": {
+    "./source/Orator-Default-ServiceServers-Node.js": "./source/Orator-Default-ServiceServers-Web.js"
   },
   "repository": {
     "type": "git",
