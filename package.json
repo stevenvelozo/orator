@@ -1,17 +1,15 @@
 {
   "name": "orator",
-  "version": "2.0.6",
-  "description": "Restful web API server. Using restify 6.",
+  "version": "3.0.0",
+  "description": "Unopinionated restful web API server container",
   "main": "source/Orator.js",
   "scripts": {
     "start": "node source/Orator.js",
-    "coverage": "npm run coverage-normal && npm run coverage-cluster && npm run coverage-report",
-    "coverage-normal": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/normal ./node_modules/mocha/bin/_mocha -- --exit -u tdd -R spec",
-    "coverage-cluster": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/cluster ./node_modules/mocha/bin/_mocha -- --exit -u tdd -R spec ./test/Orator_cluster_test.js.deferred",
-    "coverage-report": "./node_modules/istanbul/lib/cli.js report",
-    "test": "npm run test-normal && npm run test-cluster",
-    "test-normal": "./node_modules/mocha/bin/_mocha --exit -u tdd -R spec",
-    "test-cluster": "./node_modules/mocha/bin/_mocha --exit -u tdd -R spec ./test/Orator_cluster_test.js.deferred"
+    "coverage": "./node_modules/.bin/nyc --reporter=lcov --reporter=text-lcov ./node_modules/mocha/bin/_mocha -- -u tdd -R spec",
+    "test": "./node_modules/mocha/bin/_mocha --exit -u tdd -R spec",
+    "build": "./node_modules/.bin/gulp build",
+    "docker-dev-build-image": "docker build ./ -f Dockerfile_LUXURYCode -t retold/orator:local",
+    "docker-dev-run": "docker run -it -d --name retold-orator-dev -p 40000:8080 -p 48086:8086 -p 48088:8088 -v \"$PWD/.config:/home/coder/.config\"  -v \"$PWD:/home/coder/orator\" -u \"$(id -u):$(id -g)\" -e \"DOCKER_USER=$USER\" retold/orator:local"
   },
   "repository": {
     "type": "git",
@@ -27,25 +25,44 @@
   "bugs": {
     "url": "https://github.com/stevenvelozo/orator/issues"
   },
+  "mocha": {
+    "diff": true,
+    "extension": [
+      "js"
+    ],
+    "package": "./package.json",
+    "reporter": "spec",
+    "slow": "75",
+    "timeout": "5000",
+    "ui": "tdd",
+    "watch-files": [
+      "source/**/*.js",
+      "test/**/*.js"
+    ],
+    "watch-ignore": [
+      "lib/vendor"
+    ]
+  },
   "homepage": "https://github.com/stevenvelozo/orator",
   "devDependencies": {
-    "async": "2.6.1",
-    "chai": "4.1.2",
-    "codeclimate-test-reporter": "0.5.0",
-    "coveralls": "3.0.2",
-    "istanbul": "0.4.5",
-    "mocha": "5.2.0",
-    "supertest": "3.1.0"
+    "browserify": "^17.0.0",
+    "chai": "4.3.7",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-terser": "^2.1.0",
+    "gulp-util": "^3.0.8",
+    "mocha": "10.2.0",
+    "nyc": "^15.1.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
+    "async": "^3.2.4",
     "cachetrax": "^1.0.0",
-    "cluster": "^0.7.7",
-    "fable": "~1.0.2",
-    "fable-uuid": "~1.0.2",
-    "http-forward": "^0.1.3",
-    "request": "^2.88.2",
-    "restify": "^6.4.0",
-    "restify-await-promise": "^2.2.0",
-    "restify-cors-middleware": "^1.1.1"
+    "fable": "~3.0.2",
+    "find-my-way": "^7.5.0",
+    "orator-serviceserver": "^1.0.1",
+    "orator-serviceserver-restify": "^1.0.1"
   }
 }
