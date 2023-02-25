@@ -62,7 +62,6 @@
     "cachetrax": "^1.0.0",
     "fable": "~3.0.2",
     "find-my-way": "^7.5.0",
-    "orator-serviceserver": "^1.0.1",
-    "orator-serviceserver-restify": "^1.0.1"
+    "orator-serviceserver": "^1.0.1"
   }
 }
