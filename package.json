@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Unopinionated restful web API server container",
   "main": "source/Orator.js",
   "scripts": {
@@ -62,7 +62,6 @@
   },
   "dependencies": {
     "async": "^3.2.4",
-    "cachetrax": "^1.0.0",
     "fable": "~3.0.2",
     "find-my-way": "^7.5.0",
     "orator-serviceserver": "^1.0.1"

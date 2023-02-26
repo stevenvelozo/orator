@@ -7,7 +7,9 @@ const libOratorServiceServerIPCCustomConstrainer = require('./Orator-ServiceServ
 
 // This library is the default router for our services
 const libFindMyWay = require('find-my-way');
-const libAsync = require('async');
+//const libAsync = require('async');
+const libAsyncWaterfall = require("async/waterfall");
+const libAsyncEachOfSeries = require('async/eachofseries')
 
 class OratorServiceServerIPC extends libOratorServiceServerBase
 {
@@ -28,7 +30,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 
 	executePreBehaviorFunctions(pRequest, pResponse, fNext)
 	{
-		libAsync.eachOfSeries(this.preBehaviorFunctions,
+		libAsyncEachOfSeries(this.preBehaviorFunctions,
 			(fBehaviorFunction, pFunctionIndex, fCallback) =>
 			{
 				return fBehaviorFunction(pRequest, pResponse, fCallback);
@@ -45,7 +47,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 
 	executePostBehaviorFunctions(pRequest, pResponse, fNext)
 	{
-		libAsync.eachOfSeries(this.postBehaviorFunctions,
+		libAsyncEachOfSeries(this.postBehaviorFunctions,
 			(fBehaviorFunction, pFunctionIndex, fCallback) =>
 			{
 				return fBehaviorFunction(pRequest, pResponse, fCallback);
@@ -83,7 +85,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 		this.router.on(pMethod, pRoute, { constraints: { "ipc": "IPC" } },
 			(pRequest, pResponse, pParameters) =>
 			{
-				libAsync.waterfall(
+				libAsyncWaterfall(
 					[
 						(fStageComplete)=>
 						{
@@ -97,7 +99,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 						},
 						(fStageComplete)=>
 						{
-							libAsync.eachOfSeries(pRouteFunctionArray,
+							libAsyncEachOfSeries(pRouteFunctionArray,
 								(fBehaviorFunction, pFunctionIndex, fCallback) =>
 								{
 									return fBehaviorFunction(pRequest, pResponse, fCallback);
