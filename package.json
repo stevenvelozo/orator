@@ -63,8 +63,8 @@
   },
   "dependencies": {
     "async": "^3.2.4",
-    "fable": "~3.0.3",
+    "fable": "^3.0.7",
     "find-my-way": "^7.5.0",
-    "orator-serviceserver": "^1.0.1"
+    "orator-serviceserver": "^1.0.2"
   }
 }
