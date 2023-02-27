@@ -9,7 +9,7 @@ const libOratorServiceServerIPCCustomConstrainer = require('./Orator-ServiceServ
 const libFindMyWay = require('find-my-way');
 //const libAsync = require('async');
 const libAsyncWaterfall = require("async/waterfall");
-const libAsyncEachOfSeries = require('async/eachofseries')
+const libAsyncEachOfSeries = require('async/eachOfSeries')
 
 class OratorServiceServerIPC extends libOratorServiceServerBase
 {
