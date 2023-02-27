@@ -179,7 +179,7 @@ suite
 								(fStageComplete) =>
 								{
 									let tmpURI = `/MagicEndpoint/BippityBoppityBoo`;
-									tmpOrator.invoke('GET', tmpURI, null, 
+									tmpOrator.invoke('GET', tmpURI, null,
 										(pError, pResponseData) =>
 										{
 											let tmpResponseObject = JSON.parse(pResponseData);
@@ -187,7 +187,7 @@ suite
 											Expect(tmpResponseObject.MagicWords).to.equal('BippityBoppityBoo');
 											Expect(tmpResponseObject).to.have.a.property('MagicIngredients');
 											Expect(tmpResponseObject.MagicIngredients).to.be.an('array');
-											Expect(tmpResponseObject.MagicIngredients[0]).to.equal('Magic Outcomes`');
+											Expect(tmpResponseObject.MagicIngredients[0]).to.equal('Magic Outcomes');
 											tmpOrator.log.info(`Response to [${tmpURI}] came back from IPC resulting in [${pResponseData}] which is type ${typeof(pResponseData)}!`);
 											return fStageComplete();
 										});
@@ -195,7 +195,7 @@ suite
 							],
 							(pError) =>
 							{
-								fDone();
+								return fDone();
 							})
 					}
 				);

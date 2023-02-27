@@ -214,7 +214,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 	invoke(pMethod, pRoute, pData, fCallback)
 	{
 		// If the data is skipped and a callback is parameter 3, do the right thing
-		let tmpCallback = (typeof(fCallback) == 'function') ? fCallback : 
+		let tmpCallback = (typeof(fCallback) == 'function') ? fCallback :
 							(typeof(pData) == 'function') ? pData :
 							// This is here in case the developer passed no callback and just wants to fire and forget the IPC call which might not be async safe
 							()=>{};
@@ -240,7 +240,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 					this.log.error(`IPC Request Error Request GUID [${tmpRequest.guid}] handling route [${pRoute}]: ${pError}`, {Error: pError, Route: pRoute, Data: pData});
 				}
 
-				// by default, send data back through 
+				// by default, send data back through
 				return tmpCallback(pError, tmpSynthesizedResponseData.responseData, tmpSynthesizedResponseData, pResults);
 			});
 	}
