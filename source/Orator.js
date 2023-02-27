@@ -88,6 +88,8 @@ class Orator
 		{
 			this.log.warn(`Orator attempting to initialize a service server after initialization has already completed.`)
 		}
+
+		return tmpNext()
 	}
 
 	_startServiceListener(fNext)

@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Unopinionated restful web API server container",
   "main": "source/Orator.js",
   "scripts": {
@@ -58,7 +58,8 @@
     "mocha": "10.2.0",
     "nyc": "^15.1.0",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "orator-serviceserver-restify": "^1.0.1"
   },
   "dependencies": {
     "async": "^3.2.4",

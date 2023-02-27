@@ -12,7 +12,7 @@ const tmpServiceServer = new libOrator(
 
 		"APIServerPort": 8080
 	}
-	// Uncomment the next line to enable restify! 
+	// Uncomment the next line to enable restify!
 	,libOratorServiceServerRestify
 );
 // Initialize the service server
