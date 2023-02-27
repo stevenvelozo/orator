@@ -28,6 +28,28 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 		this.postBehaviorFunctions = [];
 	}
 
+	use(fHandlerFunction)
+	{
+		if (!super.use(fHandlerFunction))
+		{
+			this.log.error(`IPC provider failed to map USE handler function!`);
+			return false;
+		}
+
+		this.preBehaviorFunctions.push(fHandlerFunction);
+	}
+
+	addPostBehaviorFunction(fHandlerFunction)
+	{
+		if (!super.use(fHandlerFunction))
+		{
+			this.log.error(`IPC provider failed to map USE handler function!`);
+			return false;
+		}
+
+		this.preBehaviorFunctions.push(fHandlerFunction);
+	}
+
 	executePreBehaviorFunctions(pRequest, pResponse, fNext)
 	{
 		libAsyncEachOfSeries(this.preBehaviorFunctions,
@@ -43,6 +65,17 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 				}
 				return fNext(pError);
 			});
+	}
+
+	addPostBehaviorFunction(fHandlerFunction)
+	{
+		if (!super.use(fHandlerFunction))
+		{
+			this.log.error(`IPC provider failed to map USE handler function!`);
+			return false;
+		}
+
+		this.preBehaviorFunctions.push(fHandlerFunction);
 	}
 
 	executePostBehaviorFunctions(pRequest, pResponse, fNext)
