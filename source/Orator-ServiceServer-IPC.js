@@ -1,4 +1,4 @@
-const libOratorServiceServerBase = require('orator-serviceserver');
+const libOratorServiceServerBase = require('./Orator-ServiceServer-Base.js');
 
 // A synthesized response object, for simple IPC.
 const libOratorServiceServerIPCSynthesizedResponse = require('./Orator-ServiceServer-IPC-SynthesizedResponse.js');

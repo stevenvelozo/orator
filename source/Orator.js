@@ -7,8 +7,6 @@
 * @module Orator Service
 */
 
-const libFable = require('fable');
-
 const defaultOratorConfiguration = require('./Orator-Default-Configuration.js');
 const defaultOratorServiceServers = require('./Orator-Default-ServiceServers-Node.js');
 
@@ -16,20 +14,8 @@ class Orator
 {
 	constructor(pFable, pServiceProvider)
 	{
-		// Need to figure out if pFable is a Fable object or a Settings object or neither
-		if ((typeof(pFable) === 'object') && (pFable instanceof libFable))
-		{
-			// We were passed a fully operational fable -- use this
-			this.fable = pFable;
-		}
-		else if (typeof(pFable) == 'object')
-		{
-			this.fable = new libFable(pFable);
-		}
-		else
-		{
-			this.fable = new libFable(defaultOratorConfiguration);
-		}
+		// We were passed a fully operational fable -- use this
+		this.fable = pFable;
 
 		// Carry core application requirements into the orator object for simplicity
 		this.settings = this.fable.settings;
@@ -176,3 +162,4 @@ class Orator
 }
 
 module.exports = Orator;
+module.exports.ServiceServerBase = require('./Orator-ServiceServer-Base.js');

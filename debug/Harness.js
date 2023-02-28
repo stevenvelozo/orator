@@ -1,17 +1,21 @@
 // Load the orator module with a few simple routes
 const libOrator = require(__dirname+'/../source/Orator.js');
+const libFable = require('fable');
+
+let _Fable = new libFable({
+		"Product": "HarnessService",
+		"ProductVersion": "1.2.3",
+
+		"APIServerPort": 8888
+	});
+
 // Uncomment the following line to test the restify server plug-in
 // > make sure to run "npm i orator-serviceserver-restify" from the parent directory first so the package is available
 // > please don't --save it!
 const libOratorServiceServerRestify = require('orator-serviceserver-restify');
 
 const tmpServiceServer = new libOrator(
-	{
-		"Product": "HarnessService",
-		"ProductVersion": "1.2.3",
-
-		"APIServerPort": 8080
-	}
+	_Fable
 	// Uncomment the next line to enable restify!
 	,libOratorServiceServerRestify
 );

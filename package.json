@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "Unopinionated restful web API server container",
   "main": "source/Orator.js",
   "scripts": {
@@ -50,6 +50,7 @@
   "devDependencies": {
     "browserify": "^17.0.0",
     "chai": "4.3.7",
+    "fable": "^3.0.7",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-sourcemaps": "^3.0.0",
@@ -63,8 +64,6 @@
   },
   "dependencies": {
     "async": "^3.2.4",
-    "fable": "^3.0.7",
-    "find-my-way": "^7.5.0",
-    "orator-serviceserver": "^1.0.2"
+    "find-my-way": "^7.5.0"
   }
 }

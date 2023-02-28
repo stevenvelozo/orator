@@ -14,14 +14,12 @@ const Assert = Chai.assert;
 
 //const libSuperTest = require('supertest');
 const libFable = require('fable');
-const _Fable = new libFable({Product:'Orator-BasicTests-Backplane'});
-
-const _MockSettings = (
-{
-	Product: 'MockOratorAlternate',
-	ProductVersion: '0.0.0',
-	APIServerPort: 8099
-});
+const _Fable = new libFable(
+	{
+		Product:'Orator-BasicTests-Backplane',
+		ProductVersion: '0.0.0',
+		APIServerPort: 8099
+	});
 
 suite
 (
@@ -38,7 +36,7 @@ suite
 					'initialize should build a happy little object',
 					(fDone) =>
 					{
-						let tmpOrator = new libOrator();
+						let tmpOrator = new libOrator(_Fable);
 						Expect(tmpOrator).to.be.an('object', 'Orator should initialize as an object directly from the require statement.');
 						Expect(tmpOrator.startService).to.be.an('function');
 						Expect(tmpOrator.settings).to.be.an('object');
@@ -51,13 +49,17 @@ suite
 					'orator should be able to initialize and start a service with no effort',
 					(fDone) =>
 					{
-						let tmpOrator = new libOrator();
+						let tmpOrator = new libOrator(_Fable);
 						// Start the service server
 						tmpOrator.initializeServiceServer();
 						// Start the service
 						Expect(tmpOrator.serviceServer.Active).to.equal(false);
-						tmpOrator.startService(fDone);
-						Expect(tmpOrator.serviceServer.Active).to.equal(true);
+						tmpOrator.startService(
+							()=>
+							{
+								Expect(tmpOrator.serviceServer.Active).to.equal(true);
+								fDone();
+							});
 					}
 				);
 
@@ -66,7 +68,7 @@ suite
 					'ipc should be able to provide basic endpoint functionality',
 					(fDone) =>
 					{
-						let tmpOrator = new libOrator();
+						let tmpOrator = new libOrator(_Fable);
 						// Initialize the service server
 						tmpOrator.initializeServiceServer();
 						// Start the service
@@ -102,7 +104,7 @@ suite
 					'ipc should be able to process any number of handler additions with the use function',
 					(fDone) =>
 					{
-						let tmpOrator = new libOrator();
+						let tmpOrator = new libOrator(_Fable);
 						// Initialize the service server
 						tmpOrator.initializeServiceServer();
 						// Start the service
