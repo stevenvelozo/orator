@@ -3073,7 +3073,7 @@
       "assert": 1,
       "fast-deep-equal": 22,
       "fast-querystring": 23,
-      "safe-regex2": 38
+      "safe-regex2": 43
     }],
     30: [function (require, module, exports) {
       'use strict';
@@ -3997,54 +3997,6 @@
       };
     }, {}],
     38: [function (require, module, exports) {
-      'use strict';
-
-      var parse = require('ret');
-      var types = parse.types;
-      module.exports = function (re, opts) {
-        if (!opts) opts = {};
-        var replimit = opts.limit === undefined ? 25 : opts.limit;
-        if (isRegExp(re)) re = re.source;else if (typeof re !== 'string') re = String(re);
-        try {
-          re = parse(re);
-        } catch (err) {
-          return false;
-        }
-        var reps = 0;
-        return function walk(node, starHeight) {
-          var i;
-          var ok;
-          var len;
-          if (node.type === types.REPETITION) {
-            starHeight++;
-            reps++;
-            if (starHeight > 1) return false;
-            if (reps > replimit) return false;
-          }
-          if (node.options) {
-            for (i = 0, len = node.options.length; i < len; i++) {
-              ok = walk({
-                stack: node.options[i]
-              }, starHeight);
-              if (!ok) return false;
-            }
-          }
-          var stack = node.stack || node.value && node.value.stack;
-          if (!stack) return true;
-          for (i = 0; i < stack.length; i++) {
-            ok = walk(stack[i], starHeight);
-            if (!ok) return false;
-          }
-          return true;
-        }(re, 0);
-      };
-      function isRegExp(x) {
-        return {}.toString.call(x) === '[object RegExp]';
-      }
-    }, {
-      "ret": 39
-    }],
-    39: [function (require, module, exports) {
       const util = require('./util');
       const types = require('./types');
       const sets = require('./sets');
@@ -4302,12 +4254,12 @@
       };
       module.exports.types = types;
     }, {
-      "./positions": 40,
-      "./sets": 41,
-      "./types": 42,
-      "./util": 43
+      "./positions": 39,
+      "./sets": 40,
+      "./types": 41,
+      "./util": 42
     }],
-    40: [function (require, module, exports) {
+    39: [function (require, module, exports) {
       const types = require('./types');
       exports.wordBoundary = () => ({
         type: types.POSITION,
@@ -4326,9 +4278,9 @@
         value: '$'
       });
     }, {
-      "./types": 42
+      "./types": 41
     }],
-    41: [function (require, module, exports) {
+    40: [function (require, module, exports) {
       const types = require('./types');
       const INTS = () => [{
         type: types.RANGE,
@@ -4451,9 +4403,9 @@
         not: true
       });
     }, {
-      "./types": 42
+      "./types": 41
     }],
-    42: [function (require, module, exports) {
+    41: [function (require, module, exports) {
       module.exports = {
         ROOT: 0,
         GROUP: 1,
@@ -4465,7 +4417,7 @@
         CHAR: 7
       };
     }, {}],
-    43: [function (require, module, exports) {
+    42: [function (require, module, exports) {
       const types = require('./types');
       const sets = require('./sets');
       const CTRL = '@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^ ?';
@@ -4558,8 +4510,56 @@
         throw new SyntaxError('Invalid regular expression: /' + regexp + '/: ' + msg);
       };
     }, {
-      "./sets": 41,
-      "./types": 42
+      "./sets": 40,
+      "./types": 41
+    }],
+    43: [function (require, module, exports) {
+      'use strict';
+
+      var parse = require('ret');
+      var types = parse.types;
+      module.exports = function (re, opts) {
+        if (!opts) opts = {};
+        var replimit = opts.limit === undefined ? 25 : opts.limit;
+        if (isRegExp(re)) re = re.source;else if (typeof re !== 'string') re = String(re);
+        try {
+          re = parse(re);
+        } catch (err) {
+          return false;
+        }
+        var reps = 0;
+        return function walk(node, starHeight) {
+          var i;
+          var ok;
+          var len;
+          if (node.type === types.REPETITION) {
+            starHeight++;
+            reps++;
+            if (starHeight > 1) return false;
+            if (reps > replimit) return false;
+          }
+          if (node.options) {
+            for (i = 0, len = node.options.length; i < len; i++) {
+              ok = walk({
+                stack: node.options[i]
+              }, starHeight);
+              if (!ok) return false;
+            }
+          }
+          var stack = node.stack || node.value && node.value.stack;
+          if (!stack) return true;
+          for (i = 0; i < stack.length; i++) {
+            ok = walk(stack[i], starHeight);
+            if (!ok) return false;
+          }
+          return true;
+        }(re, 0);
+      };
+      function isRegExp(x) {
+        return {}.toString.call(x) === '[object RegExp]';
+      }
+    }, {
+      "ret": 38
     }],
     44: [function (require, module, exports) {
       (function (setImmediate, clearImmediate) {
