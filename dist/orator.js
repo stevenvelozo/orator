@@ -3073,7 +3073,7 @@
       "assert": 1,
       "fast-deep-equal": 22,
       "fast-querystring": 23,
-      "safe-regex2": 43
+      "safe-regex2": 38
     }],
     30: [function (require, module, exports) {
       'use strict';
@@ -3997,6 +3997,54 @@
       };
     }, {}],
     38: [function (require, module, exports) {
+      'use strict';
+
+      var parse = require('ret');
+      var types = parse.types;
+      module.exports = function (re, opts) {
+        if (!opts) opts = {};
+        var replimit = opts.limit === undefined ? 25 : opts.limit;
+        if (isRegExp(re)) re = re.source;else if (typeof re !== 'string') re = String(re);
+        try {
+          re = parse(re);
+        } catch (err) {
+          return false;
+        }
+        var reps = 0;
+        return function walk(node, starHeight) {
+          var i;
+          var ok;
+          var len;
+          if (node.type === types.REPETITION) {
+            starHeight++;
+            reps++;
+            if (starHeight > 1) return false;
+            if (reps > replimit) return false;
+          }
+          if (node.options) {
+            for (i = 0, len = node.options.length; i < len; i++) {
+              ok = walk({
+                stack: node.options[i]
+              }, starHeight);
+              if (!ok) return false;
+            }
+          }
+          var stack = node.stack || node.value && node.value.stack;
+          if (!stack) return true;
+          for (i = 0; i < stack.length; i++) {
+            ok = walk(stack[i], starHeight);
+            if (!ok) return false;
+          }
+          return true;
+        }(re, 0);
+      };
+      function isRegExp(x) {
+        return {}.toString.call(x) === '[object RegExp]';
+      }
+    }, {
+      "ret": 39
+    }],
+    39: [function (require, module, exports) {
       const util = require('./util');
       const types = require('./types');
       const sets = require('./sets');
@@ -4254,12 +4302,12 @@
       };
       module.exports.types = types;
     }, {
-      "./positions": 39,
-      "./sets": 40,
-      "./types": 41,
-      "./util": 42
+      "./positions": 40,
+      "./sets": 41,
+      "./types": 42,
+      "./util": 43
     }],
-    39: [function (require, module, exports) {
+    40: [function (require, module, exports) {
       const types = require('./types');
       exports.wordBoundary = () => ({
         type: types.POSITION,
@@ -4278,9 +4326,9 @@
         value: '$'
       });
     }, {
-      "./types": 41
+      "./types": 42
     }],
-    40: [function (require, module, exports) {
+    41: [function (require, module, exports) {
       const types = require('./types');
       const INTS = () => [{
         type: types.RANGE,
@@ -4403,9 +4451,9 @@
         not: true
       });
     }, {
-      "./types": 41
+      "./types": 42
     }],
-    41: [function (require, module, exports) {
+    42: [function (require, module, exports) {
       module.exports = {
         ROOT: 0,
         GROUP: 1,
@@ -4417,7 +4465,7 @@
         CHAR: 7
       };
     }, {}],
-    42: [function (require, module, exports) {
+    43: [function (require, module, exports) {
       const types = require('./types');
       const sets = require('./sets');
       const CTRL = '@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^ ?';
@@ -4510,56 +4558,8 @@
         throw new SyntaxError('Invalid regular expression: /' + regexp + '/: ' + msg);
       };
     }, {
-      "./sets": 40,
-      "./types": 41
-    }],
-    43: [function (require, module, exports) {
-      'use strict';
-
-      var parse = require('ret');
-      var types = parse.types;
-      module.exports = function (re, opts) {
-        if (!opts) opts = {};
-        var replimit = opts.limit === undefined ? 25 : opts.limit;
-        if (isRegExp(re)) re = re.source;else if (typeof re !== 'string') re = String(re);
-        try {
-          re = parse(re);
-        } catch (err) {
-          return false;
-        }
-        var reps = 0;
-        return function walk(node, starHeight) {
-          var i;
-          var ok;
-          var len;
-          if (node.type === types.REPETITION) {
-            starHeight++;
-            reps++;
-            if (starHeight > 1) return false;
-            if (reps > replimit) return false;
-          }
-          if (node.options) {
-            for (i = 0, len = node.options.length; i < len; i++) {
-              ok = walk({
-                stack: node.options[i]
-              }, starHeight);
-              if (!ok) return false;
-            }
-          }
-          var stack = node.stack || node.value && node.value.stack;
-          if (!stack) return true;
-          for (i = 0; i < stack.length; i++) {
-            ok = walk(stack[i], starHeight);
-            if (!ok) return false;
-          }
-          return true;
-        }(re, 0);
-      };
-      function isRegExp(x) {
-        return {}.toString.call(x) === '[object RegExp]';
-      }
-    }, {
-      "ret": 38
+      "./sets": 41,
+      "./types": 42
     }],
     44: [function (require, module, exports) {
       (function (setImmediate, clearImmediate) {
@@ -4687,6 +4687,7 @@
         constructor(pOrator) {
           this.orator = pOrator;
           this.log = pOrator.log;
+          this.ServiceServerType = 'Base';
           this.Name = this.orator.settings.Product;
           this.URL = 'BASE_SERVICE_SERVER';
           this.Port = this.orator.settings.ServicePort;
@@ -4709,13 +4710,17 @@
          * End of Service Lifecycle Functions
          */
 
-        use(fHandlerFunction) {
-          if (typeof fHandlerFunction != 'function') {
-            this.log.error(`Orator USE global handler mapping failed -- parameter was expected to be a function with prototype function(Request, Response, Next) but type was ${typeof fHandlerFunction} instead of a string.`);
-            return false;
-          }
-          return true;
+        /*
+         * Content parsing functions
+         *************************************************************************/
+        bodyParser(pOptions) {
+          return (pRequest, pResponse, fNext) => {
+            fNext();
+          };
         }
+        /*************************************************************************
+         * End of Service Lifecycle Functions
+         */
 
         /*
          * Service Route Creation Functions
@@ -4736,11 +4741,27 @@
         	}
         	 * This pattern and calling super is totally optional, obviously.
          *************************************************************************/
+        use(fHandlerFunction) {
+          if (typeof fHandlerFunction != 'function') {
+            this.log.error(`Orator USE global handler mapping failed -- parameter was expected to be a function with prototype function(Request, Response, Next) but type was ${typeof fHandlerFunction} instead of a string.`);
+            return false;
+          }
+          return true;
+        }
+        doGet(pRoute, ...fRouteProcessingFunctions) {
+          return true;
+        }
         get(pRoute, ...fRouteProcessingFunctions) {
           if (typeof pRoute != 'string') {
             this.log.error(`Orator GET Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
             return false;
           }
+          return this.doGet(pRoute, ...fRouteProcessingFunctions);
+        }
+        getWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
+          return this.get(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+        }
+        doPut(pRoute, ...fRouteProcessingFunctions) {
           return true;
         }
         put(pRoute, ...fRouteProcessingFunctions) {
@@ -4748,6 +4769,12 @@
             this.log.error(`Orator PUT Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
             return false;
           }
+          return this.doPut(pRoute, ...fRouteProcessingFunctions);
+        }
+        putWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
+          return this.put(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+        }
+        doPost(pRoute, ...fRouteProcessingFunctions) {
           return true;
         }
         post(pRoute, ...fRouteProcessingFunctions) {
@@ -4757,12 +4784,21 @@
           }
           return true;
         }
+        postWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
+          return this.post(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+        }
+        doDel(pRoute, ...fRouteProcessingFunctions) {
+          return true;
+        }
         del(pRoute, ...fRouteProcessingFunctions) {
           if (typeof pRoute != 'string') {
             this.log.error(`Orator DEL Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
             return false;
           }
           return true;
+        }
+        delWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
+          return this.del(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
         }
         patch(pRoute, ...fRouteProcessingFunctions) {
           if (typeof pRoute != 'string') {
@@ -4771,6 +4807,9 @@
           }
           return true;
         }
+        patchWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
+          return this.patch(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+        }
         opts(pRoute, ...fRouteProcessingFunctions) {
           if (typeof pRoute != 'string') {
             this.log.error(`Orator OPTS Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
@@ -4778,12 +4817,18 @@
           }
           return true;
         }
+        optsWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
+          return this.opts(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+        }
         head(pRoute, ...fRouteProcessingFunctions) {
           if (typeof pRoute != 'string') {
             this.log.error(`Orator HEAD Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
             return false;
           }
           return true;
+        }
+        headWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
+          return this.head(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
         }
         /*************************************************************************
          * End of Service Route Creation Functions
@@ -4886,6 +4931,7 @@
           this.routerOptions = this.orator.settings.hasOwnProperty('router_options') && typeof this.orator.settings.router_options == 'object' ? this.orator.settings.router_options : {};
           this.router = libFindMyWay(this.routerOptions);
           this.router.addConstraintStrategy(libOratorServiceServerIPCCustomConstrainer);
+          this.ServiceServerType = 'IPC';
           this.URL = 'IPC';
           this.preBehaviorFunctions = [];
           this.behaviorMap = {};
@@ -4980,12 +5026,18 @@
           });
           return true;
         }
+
+        // This is the virtualized "body parser"
+
         get(pRoute, ...fRouteProcessingFunctions) {
           if (!super.get(pRoute, ...fRouteProcessingFunctions)) {
             this.log.error(`IPC provider failed to map GET route [${pRoute}]!`);
             return false;
           }
           return this.addRouteProcessor('GET', pRoute, Array.from(fRouteProcessingFunctions));
+        }
+        getWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
+          return this.get(pRoute, fS);
         }
         put(pRoute, ...fRouteProcessingFunctions) {
           if (!super.get(pRoute, ...fRouteProcessingFunctions)) {

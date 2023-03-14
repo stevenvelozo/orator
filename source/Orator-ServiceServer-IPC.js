@@ -21,6 +21,8 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 		this.router = libFindMyWay(this.routerOptions);
 		this.router.addConstraintStrategy(libOratorServiceServerIPCCustomConstrainer);
 
+		this.ServiceServerType = 'IPC';
+
 		this.URL = 'IPC';
 
 		this.preBehaviorFunctions = [];
@@ -163,6 +165,8 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 		return true;
 	}
 
+	// This is the virtualized "body parser"
+
 	get(pRoute, ...fRouteProcessingFunctions)
 	{
 		if (!super.get(pRoute, ...fRouteProcessingFunctions))
@@ -172,6 +176,10 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 		}
 
 		return this.addRouteProcessor('GET', pRoute, Array.from(fRouteProcessingFunctions));
+	}
+	getWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.get(pRoute, fS)
 	}
 
 	put(pRoute, ...fRouteProcessingFunctions)

@@ -40,7 +40,12 @@ suite
 						Expect(tmpOrator).to.be.an('object', 'Orator should initialize as an object directly from the require statement.');
 						Expect(tmpOrator.startService).to.be.an('function');
 						Expect(tmpOrator.settings).to.be.an('object');
-						fDone();
+						tmpOrator.initializeServiceServer(
+							(pError)=>
+							{
+								Expect(tmpOrator.serviceServer.ServiceServerType).to.equal('IPC', 'The default service server provider should be IPC.');
+								fDone();
+							});
 					}
 				);
 

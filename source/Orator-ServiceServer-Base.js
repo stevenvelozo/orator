@@ -6,6 +6,8 @@ class OratorServiceServerBase
 
 		this.log = pOrator.log;
 
+		this.ServiceServerType = 'Base';
+
 		this.Name = this.orator.settings.Product;
 		this.URL = 'BASE_SERVICE_SERVER';
 		this.Port = this.orator.settings.ServicePort;
@@ -34,17 +36,19 @@ class OratorServiceServerBase
 	 * End of Service Lifecycle Functions
 	 */
 
-	use(fHandlerFunction)
+	/*
+	 * Content parsing functions
+	 *************************************************************************/
+	bodyParser(pOptions)
 	{
-		if (typeof(fHandlerFunction) != 'function')
-		{
-			this.log.error(`Orator USE global handler mapping failed -- parameter was expected to be a function with prototype function(Request, Response, Next) but type was ${typeof(fHandlerFunction)} instead of a string.`)
-			return false;
-		}
-
-		return true;
+		return (pRequest, pResponse, fNext) => 
+			{
+				fNext();
+			};
 	}
-
+	/*************************************************************************
+	 * End of Service Lifecycle Functions
+	 */
 
 	/*
 	 * Service Route Creation Functions
@@ -68,6 +72,21 @@ class OratorServiceServerBase
 
 	 * This pattern and calling super is totally optional, obviously.
 	 *************************************************************************/
+	use(fHandlerFunction)
+	{
+		if (typeof(fHandlerFunction) != 'function')
+		{
+			this.log.error(`Orator USE global handler mapping failed -- parameter was expected to be a function with prototype function(Request, Response, Next) but type was ${typeof(fHandlerFunction)} instead of a string.`)
+			return false;
+		}
+
+		return true;
+	}
+	
+	doGet(pRoute, ...fRouteProcessingFunctions)
+	{
+		return true;
+	}
 	get(pRoute, ...fRouteProcessingFunctions)
 	{
 		if (typeof(pRoute) != 'string')
@@ -75,10 +94,17 @@ class OratorServiceServerBase
 			this.log.error(`Orator GET Route mapping failed -- route parameter was ${typeof(pRoute)} instead of a string.`)
 			return false;
 		}
-
-		return true;
+		return this.doGet(pRoute, ...fRouteProcessingFunctions);
+	}
+	getWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.get(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
 	}
 
+	doPut(pRoute, ...fRouteProcessingFunctions)
+	{
+		return true;
+	}
 	put(pRoute, ...fRouteProcessingFunctions)
 	{
 		if (typeof(pRoute) != 'string')
@@ -86,10 +112,17 @@ class OratorServiceServerBase
 			this.log.error(`Orator PUT Route mapping failed -- route parameter was ${typeof(pRoute)} instead of a string.`)
 			return false;
 		}
-
-		return true;
+		return this.doPut(pRoute, ...fRouteProcessingFunctions);
+	}
+	putWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.put(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
 	}
 
+	doPost(pRoute, ...fRouteProcessingFunctions)
+	{
+		return true;
+	}
 	post(pRoute, ...fRouteProcessingFunctions)
 	{
 		if (typeof(pRoute) != 'string')
@@ -100,7 +133,15 @@ class OratorServiceServerBase
 
 		return true;
 	}
+	postWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.post(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+	}
 
+	doDel(pRoute, ...fRouteProcessingFunctions)
+	{
+		return true;
+	}
 	del(pRoute, ...fRouteProcessingFunctions)
 	{
 		if (typeof(pRoute) != 'string')
@@ -110,6 +151,10 @@ class OratorServiceServerBase
 		}
 
 		return true;
+	}
+	delWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.del(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
 	}
 
 	patch(pRoute, ...fRouteProcessingFunctions)
@@ -122,6 +167,11 @@ class OratorServiceServerBase
 
 		return true;
 	}
+	patchWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.patch(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+	}
+
 
 	opts(pRoute, ...fRouteProcessingFunctions)
 	{
@@ -133,6 +183,11 @@ class OratorServiceServerBase
 
 		return true;
 	}
+	optsWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.opts(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+	}
+
 
 	head(pRoute, ...fRouteProcessingFunctions)
 	{
@@ -143,6 +198,10 @@ class OratorServiceServerBase
 		}
 
 		return true;
+	}
+	headWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.head(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
 	}
 	/*************************************************************************
 	 * End of Service Route Creation Functions
