@@ -166,53 +166,47 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 	}
 
 	// This is the virtualized "body parser"
-
-	get(pRoute, ...fRouteProcessingFunctions)
+	bodyParser()
 	{
-		if (!super.get(pRoute, ...fRouteProcessingFunctions))
+		return (pRequest, pResponse, fNext) =>
 		{
-			this.log.error(`IPC provider failed to map GET route [${pRoute}]!`);
-			return false;
-		}
+			return fNext();
+		};
+	}
 
+	doGet(pRoute, ...fRouteProcessingFunctions)
+	{
 		return this.addRouteProcessor('GET', pRoute, Array.from(fRouteProcessingFunctions));
 	}
-	getWithBodyParser(pRoute, ...fRouteProcessingFunctions)
+
+	doPut(pRoute, ...fRouteProcessingFunctions)
 	{
-		return this.get(pRoute, fS)
+		return this.addRouteProcessor('PUT', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
-	put(pRoute, ...fRouteProcessingFunctions)
+	doPost(pRoute, ...fRouteProcessingFunctions)
 	{
-		if (!super.get(pRoute, ...fRouteProcessingFunctions))
-		{
-			this.log.error(`IPC provider failed to map PUT route [${pRoute}]!`);
-			return false;
-		}
-
-		return true;
+		return this.addRouteProcessor('POST', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
-	post(pRoute, ...fRouteProcessingFunctions)
+	doDel(pRoute, ...fRouteProcessingFunctions)
 	{
-		if (!super.get(pRoute, ...fRouteProcessingFunctions))
-		{
-			this.log.error(`IPC provider failed to map POST route [${pRoute}]!`);
-			return false;
-		}
-
-		return true;
+		return this.addRouteProcessor('DEL', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
-	del(pRoute, ...fRouteProcessingFunctions)
+	doPatch(pRoute, ...fRouteProcessingFunctions)
 	{
-		if (!super.get(pRoute, ...fRouteProcessingFunctions))
-		{
-			this.log.error(`IPC provider failed to map DEL route [${pRoute}]!`);
-			return false;
-		}
+		return this.addRouteProcessor('PATCH', pRoute, Array.from(fRouteProcessingFunctions));
+	}
 
-		return true;
+	doOpts(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.addRouteProcessor('OPTS', pRoute, Array.from(fRouteProcessingFunctions));
+	}
+
+	doHead(pRoute, ...fRouteProcessingFunctions)
+	{
+		return this.addRouteProcessor('HEAD', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 	/*************************************************************************
 	 * End of Service Route Creation Functions

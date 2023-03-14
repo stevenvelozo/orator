@@ -82,7 +82,7 @@ class OratorServiceServerBase
 
 		return true;
 	}
-	
+
 	doGet(pRoute, ...fRouteProcessingFunctions)
 	{
 		return true;
@@ -130,8 +130,7 @@ class OratorServiceServerBase
 			this.log.error(`Orator POST Route mapping failed -- route parameter was ${typeof(pRoute)} instead of a string.`)
 			return false;
 		}
-
-		return true;
+		return this.doPost(pRoute, ...fRouteProcessingFunctions);
 	}
 	postWithBodyParser(pRoute, ...fRouteProcessingFunctions)
 	{
@@ -149,14 +148,17 @@ class OratorServiceServerBase
 			this.log.error(`Orator DEL Route mapping failed -- route parameter was ${typeof(pRoute)} instead of a string.`)
 			return false;
 		}
-
-		return true;
+		return this.doDel(pRoute, ...fRouteProcessingFunctions);
 	}
 	delWithBodyParser(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.del(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
 	}
 
+	doPatch(pRoute, ...fRouteProcessingFunctions)
+	{
+		return true;
+	}
 	patch(pRoute, ...fRouteProcessingFunctions)
 	{
 		if (typeof(pRoute) != 'string')
@@ -164,15 +166,17 @@ class OratorServiceServerBase
 			this.log.error(`Orator PATCH Route mapping failed -- route parameter was ${typeof(pRoute)} instead of a string.`)
 			return false;
 		}
-
-		return true;
+		return this.doPatch(pRoute, ...fRouteProcessingFunctions);
 	}
 	patchWithBodyParser(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.patch(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
 	}
 
-
+	doOpts(pRoute, ...fRouteProcessingFunctions)
+	{
+		return true;
+	}
 	opts(pRoute, ...fRouteProcessingFunctions)
 	{
 		if (typeof(pRoute) != 'string')
@@ -180,15 +184,17 @@ class OratorServiceServerBase
 			this.log.error(`Orator OPTS Route mapping failed -- route parameter was ${typeof(pRoute)} instead of a string.`)
 			return false;
 		}
-
-		return true;
+		return this.doOpts(pRoute, ...fRouteProcessingFunctions);
 	}
 	optsWithBodyParser(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.opts(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
 	}
 
-
+	doHead(pRoute, ...fRouteProcessingFunctions)
+	{
+		return true;
+	}
 	head(pRoute, ...fRouteProcessingFunctions)
 	{
 		if (typeof(pRoute) != 'string')

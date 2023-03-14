@@ -4782,7 +4782,7 @@
             this.log.error(`Orator POST Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
             return false;
           }
-          return true;
+          return this.doPost(pRoute, ...fRouteProcessingFunctions);
         }
         postWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
           return this.post(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
@@ -4795,30 +4795,39 @@
             this.log.error(`Orator DEL Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
             return false;
           }
-          return true;
+          return this.doDel(pRoute, ...fRouteProcessingFunctions);
         }
         delWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
           return this.del(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+        }
+        doPatch(pRoute, ...fRouteProcessingFunctions) {
+          return true;
         }
         patch(pRoute, ...fRouteProcessingFunctions) {
           if (typeof pRoute != 'string') {
             this.log.error(`Orator PATCH Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
             return false;
           }
-          return true;
+          return this.doPatch(pRoute, ...fRouteProcessingFunctions);
         }
         patchWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
           return this.patch(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+        }
+        doOpts(pRoute, ...fRouteProcessingFunctions) {
+          return true;
         }
         opts(pRoute, ...fRouteProcessingFunctions) {
           if (typeof pRoute != 'string') {
             this.log.error(`Orator OPTS Route mapping failed -- route parameter was ${typeof pRoute} instead of a string.`);
             return false;
           }
-          return true;
+          return this.doOpts(pRoute, ...fRouteProcessingFunctions);
         }
         optsWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
           return this.opts(pRoute, this.bodyParser(), ...fRouteProcessingFunctions);
+        }
+        doHead(pRoute, ...fRouteProcessingFunctions) {
+          return true;
         }
         head(pRoute, ...fRouteProcessingFunctions) {
           if (typeof pRoute != 'string') {
@@ -5028,37 +5037,31 @@
         }
 
         // This is the virtualized "body parser"
-
-        get(pRoute, ...fRouteProcessingFunctions) {
-          if (!super.get(pRoute, ...fRouteProcessingFunctions)) {
-            this.log.error(`IPC provider failed to map GET route [${pRoute}]!`);
-            return false;
-          }
+        bodyParser() {
+          return (pRequest, pResponse, fNext) => {
+            return fNext();
+          };
+        }
+        doGet(pRoute, ...fRouteProcessingFunctions) {
           return this.addRouteProcessor('GET', pRoute, Array.from(fRouteProcessingFunctions));
         }
-        getWithBodyParser(pRoute, ...fRouteProcessingFunctions) {
-          return this.get(pRoute, fS);
+        doPut(pRoute, ...fRouteProcessingFunctions) {
+          return this.addRouteProcessor('PUT', pRoute, Array.from(fRouteProcessingFunctions));
         }
-        put(pRoute, ...fRouteProcessingFunctions) {
-          if (!super.get(pRoute, ...fRouteProcessingFunctions)) {
-            this.log.error(`IPC provider failed to map PUT route [${pRoute}]!`);
-            return false;
-          }
-          return true;
+        doPost(pRoute, ...fRouteProcessingFunctions) {
+          return this.addRouteProcessor('POST', pRoute, Array.from(fRouteProcessingFunctions));
         }
-        post(pRoute, ...fRouteProcessingFunctions) {
-          if (!super.get(pRoute, ...fRouteProcessingFunctions)) {
-            this.log.error(`IPC provider failed to map POST route [${pRoute}]!`);
-            return false;
-          }
-          return true;
+        doDel(pRoute, ...fRouteProcessingFunctions) {
+          return this.addRouteProcessor('DEL', pRoute, Array.from(fRouteProcessingFunctions));
         }
-        del(pRoute, ...fRouteProcessingFunctions) {
-          if (!super.get(pRoute, ...fRouteProcessingFunctions)) {
-            this.log.error(`IPC provider failed to map DEL route [${pRoute}]!`);
-            return false;
-          }
-          return true;
+        doPatch(pRoute, ...fRouteProcessingFunctions) {
+          return this.addRouteProcessor('PATCH', pRoute, Array.from(fRouteProcessingFunctions));
+        }
+        doOpts(pRoute, ...fRouteProcessingFunctions) {
+          return this.addRouteProcessor('OPTS', pRoute, Array.from(fRouteProcessingFunctions));
+        }
+        doHead(pRoute, ...fRouteProcessingFunctions) {
+          return this.addRouteProcessor('HEAD', pRoute, Array.from(fRouteProcessingFunctions));
         }
         /*************************************************************************
          * End of Service Route Creation Functions
