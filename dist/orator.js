@@ -5052,13 +5052,13 @@
           return this.addRouteProcessor('POST', pRoute, Array.from(fRouteProcessingFunctions));
         }
         doDel(pRoute, ...fRouteProcessingFunctions) {
-          return this.addRouteProcessor('DEL', pRoute, Array.from(fRouteProcessingFunctions));
+          return this.addRouteProcessor('DELETE', pRoute, Array.from(fRouteProcessingFunctions));
         }
         doPatch(pRoute, ...fRouteProcessingFunctions) {
           return this.addRouteProcessor('PATCH', pRoute, Array.from(fRouteProcessingFunctions));
         }
         doOpts(pRoute, ...fRouteProcessingFunctions) {
-          return this.addRouteProcessor('OPTS', pRoute, Array.from(fRouteProcessingFunctions));
+          return this.addRouteProcessor('OPTIONS', pRoute, Array.from(fRouteProcessingFunctions));
         }
         doHead(pRoute, ...fRouteProcessingFunctions) {
           return this.addRouteProcessor('HEAD', pRoute, Array.from(fRouteProcessingFunctions));

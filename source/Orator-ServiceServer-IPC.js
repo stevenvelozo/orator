@@ -191,7 +191,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 
 	doDel(pRoute, ...fRouteProcessingFunctions)
 	{
-		return this.addRouteProcessor('DEL', pRoute, Array.from(fRouteProcessingFunctions));
+		return this.addRouteProcessor('DELETE', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
 	doPatch(pRoute, ...fRouteProcessingFunctions)
@@ -201,7 +201,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 
 	doOpts(pRoute, ...fRouteProcessingFunctions)
 	{
-		return this.addRouteProcessor('OPTS', pRoute, Array.from(fRouteProcessingFunctions));
+		return this.addRouteProcessor('OPTIONS', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
 	doHead(pRoute, ...fRouteProcessingFunctions)
