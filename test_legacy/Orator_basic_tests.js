@@ -150,7 +150,7 @@ suite
 												.end(
 													function (pError, pResponse)
 													{
-														_Orator.settings.Profiling.TraceLog = true;
+														_Orator.options.Profiling.TraceLog = true;
 														Expect(pResponse.text)
 															.to.contain('50000px');
 														libSuperTest('http://localhost:8099/')

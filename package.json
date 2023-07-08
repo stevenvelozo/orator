@@ -1,69 +1,61 @@
 {
-  "name": "orator",
-  "version": "3.0.11",
-  "description": "Unopinionated restful web API server container",
-  "main": "source/Orator.js",
-  "scripts": {
-    "start": "node source/Orator.js",
-    "coverage": "./node_modules/.bin/nyc --reporter=lcov --reporter=text-lcov ./node_modules/mocha/bin/_mocha -- -u tdd -R spec",
-    "test": "./node_modules/mocha/bin/_mocha --exit -u tdd -R spec",
-    "build": "./node_modules/.bin/gulp build",
-    "docker-dev-build-image": "docker build ./ -f Dockerfile_LUXURYCode -t retold/orator:local",
-    "docker-dev-run": "docker run -it -d --name retold-orator-dev -p 40000:8080 -p 48086:8086 -p 48088:8088 -v \"$PWD/.config:/home/coder/.config\"  -v \"$PWD:/home/coder/orator\" -u \"$(id -u):$(id -g)\" -e \"DOCKER_USER=$USER\" retold/orator:local"
-  },
-  "browser": {
-    "./source/Orator-Default-ServiceServers-Node.js": "./source/Orator-Default-ServiceServers-Web.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/stevenvelozo/orator.git"
-  },
-  "keywords": [
-    "rest",
-    "api",
-    "logging"
-  ],
-  "author": "Steven Velozo <steven@velozo.com> (http://velozo.com/)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/stevenvelozo/orator/issues"
-  },
-  "mocha": {
-    "diff": true,
-    "extension": [
-      "js"
+    "name": "orator",
+    "version": "4.0.0",
+    "description": "Unopinionated API behavior container - REST or IPC",
+    "main": "source/Orator.js",
+    "scripts": {
+        "start": "node source/Orator.js",
+        "coverage": "npx nyc --reporter=lcov --reporter=text-lcov ./node_modules/mocha/bin/_mocha -- -u tdd -R spec",
+        "test": "npx mocha -u tdd -R spec",
+        "build": "npx quack build",
+        "docker-dev-build-image": "docker build ./ -f Dockerfile_LUXURYCode -t retold/orator:local",
+        "docker-dev-run": "docker run -it -d --name orator-dev -p 15277:8080 -p 34566:8086 -v \"$PWD/.config:/home/coder/.config\"  -v \"$PWD:/home/coder/orator\" -u \"$(id -u):$(id -g)\" -e \"DOCKER_USER=$USER\" orator-image:local",
+        "tests": "npx mocha -u tdd --exit -R spec --grep",
+        "docker-dev-build": "docker build ./ -f Dockerfile_LUXURYCode -t orator-image:local",
+        "docker-dev-shell": "docker exec -it orator-dev /bin/bash"
+    },
+    "browser": {
+        "./source/Orator-Default-ServiceServer.js": "./source/Orator-Default-ServiceServer-Web.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/stevenvelozo/orator.git"
+    },
+    "keywords": [
+        "rest",
+        "api",
+        "logging"
     ],
-    "package": "./package.json",
-    "reporter": "spec",
-    "slow": "75",
-    "timeout": "5000",
-    "ui": "tdd",
-    "watch-files": [
-      "source/**/*.js",
-      "test/**/*.js"
-    ],
-    "watch-ignore": [
-      "lib/vendor"
-    ]
-  },
-  "homepage": "https://github.com/stevenvelozo/orator",
-  "devDependencies": {
-    "browserify": "^17.0.0",
-    "chai": "4.3.7",
-    "fable": "^3.0.11",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-terser": "^2.1.0",
-    "gulp-util": "^3.0.8",
-    "mocha": "10.2.0",
-    "nyc": "^15.1.0",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0",
-    "orator-serviceserver-restify": "^1.0.1"
-  },
-  "dependencies": {
-    "async": "^3.2.4",
-    "find-my-way": "^7.5.0"
-  }
+    "author": "Steven Velozo <steven@velozo.com> (http://velozo.com/)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/stevenvelozo/orator/issues"
+    },
+    "mocha": {
+        "diff": true,
+        "extension": [
+            "js"
+        ],
+        "package": "./package.json",
+        "reporter": "spec",
+        "slow": "75",
+        "timeout": "5000",
+        "ui": "tdd",
+        "watch-files": [
+            "source/**/*.js",
+            "test/**/*.js"
+        ],
+        "watch-ignore": [
+            "lib/vendor"
+        ]
+    },
+    "homepage": "https://github.com/stevenvelozo/orator",
+    "devDependencies": {
+        "fable": "^3.0.73",
+        "quackage": "^1.0.17"
+    },
+    "dependencies": {
+        "fable-serviceproviderbase": "^3.0.10",
+        "find-my-way": "^7.5.0"
+    }
 }

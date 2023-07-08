@@ -1,8 +1,25 @@
 class OratorServiceServerIPCSynthesizedResponse
 {
-	constructor(pLog, pRequestGUID)
+	constructor(pHandler, pLog, pRequestGUID)
 	{
 		this.log = pLog;
+
+		if (pHandler.hasOwnProperty('params'))
+		{
+			this.params = pHandler.params;
+		}
+		else
+		{
+			this.params = {};
+		}
+		if (pHandler.hasOwnProperty('searchParams'))
+		{
+			this.searchParams = pHandler.searchParams;
+		}
+		else
+		{
+			this.searchParams = {};
+		}
 
 		this.requestGUID = pRequestGUID;
 

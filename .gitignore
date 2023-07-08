@@ -1,3 +1,9 @@
+.babelrc
+.browserslistrc
+.browserslistrc-BACKUP
+.gulpfile-quackage-config.json
+.gulpfile-quackage.js
+
 # Logs
 logs
 *.log

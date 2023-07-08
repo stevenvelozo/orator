@@ -12,15 +12,11 @@ let _Fable = new libFable({
 // Uncomment the following line to test the restify server plug-in
 // > make sure to run "npm i orator-serviceserver-restify" from the parent directory first so the package is available
 // > please don't --save it!
-const libOratorServiceServerRestify = require('orator-serviceserver-restify');
+// _Fable.serviceManager.instantiateServiceProvider('OratorServiceServer', require('orator-serviceserver-restify'));
+//const libOratorServiceServerRestify = require('orator-serviceserver-restify');
 
-const tmpServiceServer = new libOrator(
-	_Fable
-	// Uncomment the next line to enable restify!
-	,libOratorServiceServerRestify
-);
-// Initialize the service server
-tmpServiceServer.initializeServiceServer();
+_Fable.serviceManager.addAndInitializeServiceType('Orator', libOrator);
+
 // Start the service
 tmpServiceServer.startService();
 

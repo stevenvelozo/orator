@@ -14,11 +14,12 @@ const Assert = Chai.assert;
 
 //const libSuperTest = require('supertest');
 const libFable = require('fable');
-const _Fable = new libFable(
+
+const defaultFableSettings = (
 	{
 		Product:'Orator-BasicTests-Backplane',
 		ProductVersion: '0.0.0',
-		APIServerPort: 8099
+		APIServerPort: 0
 	});
 
 suite
@@ -36,11 +37,13 @@ suite
 					'initialize should build a happy little object',
 					(fDone) =>
 					{
-						let tmpOrator = new libOrator(_Fable);
+						let tmpFable = new libFable(defaultFableSettings);
+						tmpFable.serviceManager.addServiceType('Orator', libOrator);
+						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
 						Expect(tmpOrator).to.be.an('object', 'Orator should initialize as an object directly from the require statement.');
 						Expect(tmpOrator.startService).to.be.an('function');
-						Expect(tmpOrator.settings).to.be.an('object');
-						tmpOrator.initializeServiceServer(
+						Expect(tmpOrator.options).to.be.an('object');
+						tmpOrator.initialize(
 							(pError)=>
 							{
 								Expect(tmpOrator.serviceServer.ServiceServerType).to.equal('IPC', 'The default service server provider should be IPC.');
@@ -51,14 +54,36 @@ suite
 
 				test
 				(
-					'orator should be able to initialize and start a service with no effort',
+					'orator should be able to initialize and start a service with discrete steps for init and start',
 					(fDone) =>
 					{
-						let tmpOrator = new libOrator(_Fable);
-						// Start the service server
-						tmpOrator.initializeServiceServer();
+						let tmpFable = new libFable(defaultFableSettings);
+						tmpFable.serviceManager.addServiceType('Orator', libOrator);
+						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
 						// Start the service
-						Expect(tmpOrator.serviceServer.Active).to.equal(false);
+						tmpOrator.initialize(
+							() =>
+							{
+								Expect(tmpOrator.serviceServer.Active).to.equal(false);
+								tmpOrator.startService(
+									()=>
+									{
+										Expect(tmpOrator.serviceServer.Active).to.equal(true);
+										fDone();
+									});
+							})
+					}
+				);
+
+				test
+				(
+					'orator should be able to initialize IPC and start a service with no effort',
+					(fDone) =>
+					{
+						let tmpFable = new libFable(defaultFableSettings);
+						tmpFable.serviceManager.addServiceType('Orator', libOrator);
+						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
+						// Start the service, which will implicitly call initialize
 						tmpOrator.startService(
 							()=>
 							{
@@ -73,12 +98,11 @@ suite
 					'ipc should be able to provide basic endpoint functionality',
 					(fDone) =>
 					{
-						let tmpOrator = new libOrator(_Fable);
-						// Initialize the service server
-						tmpOrator.initializeServiceServer();
+						let tmpFable = new libFable(defaultFableSettings);
+						tmpFable.serviceManager.addServiceType('Orator', libOrator);
+						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
 						// Start the service
 						tmpOrator.startService();
-
 						tmpOrator.serviceServer.get
 						(
 							'/test/:hash',
@@ -109,9 +133,10 @@ suite
 					'ipc should be able to process any number of handler additions with the use function',
 					(fDone) =>
 					{
-						let tmpOrator = new libOrator(_Fable);
-						// Initialize the service server
-						tmpOrator.initializeServiceServer();
+						let tmpFable = new libFable(defaultFableSettings);
+						tmpFable.serviceManager.addServiceType('Orator', libOrator);
+						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
+
 						// Start the service
 						tmpOrator.startService();
 
@@ -130,7 +155,7 @@ suite
 							}
 						);
 
-						_Fable.Utility.waterfall([
+						tmpFable.Utility.waterfall([
 								(fStageComplete) =>
 								{
 									let tmpURI = `/MagicEndpoint/BippityBoppityBoo`;

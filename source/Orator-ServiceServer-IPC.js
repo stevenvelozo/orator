@@ -3,27 +3,24 @@ const libOratorServiceServerBase = require('./Orator-ServiceServer-Base.js');
 // A synthesized response object, for simple IPC.
 const libOratorServiceServerIPCSynthesizedResponse = require('./Orator-ServiceServer-IPC-SynthesizedResponse.js');
 // A simple constrainer for the find-my-way router since we aren't using any kind of headers to pass version or host
-const libOratorServiceServerIPCCustomConstrainer = require('./Orator-ServiceServer-IPC-RouterConstrainer.js');
+//const libOratorServiceServerIPCCustomConstrainer = require('./Orator-ServiceServer-IPC-RouterConstrainer.js');
 
 // This library is the default router for our services
 const libFindMyWay = require('find-my-way');
-//const libAsync = require('async');
-const libAsyncWaterfall = require("async/waterfall");
-const libAsyncEachOfSeries = require('async/eachOfSeries')
 
 class OratorServiceServerIPC extends libOratorServiceServerBase
 {
-	constructor(pOrator)
+	constructor(pFable, pOptions, pServiceHash)
 	{
-		super(pOrator);
+        super(pFable, pOptions, pServiceHash);
 
-		this.routerOptions = (this.orator.settings.hasOwnProperty('router_options') && (typeof(this.orator.settings.router_options) == 'object')) ? this.orator.settings.router_options : {};
-		this.router = libFindMyWay(this.routerOptions);
-		this.router.addConstraintStrategy(libOratorServiceServerIPCCustomConstrainer);
+		this.router = libFindMyWay(this.options);
+		//this.router.addConstraintStrategy(libOratorServiceServerIPCCustomConstrainer);
 
 		this.ServiceServerType = 'IPC';
 
 		this.URL = 'IPC';
+		this.Port = 0;
 
 		this.preBehaviorFunctions = [];
 		this.behaviorMap = {};
@@ -32,16 +29,10 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 
 	use(fHandlerFunction)
 	{
-		if (!super.use(fHandlerFunction))
-		{
-			this.log.error(`IPC provider failed to map USE handler function!`);
-			return false;
-		}
-
-		this.preBehaviorFunctions.push(fHandlerFunction);
+		return this.addPreBehaviorFunction(fHandlerFunction);
 	}
 
-	addPostBehaviorFunction(fHandlerFunction)
+	addPreBehaviorFunction(fHandlerFunction)
 	{
 		if (!super.use(fHandlerFunction))
 		{
@@ -50,15 +41,24 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 		}
 
 		this.preBehaviorFunctions.push(fHandlerFunction);
+		return true;
 	}
 
 	executePreBehaviorFunctions(pRequest, pResponse, fNext)
 	{
-		libAsyncEachOfSeries(this.preBehaviorFunctions,
-			(fBehaviorFunction, pFunctionIndex, fCallback) =>
-			{
-				return fBehaviorFunction(pRequest, pResponse, fCallback);
-			},
+		let tmpAnticipate = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration('Anticipate');
+
+		for (let i = 0; i < this.preBehaviorFunctions.length; i++)
+		{
+			let tmpPreBehaviorFunction = this.preBehaviorFunctions[i];
+			tmpAnticipate.anticipate(
+				(fStageComplete) =>
+				{
+					return tmpPreBehaviorFunction(pRequest, pResponse, fStageComplete);
+				});
+		}
+
+		tmpAnticipate.wait(
 			(pError) =>
 			{
 				if (pError)
@@ -77,16 +77,25 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 			return false;
 		}
 
-		this.preBehaviorFunctions.push(fHandlerFunction);
+		this.postBehaviorFunctions.push(fHandlerFunction);
+		return true;
 	}
 
 	executePostBehaviorFunctions(pRequest, pResponse, fNext)
 	{
-		libAsyncEachOfSeries(this.postBehaviorFunctions,
-			(fBehaviorFunction, pFunctionIndex, fCallback) =>
-			{
-				return fBehaviorFunction(pRequest, pResponse, fCallback);
-			},
+		let tmpAnticipate = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration('Anticipate');
+
+		for (let i = 0; i < this.postBehaviorFunctions.length; i++)
+		{
+			let tmpPostBehaviorFunction = this.postBehaviorFunctions[i];
+			tmpAnticipate.anticipate(
+				(fStageComplete) =>
+				{
+					return tmpPostBehaviorFunction(pRequest, pResponse, fStageComplete);
+				});
+		}
+
+		tmpAnticipate.wait(
 			(pError) =>
 			{
 				if (pError)
@@ -117,52 +126,55 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 	{
 		// We have a constrainer on IPC so we can control channels eventually, if we like.
 		// For now it just makes sure it was added with an IPC service server.
-		this.router.on(pMethod, pRoute, { constraints: { "ipc": "IPC" } },
-			(pRequest, pResponse, pParameters) =>
+		this.router.on(pMethod, pRoute, this.buildFindMyWayHandler(pRouteFunctionArray));
+		return true;
+	}
+
+	buildFindMyWayHandler(pRouteFunctionArray)
+	{
+		let tmpRouteFunctionArray = pRouteFunctionArray;
+		return (
+			(pRequest, pResponse, pData) =>
 			{
-				libAsyncWaterfall(
-					[
-						(fStageComplete)=>
-						{
-							// Added to make this mimic what we saw with route parsing in the old restify
-							pRequest.params = pParameters;
-							return fStageComplete();
-						},
-						(fStageComplete)=>
-						{
-							return this.executePreBehaviorFunctions(pRequest, pResponse, fStageComplete);
-						},
-						(fStageComplete)=>
-						{
-							libAsyncEachOfSeries(pRouteFunctionArray,
-								(fBehaviorFunction, pFunctionIndex, fCallback) =>
-								{
-									return fBehaviorFunction(pRequest, pResponse, fCallback);
-								},
-								(pBehaviorFunctionError) =>
-								{
-									if (pBehaviorFunctionError)
-									{
-										this.log.error(`IPC Provider behavior function ${pFunctionIndex} failed with error: ${pBehaviorFunctionError}`, pBehaviorFunctionError);
-										return fNext(pError);
-									}
-								});
-						},
-						(fStageComplete)=>
-						{
-							return this.executePostBehaviorFunctions(pRequest, pResponse, fStageComplete);
-						}
-					],
-					(pRequestError)=>
+				let tmpAnticipate = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration('Anticipate');
+
+				tmpAnticipate.anticipate(
+					(fNext)=>
 					{
-						if (pRequestError)
+						return this.executePreBehaviorFunctions(pRequest, pResponse, fNext);
+					});
+
+				for (let i = 0; i < tmpRouteFunctionArray.length; i++)
+				{
+					let tmpRouteFunction = tmpRouteFunctionArray[i];
+					tmpAnticipate.anticipate(
+						(fNext) =>
 						{
-							this.log.error(`IPC Provider behavior function ${pFunctionIndex} failed with error: ${pBehaviorFunctionError}`, pBehaviorFunctionError);
-						}
+							return tmpRouteFunction(pRequest, pResponse, fNext);
+						});
+				}
+
+				tmpAnticipate.anticipate(
+					(fStageComplete)=>
+					{
+						return this.executePostBehaviorFunctions(pRequest, pResponse, fStageComplete);
+					});
+
+				return new Promise(
+					(fResolve, fReject) =>
+					{
+						tmpAnticipate.wait(
+							(pBehaviorFunctionError) =>
+							{
+								if (pBehaviorFunctionError)
+								{
+									this.log.error(`IPC Provider behavior function ${pFunctionIndex} failed with error: ${pBehaviorFunctionError}`, pBehaviorFunctionError);
+									return fReject(pBehaviorFunctionError);
+								}
+								return fResolve();
+							});
 					});
 			});
-
-		return true;
 	}
 
 	// This is the virtualized "body parser"
@@ -218,33 +230,49 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 		// If the data is skipped and a callback is parameter 3, do the right thing
 		let tmpCallback = (typeof(fCallback) == 'function') ? fCallback :
 							(typeof(pData) == 'function') ? pData :
-							// This is here in case the developer passed no callback and just wants to fire and forget the IPC call which might not be async safe
-							()=>{};
+							false;
+
+		if (!tmpCallback)
+		{
+			throw new Error(`IPC Provider invoke() called without a callback function.`);
+		}
 
 		// Create a bare minimum request object for IPC to pass to our router
 		let tmpRequest = (
 			{
 				method: pMethod,
 				url: pRoute,
-				guid: this.orator.fable.getUUID()
+				guid: this.fable.getUUID()
 			});
 
-		// Create a container for the IPC response data to be aggregated to from send() methodds
-		let tmpSynthesizedResponseData = new libOratorServiceServerIPCSynthesizedResponse(this.log, tmpRequest.guid);
+		// For now, dealing with no handler constraints.
+		let tmpHandler = this.router.find( tmpRequest.method, tmpRequest.url);
 
-		return this.router.lookup(
-			tmpRequest,
-			tmpSynthesizedResponseData,
-			(pError, pResults)=>
+		// Create a container for the IPC response data to be aggregated to from send() methodds
+		let tmpSynthesizedResponseData = new libOratorServiceServerIPCSynthesizedResponse(tmpHandler, this.log, tmpRequest.guid);
+
+		// Map parsed params back to the request object
+		tmpRequest.params = tmpSynthesizedResponseData.params;
+		tmpRequest.searchParams = tmpSynthesizedResponseData.searchParams;
+
+		//params: handle._createParamsObject(params)//,
+        //searchParams: this.querystringParser(querystring)
+
+		tmpHandler.handler(tmpRequest, tmpSynthesizedResponseData, pData).then(
+			(pResults)=>
 			{
+				return tmpCallback(null, tmpSynthesizedResponseData.responseData, tmpSynthesizedResponseData, pResults);
+			},
+			(pError)=>
+			{
+				this.log.trace('IPC Response Received', {Error: pError});
 				if (pError)
 				{
 					this.log.error(`IPC Request Error Request GUID [${tmpRequest.guid}] handling route [${pRoute}]: ${pError}`, {Error: pError, Route: pRoute, Data: pData});
 				}
-
-				// by default, send data back through
-				return tmpCallback(pError, tmpSynthesizedResponseData.responseData, tmpSynthesizedResponseData, pResults);
-			});
+				return tmpCallback(pError, tmpSynthesizedResponseData.responseData, tmpSynthesizedResponseData);
+			}
+		);
 	}
 }
 

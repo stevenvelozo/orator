@@ -1,16 +1,18 @@
-class OratorServiceServerBase
-{
-	constructor(pOrator)
-	{
-		this.orator = pOrator;
+const libFableServiceProviderBase = require('fable-serviceproviderbase');
 
-		this.log = pOrator.log;
+class OratorServiceServerBase extends libFableServiceProviderBase
+{
+	constructor(pFable, pOptions, pServiceHash)
+	{
+        super(pFable, pOptions, pServiceHash);
+
+        this.serviceType = 'OratorServiceServer';
 
 		this.ServiceServerType = 'Base';
 
-		this.Name = this.orator.settings.Product;
+		this.Name = this.fable.settings.Product;
 		this.URL = 'BASE_SERVICE_SERVER';
-		this.Port = this.orator.settings.ServicePort;
+		this.Port = this.options.ServicePort;
 
 		this.Active = false;
 	}

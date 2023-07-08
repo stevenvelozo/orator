@@ -116,7 +116,7 @@ suite
 												.to.contain('dire');
 										}
 										// Next uncaught exception should be passed through without logging the stack trace
-										_Orator.settings.LogStackTraces = false;
+										_Orator.options.LogStackTraces = false;
 										fDone();
 									}
 								);
