@@ -1,6 +1,6 @@
 {
     "name": "orator",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "description": "Unopinionated API behavior container - REST or IPC",
     "main": "source/Orator.js",
     "scripts": {
@@ -56,6 +56,7 @@
     },
     "dependencies": {
         "fable-serviceproviderbase": "^3.0.10",
-        "find-my-way": "^7.5.0"
+        "find-my-way": "^7.5.0",
+        "orator-serviceserver-base": "^1.0.0"
     }
 }

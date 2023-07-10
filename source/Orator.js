@@ -165,7 +165,7 @@ class Orator extends libFableServiceProviderBase
 			this.options.ServicePort,
 			(pError)	=>
 			{
-				this.log.info(`${this.serviceServer.Name} listening at ${this.serviceServer.URL} port ${this.serviceServer.Port}`);
+				this.log.info(`${this.serviceServer.Name} listening on port ${this.options.ServicePort}`);
 				return fNext(pError);
 			}
 		);
@@ -268,5 +268,5 @@ class Orator extends libFableServiceProviderBase
 }
 
 module.exports = Orator;
-module.exports.ServiceServerBase = require('./Orator-ServiceServer-Base.js');
+module.exports.ServiceServerBase = require('orator-serviceserver-base');
 module.exports.ServiceServerIPC = require('./Orator-ServiceServer-IPC.js');

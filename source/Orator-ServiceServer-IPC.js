@@ -1,9 +1,7 @@
-const libOratorServiceServerBase = require('./Orator-ServiceServer-Base.js');
+const libOratorServiceServerBase = require('orator-serviceserver-base');
 
 // A synthesized response object, for simple IPC.
 const libOratorServiceServerIPCSynthesizedResponse = require('./Orator-ServiceServer-IPC-SynthesizedResponse.js');
-// A simple constrainer for the find-my-way router since we aren't using any kind of headers to pass version or host
-//const libOratorServiceServerIPCCustomConstrainer = require('./Orator-ServiceServer-IPC-RouterConstrainer.js');
 
 // This library is the default router for our services
 const libFindMyWay = require('find-my-way');
@@ -15,7 +13,6 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
         super(pFable, pOptions, pServiceHash);
 
 		this.router = libFindMyWay(this.options);
-		//this.router.addConstraintStrategy(libOratorServiceServerIPCCustomConstrainer);
 
 		this.ServiceServerType = 'IPC';
 
