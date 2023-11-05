@@ -118,7 +118,7 @@ class Orator extends libFableServiceProviderBase
 
 	initialize(fCallback)
 	{
-		// I hate this -- is there a reason to not require a callback?
+		// I hate this -- as long as we want to be "mostly" backwards compatible it needs to do it though
 		let tmpCallback = (typeof(fCallback) === 'function') ? fCallback : () => {};
 
 		if (!this.initializeTimestamp)
@@ -257,7 +257,7 @@ class Orator extends libFableServiceProviderBase
 		// this accessor function is called.
 		if (!this.serviceServer)
 		{
-			this.initializeServiceServer();
+			this.initialize();
 		}
 
 		return this.serviceServer;
