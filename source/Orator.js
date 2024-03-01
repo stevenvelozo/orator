@@ -25,11 +25,6 @@ class Orator extends libFableServiceProviderBase
 		this.serviceServer = false;
 		this.serviceServerProvider = false;
 
-		if (typeof(pServiceProvider) !== 'undefined')
-		{
-			this.serviceServerProvider = pServiceProvider;
-		}
-
 		// Now check to see that the ServicePort is set (this used to be APIServerPort)
 		if (!this.options.hasOwnProperty('ServicePort'))
 		{

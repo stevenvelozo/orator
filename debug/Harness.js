@@ -13,9 +13,11 @@ let _Fable = new libFable({
 // > make sure to run "npm i orator-serviceserver-restify" from the parent directory first so the package is available
 // > please don't --save it!
 // _Fable.serviceManager.instantiateServiceProvider('OratorServiceServer', require('orator-serviceserver-restify'));
-//const libOratorServiceServerRestify = require('orator-serviceserver-restify');
+const libOratorServiceServerRestify = require('orator-serviceserver-restify');
+_Fable.serviceManager.addAndInstantiateServiceType('OratorServiceServer', libOratorServiceServerRestify);
 
-_Fable.serviceManager.addAndInitializeServiceType('Orator', libOrator);
+_Fable.serviceManager.addServiceType('Orator', libOrator);
+const tmpServiceServer = _Fable.serviceManager.instantiateServiceProvider('Orator');
 
 // Start the service
 tmpServiceServer.startService();
