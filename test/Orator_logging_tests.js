@@ -15,7 +15,7 @@ var libSuperTest = require('supertest');
 var _MockSettings = (
 {
 	Product: 'MockOratorRequestLogging',
-	APIServerPort: 8085,
+	APIServerPort: 8985,
 	Profiling: (
 		{
 			// Tracelog is just log-based request timing encapsulation.
@@ -83,7 +83,7 @@ suite
 							}
 						);
 						_Orator.startWebServer();
-						libSuperTest('http://localhost:8085/')
+						libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 						.get('PINGOLo')
 						.end(
 							function (pError, pResponse)
@@ -98,7 +98,7 @@ suite
 									Expect(pResponse.text)
 										.to.contain('Loggo');
 								}
-								libSuperTest('http://localhost:8085/')
+								libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 								.get('PINataGOLo')
 								.end(
 									function (pError, pResponse)
@@ -129,7 +129,7 @@ suite
 					'uncaught exceptions should throw properly.',
 					function(fDone)
 					{
-						libSuperTest('http://localhost:8085/')
+						libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 						.get('PINataGOLo')
 						.end(
 							function (pError, pResponse)
@@ -156,7 +156,7 @@ suite
 					'rejected promises should throw properly.',
 					function(fDone)
 					{
-						libSuperTest('http://localhost:8085/')
+						libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 						.get('PINataGOLo_promise')
 						.end(
 							function (pError, pResponse)

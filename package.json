@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Restful web API server. Using restify 6.",
   "main": "source/Orator.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "coverage-cluster": "./node_modules/istanbul/lib/cli.js cover --dir ./coverage/cluster ./node_modules/mocha/bin/_mocha -- --exit -u tdd -R spec ./test/Orator_cluster_test.js.deferred",
     "coverage-report": "./node_modules/istanbul/lib/cli.js report",
     "test": "npm run test-normal && npm run test-cluster",
+    "tests": "mocha --exit -u tdd -R spec -g",
     "test-normal": "./node_modules/mocha/bin/_mocha --exit -u tdd -R spec",
     "test-cluster": "./node_modules/mocha/bin/_mocha --exit -u tdd -R spec ./test/Orator_cluster_test.js.deferred"
   },

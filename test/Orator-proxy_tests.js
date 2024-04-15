@@ -16,12 +16,12 @@ var _MockSettings = (
 {
 	Product: 'MockOratorAlternate',
 	ProductVersion: '0.0.0',
-	APIServerPort: 8181
+	APIServerPort: 8181,
 });
 
 suite
 (
-	'Orator',
+	'Orator Proxy',
 	function()
 	{
 		var _Orator;
