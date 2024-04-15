@@ -589,16 +589,45 @@ var Orator = function()
 			);
 		};
 
+		var userErrorTransformer;
+		var registerErrorTransformer = function(transformError)
+		{
+			if (typeof(transformError) === 'function')
+			{
+				userErrorTransformer = transformError;
+			}
+		};
+
+		var userUnhandledErrorHandler;
+		var registerUnhandledErrorHandler = function(callback)
+		{
+			if (typeof(callback) === 'function')
+			{
+				userUnhandledErrorHandler = callback;
+			}
+		};
+
 		var handleError = function(req, res, err, callback)
 		{
+			// allow application to customize this error handling
+			if (typeof userUnhandledErrorHandler == 'function' && !userUnhandledErrorHandler(req, res, err))
+			{
+				return callback();
+			}
 			//the default for a string error is 'Route not found', though it isn't accurate
 			err.message = err.message.replace('Route not found: ', '');
 			//log error
 			let sessionId = '';
 			if (req.UserSession && req.UserSession.SessionID)
+			{
 				sessionId = req.UserSession.SessionID;
+			}
 
-			_Fable.log.error('REQUEST ERROR: ' + err.message, {SessionID: sessionId, Action: 'APIError'});
+			if (!err.logged)
+			{
+				_Fable.log.error('REQUEST ERROR: ' + err.message || err,
+					{ SessionID: sessionId, Action: 'APIError', RequestUUID: req.RequestUUID, Error: err.message || err, Stack: err.stack, });
+			}
 			return callback();
 		}
 
@@ -618,6 +647,9 @@ var Orator = function()
 			setupStaticFormatters: setupStaticFormatters,
 			serveStatic: libRestify.plugins.serveStatic,
 			getHeader: getHeader,
+
+			registerErrorTransformer: registerErrorTransformer,
+			registerUnhandledErrorHandler: registerUnhandledErrorHandler,
 
 			new: createNew
 		});
@@ -647,14 +679,23 @@ var Orator = function()
 								 */
 								errorTransformer:
 								{
-									transform: (error) =>
+									transform: (originalError) =>
 									{
-										// duck typing for error objects; means an exception was thrown
-										if (error && error.message && error.stack)
+										let error = originalError;
+										if (typeof userErrorTransformer == 'function')
 										{
-											return new RestifyErrors.InternalError(error, error.message || 'Unhandled error');
+											error = userErrorTransformer(error);
 										}
-										return error;
+										// duck typing for error objects; means an exception was thrown; but status code means it was handled upstream
+										if (error && error.message && error.stack && !error.statusCode)
+										{
+											_Fable.log.fatal('Unhandled request error', { Error: error.message || error, Stack: error.stack, });
+
+											const wrappedError = new RestifyErrors.InternalError(error, error.message || 'Unhandled error');
+											wrappedError.logged = true; // dumb, but prevents double logging in handleError
+											return wrappedError;
+										}
+										return error || new Error('fail request'); // returning no error here is bad news; request can get stuck, so at least return something
 									},
 								},
 							});

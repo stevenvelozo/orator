@@ -16,23 +16,41 @@ var _MockSettings = (
 {
 	Product: 'MockOratorAlternate',
 	ProductVersion: '0.0.0',
-	APIServerPort: 8099
+	APIServerPort: 8999,
 });
 
 suite
 (
-	'Orator',
+	'Orator basic',
 	function()
 	{
 		var _Orator;
+		let capturedOriginalErr = null;
+		let capturedReq = null;
+		let capturedRes = null;
+		let capturedErr = null;
 
 		setup
 		(
 			function()
 			{
 				_Orator = require('../source/Orator.js').new(_MockSettings);
+				_Orator.registerUnhandledErrorHandler((req, res, err) =>
+				{
+					capturedReq = req;
+					capturedRes = res;
+					capturedErr = err;
+					return err.statusCode > 0;
+				});
+				_Orator.registerErrorTransformer((err) =>
+				{
+					capturedOriginalErr = err;
+					return err;
+				});
 			}
 		);
+
+		teardown(() => { capturedReq = undefined; capturedRes = undefined; capturedErr = undefined; capturedOriginalErr = undefined; });
 
 		suiteTeardown
 		(
@@ -121,6 +139,23 @@ suite
 								return Promise.reject('error promise response');
 							}
 						);
+						_Orator.webServer.get (
+							'/SyncBug',
+							function (pRequest, pResponse, fNext)
+							{
+								const cat = null;
+								cat.dog();
+							}
+						);
+						_Orator.webServer.get (
+							'/AsyncBug',
+							async function (pRequest, pResponse)
+							{
+								await new Promise((resolve) => setTimeout(() => resolve()), 1);
+								const cat = null;
+								cat.dog();
+							}
+						);
 						// Expect this to fail
 						_Orator.addStaticRoute();
 						// And you can specify a path for bonus
@@ -133,19 +168,19 @@ suite
 						(
 							function ()
 							{
-								libSuperTest('http://localhost:8099/')
+								libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 								.get('PIN')
 								.end(
 									function (pError, pResponse)
 									{
 										Expect(pResponse.text)
 											.to.contain('PON');
-										libSuperTest('http://localhost:8099/')
+										libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 										.get('ThirdAPI')
 										.end(
 											function (pError, pResponse)
 											{
-												libSuperTest('http://localhost:8099/')
+												libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 												.get('Test.css')
 												.end(
 													function (pError, pResponse)
@@ -153,7 +188,7 @@ suite
 														_Orator.settings.Profiling.TraceLog = true;
 														Expect(pResponse.text)
 															.to.contain('50000px');
-														libSuperTest('http://localhost:8099/')
+														libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 														.get('content/')
 														.end(
 															function (pError, pResponse)
@@ -178,7 +213,7 @@ suite
 					'promise routes should work',
 					function(fDone)
 					{
-						libSuperTest('http://localhost:8099/')
+						libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 						.get('PromiseAPI')
 						.end(
 							function (pError, pResponse)
@@ -196,13 +231,68 @@ suite
 					'promise routes error handling',
 					function(fDone)
 					{
-						libSuperTest('http://localhost:8099/')
+						libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
 						.get('PromiseAPIError')
 						.end(
 							function (pError, pResponse)
 							{
+								Expect(capturedErr).to.exist;
+								Expect(capturedReq).to.exist;
+								Expect(capturedRes).to.exist;
 								Expect(pResponse.text)
 									.to.contain('error promise response');
+
+								return fDone();
+							}
+						);
+					}
+				);
+				test
+				(
+					'unhandled error interception',
+					function(fDone)
+					{
+						libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
+						.get('SyncBug')
+						.end(
+							function (pError, pResponse)
+							{
+								Expect(pError).to.not.exist;
+								Expect(capturedOriginalErr).to.exist;
+								Expect(capturedErr).to.exist;
+								Expect(capturedOriginalErr.statusCode).to.not.exist; // raw error
+								Expect(capturedErr.statusCode).to.equal(500); // wrapped to give reasonable http response
+								Expect(capturedReq).to.exist; // shows we called the custom error handler
+								Expect(capturedReq.RequestUUID).to.be.a('string'); // so we can log this from the handler
+								Expect(capturedRes).to.exist; // shows we called the custom error handler
+								Expect(capturedErr.message).to.contain('Cannot read property \'dog\'');
+								Expect(pResponse.text).to.contain('Cannot read property \'dog\'');
+
+								return fDone();
+							}
+						);
+					}
+				);
+				test
+				(
+					'unhandled error interception async',
+					function(fDone)
+					{
+						libSuperTest(`http://localhost:${_MockSettings.APIServerPort}/`)
+						.get('AsyncBug')
+						.end(
+							function (pError, pResponse)
+							{
+								Expect(pError).to.not.exist;
+								Expect(capturedOriginalErr).to.exist;
+								Expect(capturedErr).to.exist;
+								Expect(capturedOriginalErr.statusCode).to.not.exist; // raw error
+								Expect(capturedErr.statusCode).to.equal(500); // wrapped to give reasonable http response
+								Expect(capturedReq).to.exist; // shows we called the custom error handler
+								Expect(capturedReq.RequestUUID).to.be.a('string'); // so we can log this from the handler
+								Expect(capturedRes).to.exist; // shows we called the custom error handler
+								Expect(capturedErr.message).to.contain('Cannot read property \'dog\'');
+								Expect(pResponse.text).to.contain('Cannot read property \'dog\'');
 
 								return fDone();
 							}
@@ -225,7 +315,7 @@ suite
 							{
 								Product: 'MockOratorInverted',
 								ProductVersion: '0.0.0',
-								APIServerPort: 8089,
+								APIServerPort: _MockSettings.APIServerPort - 10,
 								LogStackTraces: false
 							});
 						var _OratorInverted = require('../source/Orator.js').new(_MockSettingsInvertedParameters);
@@ -259,7 +349,7 @@ suite
 							}
 						);
 						_OratorInverted.startWebServer();
-						libSuperTest('http://localhost:8089/')
+						libSuperTest(`http://localhost:${_MockSettings.APIServerPort - 10}/`)
 						.get('PINGU')
 						.end(
 							function (pError, pResponse)
