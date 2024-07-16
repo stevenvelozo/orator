@@ -1,6 +1,6 @@
 {
   "name": "orator",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "Restful web API server. Using restify 6.",
   "main": "source/Orator.js",
   "scripts": {
