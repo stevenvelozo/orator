@@ -29,17 +29,19 @@ suite
 		let capturedReq = null;
 		let capturedRes = null;
 		let capturedErr = null;
+		let capturedCallback = null;
 
 		setup
 		(
 			function()
 			{
 				_Orator = require('../source/Orator.js').new(_MockSettings);
-				_Orator.registerUnhandledErrorHandler((req, res, err) =>
+				_Orator.registerUnhandledErrorHandler((req, res, err, callback) =>
 				{
 					capturedReq = req;
 					capturedRes = res;
 					capturedErr = err;
+					capturedCallback = callback;
 					return err.statusCode > 0;
 				});
 				_Orator.registerErrorTransformer((err) =>
@@ -291,6 +293,7 @@ suite
 								Expect(capturedReq).to.exist; // shows we called the custom error handler
 								Expect(capturedReq.RequestUUID).to.be.a('string'); // so we can log this from the handler
 								Expect(capturedRes).to.exist; // shows we called the custom error handler
+								Expect(capturedCallback).to.be.a('function');
 								Expect(capturedErr.message).to.contain('Cannot read property \'dog\'');
 								Expect(pResponse.text).to.contain('Cannot read property \'dog\'');
 

@@ -610,9 +610,9 @@ var Orator = function()
 		var handleError = function(req, res, err, callback)
 		{
 			// allow application to customize this error handling
-			if (typeof userUnhandledErrorHandler == 'function' && !userUnhandledErrorHandler(req, res, err))
+			if (typeof userUnhandledErrorHandler == 'function' && !userUnhandledErrorHandler(req, res, err, callback))
 			{
-				return callback();
+				return;
 			}
 			//the default for a string error is 'Route not found', though it isn't accurate
 			err.message = err.message.replace('Route not found: ', '');
