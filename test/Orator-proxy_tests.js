@@ -146,13 +146,13 @@ suite
 					function(fDone)
 					{
 						libSuperTest('http://localhost:' + _MockSettings.APIServerPort + '/')
-						.get('google/search?q=laser+shark')
+						.get('google/a')
 						.end(
 							function (pError, pResponse)
 							{
 								//check for google search result
 								Expect(pResponse.text)
-									.to.contain('laser shark');
+									.to.contain('google');
 								return fDone();
 							}
 						);

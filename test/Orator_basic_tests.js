@@ -267,7 +267,7 @@ suite
 								Expect(capturedReq).to.exist; // shows we called the custom error handler
 								Expect(capturedReq.RequestUUID).to.be.a('string'); // so we can log this from the handler
 								Expect(capturedRes).to.exist; // shows we called the custom error handler
-								Expect(capturedErr.message).to.contain('Cannot read property \'dog\'');
+								Expect(capturedErr.message).to.contain('Cannot read properties of null (reading \'dog\')');
 								Expect(pResponse.text).to.contain('Cannot read property \'dog\'');
 
 								return fDone();
