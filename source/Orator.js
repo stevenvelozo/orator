@@ -11,8 +11,22 @@ const libFableServiceProviderBase = require('fable-serviceproviderbase');
 
 const libDefaultOratorServiceServer = require('./Orator-Default-ServiceServer.js');
 
+const libServeStatic = require('serve-static');
+const libFinalHandler = require('finalhandler');
+const libMime = require('mime');
+
 const defaultOratorConfiguration = require('./Orator-Default-Configuration.js');
 
+/**
+ * @class Orator
+ * @extends libFableServiceProviderBase
+ * 
+ * Represents the Orator service provider.
+ * 
+ * @param {Object} pFable - The Fable instance.
+ * @param {Object} pOptions - The options for the Orator service.
+ * @param {string} pServiceHash - The hash of the service.
+ */
 class Orator extends libFableServiceProviderBase
 {
 	constructor(pFable, pOptions, pServiceHash)
@@ -47,6 +61,9 @@ class Orator extends libFableServiceProviderBase
 		}
 	}
 
+	/**
+	 * Lifecycle event that executes before initializing the service.  For overloading.
+	 */
 	onBeforeInitialize()
 	{
 		if (this.fable.settings.LogNoisiness > 3)
@@ -54,6 +71,11 @@ class Orator extends libFableServiceProviderBase
 			this.log.trace(`Orator [${this.UUID}]::[${this.Hash}] ${this.options.Product} onBeforeInitialize:`);
 		}
 	}
+	/**
+	 * Lifecycle event that executes before initializing the service.  For overloading.
+	 * 
+	 * @param {Function} fNext - The callback function to be called after the actions are executed.
+	 */
 	onBeforeInitializeAsync(fNext)
 	{
 		this.onBeforeInitialize();
@@ -92,12 +114,20 @@ class Orator extends libFableServiceProviderBase
 			this.log.trace(`Orator [${this.UUID}]::[${this.Hash}] ${this.options.Product} onInitialize:`);
 		}
 	}
+	/**
+	 * Lifecycle event that executes at the moment of initializing the service.  For overloading.
+	 *
+	 * @param {Function} fNext - The callback function to be executed after initialization.
+	 */
 	onInitializeAsync(fNext)
 	{
 		this.onInitialize();
 		return fNext();
 	}
 
+	/**
+	 * Lifecycle event that executes after initializing the service.  For overloading.
+	 */
 	onAfterInitialize()
 	{
 		if (this.fable.settings.LogNoisiness > 3)
@@ -105,12 +135,22 @@ class Orator extends libFableServiceProviderBase
 			this.log.trace(`Orator [${this.UUID}]::[${this.Hash}] ${this.options.Product} onAfterInitialize:`);
 		}
 	}
+	/**
+	 * Lifecycle event that executes after initializing the service.  For overloading.
+	 * @param {Function} fNext - The callback function to be called after executing onAfterInitialize.
+	 * @returns {Promise} - A promise that resolves when the callback function is called.
+	 */
 	onAfterInitializeAsync(fNext)
 	{
 		this.onAfterInitialize();
 		return fNext();
 	}
 
+	/**
+	 * Initializes the Orator instance.
+	 *
+	 * @param {Function} fCallback - The callback function to be executed after initialization.
+	 */
 	initialize(fCallback)
 	{
 		// I hate this -- as long as we want to be "mostly" backwards compatible it needs to do it though
@@ -148,10 +188,22 @@ class Orator extends libFableServiceProviderBase
 		}
 	}
 
+	/**
+	 * Lifecycle event that executes before starting the service.  For overloading.
+	 *
+	 * @param {Function} fNext - The function to be executed before starting the service.
+	 * @returns {Promise} A promise that resolves when the function is completed.
+	 */
 	onBeforeStartService(fNext)
 	{
 		return fNext();
 	}
+	/**
+	 * Lifecycle event that executes when the service starts.  For overloading.
+	 * 
+	 * @param {Function} fNext - The callback function to be called after the service starts.
+	 * @returns {Promise} A promise that resolves when the service starts successfully, or rejects with an error.
+	 */
 	onStartService(fNext)
 	{
 		this.onAfterInitialize();
@@ -165,11 +217,22 @@ class Orator extends libFableServiceProviderBase
 			}
 		);
 	}
+	/**
+	 * Lifecycle event that executes after starting the service.  For overloading.
+	 *
+	 * @param {Function} fNext - The callback function to be executed after the service starts.
+	 * @returns {Promise} - A promise that resolves when the callback function is completed.
+	 */
 	onAfterStartService(fNext)
 	{
 		return fNext();
 	}
 
+	/**
+	 * Starts the service.
+	 * 
+	 * @param {Function} fNext - The callback function to be executed after the service has started.
+	 */
 	startService(fNext)
 	{
 		var tmpNext = (typeof(fNext) === 'function') ? fNext : ()=>{};
@@ -203,6 +266,12 @@ class Orator extends libFableServiceProviderBase
 			});
 	}
 
+	/**
+	 * Stops the service server.
+	 * 
+	 * @param {Function} fCallback - The callback function to be executed after the service server is stopped.
+	 * @returns {void}
+	 */
 	stopService(fCallback)
 	{
 		var tmpCallback = (typeof(fCallback) === 'function') ? fCallback : ()=>{};
@@ -224,28 +293,51 @@ class Orator extends libFableServiceProviderBase
 		return this.serviceServer.close(tmpCallback);
 	}
 
+	/**
+	 * Programmatically invokes a method on the service server.
+	 *
+	 * @param {string} pMethod - The method to invoke.
+	 * @param {string} pRoute - The route to invoke.
+	 * @param {any} pData - The data to send with the invocation.
+	 * @param {Function} fCallback - The callback function to execute after the invocation.
+	 * @returns {any} - The result of the invocation.
+	 */
 	invoke(pMethod, pRoute, pData, fCallback)
 	{
 		//this.log.trace(`Orator [${this.UUID}]::[${this.Hash}] ${this.options.Product} invoking ${pMethod} ${pRoute}`);
 		return this.serviceServer.invoke(pMethod, pRoute, pData, fCallback);
 	}
 
-
 	/*
-	 * Legacy Orator Functions
+	 * Legacy Orator / Backwards Compatibility Functions
 	 *************************************************************************/
+	/**
+	 * Starts the web server.
+	 *
+	 * @param {Function} fNext - The callback function to be executed after the web server starts.
+	 * @returns {Promise} A promise that resolves when the web server has started.
+	 */
 	startWebServer(fNext)
 	{
 		return this.startService(fNext);
 	}
 
-	// For legacy purposes
+	/**
+	 * Stops the web server.
+	 *
+	 * @param {Function} fNext - The callback function to be called after the web server is stopped.
+	 * @returns {Promise} A promise that resolves when the web server is stopped.
+	 */
 	stopWebServer(fNext)
 	{
 		return this.stopService(fNext);
 	}
 
-	// For legacy purposes
+	/**
+	 * Retrieves the web server instance.
+	 * 
+	 * @returns {WebServer} The web server instance.
+	 */
 	getWebServer()
 	{
 		// The old behavior was to lazily construct the service the first time 
@@ -260,6 +352,85 @@ class Orator extends libFableServiceProviderBase
 	/*************************************************************************
 	 * End of Legacy Orator Functions
 	 */
+
+	setMimeHeader(pFileName, pResponse)
+	{
+		let tmpHeader = libMime.lookup(pFileName);
+
+		if (!tmpHeader)
+		{
+			tmpHeader = 'application/octet-stream';
+		}
+
+		pResponse.setHeader('Content-Type', tmpHeader);		
+	}
+
+	/**
+	 * Serve a static folder, optionally with magic subdomain masking.
+	 *
+	 * @param {string} pFilePath The path on disk that we are serving files from.
+	 * @param {string?} pDefaultFile (optional) The default file served if no specific file is requested.
+	 * @param {string?} pRoute (optional) The route matcher that will be used. Defaults to everything.
+	 * @param {string?} pRouteStrip (optional) If provided, this prefix will be removed from URL paths before being served.
+	 * @param {object?} pParams (optional) Additional parameters to pass to serve-static.
+	 * @return {boolean} true if the handler was successfully installed, otherwise false.
+	 */
+	addStaticRoute(pFilePath, pDefaultFile, pRoute, pRouteStrip, pParams)
+	{
+		if (typeof(pFilePath) !== 'string')
+		{
+				this.fable.log.error('A file path must be passed in as part of the server.');
+				return false;
+		}
+
+		// Default to just serving from root
+		const tmpRoute = (typeof(pRoute) === 'undefined') ? '/*' : pRoute;
+		const tmpRouteStrip = (typeof(pRouteStrip) === 'undefined') ? '/' : pRouteStrip;
+
+		// Default to serving index.html
+		const tmpDefaultFile = (typeof(pDefaultFile) === 'undefined') ? 'index.html' : pDefaultFile;
+
+		this.fable.log.info('Orator mapping static route to files: '+tmpRoute+' ==> '+pFilePath+' '+tmpDefaultFile);
+
+		// Add the route
+		this.serviceServer.get(tmpRoute,
+			(pRequest, pResponse, fNext) =>
+			{
+					// See if there is a magic subdomain put at the beginning of a request.
+					// If there is, then we need to see if there is a subfolder and add that to the file path
+					let tmpHostSet = pRequest.headers.host.split('.');
+					let tmpPotentialSubfolderMagicHost = false;
+					let servePath = pFilePath;
+					// Check if there are more than one host in the host header (this will be 127 a lot)
+					if (tmpHostSet.length > 1)
+					{
+						tmpPotentialSubfolderMagicHost = tmpHostSet[0];
+					}
+					if (tmpPotentialSubfolderMagicHost)
+					{
+						// Check if the subfolder exists -- this is only one dimensional for now
+						let tmpPotentialSubfolder = servePath + tmpPotentialSubfolderMagicHost;
+						if (this.fable.FilePersistence.libFS.existsSync(tmpPotentialSubfolder))
+						{
+							// If it does, then we need to add it to the file path
+							servePath = `${tmpPotentialSubfolder}/`;
+						}
+					}
+					pRequest.url = pRequest.url.split('?')[0].substr(tmpRouteStrip.length) || '/';
+					pRequest.path = function()
+					{
+							return pRequest.url;
+					};
+
+					this.setMimeHeader(pRequest.url, pResponse);
+
+					const tmpServe = libServeStatic(servePath, Object.assign({ index: tmpDefaultFile }, pParams));
+					tmpServe(pRequest, pResponse, libFinalHandler(pRequest, pResponse));
+					// TODO: This may break things if a post request send handler is setup...
+					//fNext();
+			});
+		return true;
+	}
 }
 
 module.exports = Orator;

@@ -12,6 +12,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
+            "cwd": "${workspaceFolder}/debug/",
             "program": "${workspaceFolder}/debug/Harness.js",
             "presentation": {
                 "hidden": false,

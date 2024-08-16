@@ -6,6 +6,13 @@ const libOratorServiceServerIPCSynthesizedResponse = require('./Orator-ServiceSe
 // This library is the default router for our services
 const libFindMyWay = require('find-my-way');
 
+/**
+ * OratorServiceServerIPC class.
+ *
+ * @class
+ * @extends libOratorServiceServerBase
+ * @classdesc Represents an IPC service server for Orator.
+ */
 class OratorServiceServerIPC extends libOratorServiceServerBase
 {
 	constructor(pFable, pOptions, pServiceHash)
@@ -183,36 +190,85 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 		};
 	}
 
+	/**
+	 * Handles the HTTP GET request for a specific route.
+	 *
+	 * @param {string} pRoute - The route to handle.
+	 * @param {...Function} fRouteProcessingFunctions - The processing functions to execute for the route.
+	 * @returns {Promise} A promise that resolves when the route processing is complete.
+	 */
 	doGet(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.addRouteProcessor('GET', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
+	/**
+	 * Handles the PUT request for a specific route.
+	 *
+	 * @param {string} pRoute - The route to handle.
+	 * @param {...Function} fRouteProcessingFunctions - The processing functions to execute for the route.
+	 * @returns {Promise} - A promise that resolves when the route processing is complete.
+	 */
 	doPut(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.addRouteProcessor('PUT', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
+	/**
+	 * Handles the HTTP POST request for a specific route.
+	 *
+	 * @param {string} pRoute - The route to handle.
+	 * @param {...Function} fRouteProcessingFunctions - The processing functions to execute for the route.
+	 * @returns {Promise} - A promise that resolves when the route processing is complete.
+	 */
 	doPost(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.addRouteProcessor('POST', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
+	/**
+	 * Handles the HTTP DEL request for a specific route.
+	 *
+	 * @param {string} pRoute - The route to be deleted.
+	 * @param {...Function} fRouteProcessingFunctions - The route processing functions to be added.
+	 * @returns {Object} - The updated route processor object.
+	 */
 	doDel(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.addRouteProcessor('DELETE', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
+	/**
+	 * Adds a PATCH route processor to the service server.
+	 *
+	 * @param {string} pRoute - The route to be processed.
+	 * @param {...Function} fRouteProcessingFunctions - The route processing functions.
+	 * @returns {boolean} - Returns true if the route processor was added successfully, false otherwise.
+	 */
 	doPatch(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.addRouteProcessor('PATCH', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
+	/**
+	 * Adds a route processor for the OPTIONS method.
+	 *
+	 * @param {string} pRoute - The route to add the processor to.
+	 * @param {...Function} fRouteProcessingFunctions - The processing functions to be executed for the route.
+	 * @returns {Object} - The updated Orator-ServiceServer-IPC object.
+	 */
 	doOpts(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.addRouteProcessor('OPTIONS', pRoute, Array.from(fRouteProcessingFunctions));
 	}
 
+	/**
+	 * Handles the HEAD request for a specific route.
+	 *
+	 * @param {string} pRoute - The route to handle.
+	 * @param {...Function} fRouteProcessingFunctions - The processing functions to execute for the route.
+	 * @returns {Promise} - A promise that resolves when the route processing is complete.
+	 */
 	doHead(pRoute, ...fRouteProcessingFunctions)
 	{
 		return this.addRouteProcessor('HEAD', pRoute, Array.from(fRouteProcessingFunctions));
@@ -221,7 +277,15 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 	 * End of Service Route Creation Functions
 	 */
 
-	// Programmatically invoke a route
+	/**
+	 * Invokes a method on the IPC provider.
+	 *
+	 * @param {string} pMethod - The method to invoke.
+	 * @param {string} pRoute - The route to invoke.
+	 * @param {any} pData - The data to pass to the method.
+	 * @param {Function} fCallback - The callback function to handle the response.
+	 * @throws {Error} Throws an error if invoked without a callback function.
+	 */
 	invoke(pMethod, pRoute, pData, fCallback)
 	{
 		// If the data is skipped and a callback is parameter 3, do the right thing

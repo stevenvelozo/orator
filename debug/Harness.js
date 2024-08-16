@@ -42,3 +42,5 @@ tmpServiceServer.invoke('GET', tmpURI, null,
 	{
 		tmpServiceServer.log.info(`Response to [${tmpURI}] came back from IPC resulting in [${pResponseData}]!`)
 	});
+
+tmpServiceServer.addStaticRoute('site', 'Test.html', '/*', '/');

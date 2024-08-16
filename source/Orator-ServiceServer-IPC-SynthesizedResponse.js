@@ -1,3 +1,8 @@
+/**
+ * Represents a synthesized server response for the Orator service server IPC.
+ *
+ * @class
+ */
 class OratorServiceServerIPCSynthesizedResponse
 {
 	constructor(pHandler, pLog, pRequestGUID)
@@ -27,6 +32,12 @@ class OratorServiceServerIPCSynthesizedResponse
 		this.responseStatus = -1;
 	}
 
+	/**
+	 * Sends data to the server.
+	 * 
+	 * @param {string|object} pData - The data to be sent. It can be either a string or an object.
+	 * @returns {boolean} - Returns true if the data was successfully sent, false otherwise.
+	 */
 	send(pData)
 	{
 		if (typeof(pData) == 'string')
