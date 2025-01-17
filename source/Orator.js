@@ -59,6 +59,15 @@ class Orator extends libFableServiceProviderBase
 		{
 			this.options.Product = defaultOratorConfiguration.Product;
 		}
+
+		// This is here because libMime has a breaking change from v1 to v2 and the lookup function was update to be getType per https://stackoverflow.com/a/60741078
+		// We don't want to introspect properties on this library every single time we need to check mime types.
+		// Therefore we are setting this boolean here and using it to branch.
+		this.oldLibMime = false;
+		if ('lookup' in libMime)
+		{
+			this.oldLibMime = true;
+		}
 	}
 
 	/**
@@ -355,7 +364,16 @@ class Orator extends libFableServiceProviderBase
 
 	setMimeHeader(pFileName, pResponse)
 	{
-		let tmpHeader = libMime.lookup(pFileName);
+		let tmpHeader;
+		
+		if (this.oldLibMime)
+		{
+			tmpHeader = libMime.lookup(pFileName);
+		}
+		else
+		{
+			tmpHeader = libMime.getType(pFileName);
+		}
 
 		if (!tmpHeader)
 		{
