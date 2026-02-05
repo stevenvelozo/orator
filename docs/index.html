@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Orator Documentation</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Documentation for Orator - An unopinionated API server abstraction for REST and IPC services" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <meta name="keywords" content="orator, javascript, api, rest, ipc, server, restify, fable" />
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css" />
+    <style>
+      :root {
+        --theme-color: #42b983;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.$docsify = {
+        name: 'Orator',
+        repo: 'https://github.com/stevenvelozo/orator',
+        loadSidebar: '_sidebar.md',
+        subMaxLevel: 3,
+        auto2top: true,
+        coverpage: 'cover.md',
+        onlyCover: false,
+        search: {
+          placeholder: 'Search',
+          noData: 'No results found',
+          depth: 3
+        },
+        copyCode: {
+          buttonText: 'Copy',
+          successText: 'Copied'
+        }
+      };
+    </script>
+    <!-- Docsify v4 -->
+    <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+    <!-- Syntax highlighting -->
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-markdown.min.js"></script>
+    <!-- Search plugin -->
+    <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+    <!-- Copy code plugin -->
+    <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+  </body>
+</html>

@@ -1,107 +1,84 @@
 # Orator
 
-Orator API Server, meant to interact well with Fable, Meadow and FoxHound.
+> An unopinionated API server abstraction for REST and IPC services
 
-[![Coverage Status](https://coveralls.io/repos/stevenvelozo/orator/badge.svg?branch=master)](https://coveralls.io/r/stevenvelozo/orator?branch=master) [![Build Status](https://travis-ci.org/stevenvelozo/orator.svg?branch=master)](https://travis-ci.org/stevenvelozo/orator) [![Dependency Status](https://david-dm.org/stevenvelozo/orator.svg)](https://david-dm.org/stevenvelozo/orator) [![devDependency Status](https://david-dm.org/stevenvelozo/orator/dev-status.svg)](https://david-dm.org/stevenvelozo/orator#info=devDependencies)
+Orator is not an attempt to reinvent the wheel. Nor do we want to make a car with five of them. Orator is a thin abstraction layer over service server implementations (like Restify), providing a consistent interface for building API servers. You can spin up a web server in a single simple line, and configuration is managed through a consistent JSON format -- so as you begin to have 10 or 15 or 5,000 microservices, you don't have a bunch of boilerplate API server code laying around.
 
-This is not an attempt to reinvent the wheel.  Nor do we want to make a car with five of them.
+## Features
 
-Orator is a wrapper for [restify](https://github.com/restify/node-restify), which is an amazing API server.  With Orator, you can spin up a web server in a single simple line.  And config settings are managed via a consistent json format, so as you begin to have 10 or 15 or 5,000 microservices, you don't have a bunch of boilerplate API server code laying around.
+- **Unopinionated Design** - Wraps any service server implementation through a consistent interface
+- **REST and IPC** - Full HTTP server support via Restify, or in-process IPC for testing and microservice composition
+- **Lifecycle Management** - Before/After hooks for initialization and service start phases
+- **Static File Serving** - Built-in static file serving with subdomain-based folder routing
+- **Fable Integration** - First-class service provider in the Fable ecosystem with logging and configuration
+- **Browser & Node.js** - Works in both environments with automatic service server selection
 
-## Creating a Simple Server
+## Quick Start
 
-Okay, so you want to make a simple api server.  You would need to create a node.js project, then install the Orator dependency with npm:
+```javascript
+const libFable = require('fable');
+const libOrator = require('orator');
+const libOratorServiceServerRestify = require('orator-serviceserver-restify');
 
-```sh
-npm install orator --save
-```
+const _Fable = new libFable({
+	Product: 'MyAPIServer',
+	ProductVersion: '1.0.0',
+	ServicePort: 8080
+});
 
-Then within your javascript code, you could write the following:
+_Fable.serviceManager.addServiceType('Orator', libOrator);
+_Fable.serviceManager.addServiceType('OratorServiceServer', libOratorServiceServerRestify);
+_Fable.serviceManager.instantiateServiceProvider('Orator');
+_Fable.serviceManager.instantiateServiceProvider('OratorServiceServer');
 
-```js
-// Load the orator module with a few settings
-var libOrator = require('orator').new(
+_Fable.Orator.serviceServer.get('/hello/:name',
+	(pRequest, pResponse, fNext) =>
 	{
-		Product: 'MyMicroserviceHash',
-		ProductVersion: '9.8.7',
-
-		"APIServerPort": 8000
+		pResponse.send({ greeting: `Hello ${pRequest.params.name}!` });
+		return fNext();
 	});
 
-// Add an API endpoint
-libOrator.webServer.post
-(
-	'/echo/:name',
-	function(pRequest, pResponse, fNext)
+_Fable.Orator.startService(
+	() =>
 	{
-		// Send back whatever was sent as "name" in the URI
-		pResponse.send(pRequest.params);
-		return fNext();
-	}
-);
-
-// Start the web service
-libOrator.startWebServer();
-```
-
-After writing this code, you could run your service and a browser going to `http://localhost:8000/echo/Gargamel` would return a JSON object with Gargamel as the name.
-
-Of course, this is not much different from the Restify code.  Where it gets interesting is dealing with things like logging and configuration management.  For instance, if you do
-
-```js
-// Load the orator module with a few settings
-var libOrator = require('orator').new(
-	{
-		Product: 'MyMicroserviceHash',
-		ProductVersion: '9.8.7',
-
-		"APIServerPort": 8000,
-
-		ConfigFile:__dirname+'/MyMicroservice-Config.json'
+		console.log('Server is running on port 8080');
 	});
-
-// Add an API endpoint
-libOrator.webServer.post
-(
-	'/echo/:name',
-	function(pRequest, pResponse, fNext)
-	{
-		// Send back whatever was sent as "name" in the URI
-		pResponse.send(pRequest.params);
-		return fNext();
-	}
-);
-
-// Start the web service
-libOrator.startWebServer();
 ```
 
-Then you could create a file in the same folder as this script called `MyMicroservice-Config.json` and as long as it is valid json, settings can be loaded from there.  Something like this:
+## Installation
 
-```json
-{
-	"APIServerPort": 8080,
-
-	"UUID":
-		{
-			"DataCenter": 0,
-			"Worker": 0
-		},
-
-	"LogStreams":
-		[
-			{
-				"level": "info",
-				"path": "./MyMicroService-Server.log"
-			},
-			{
-				"level": "trace",
-				"streamtype": "process.stdout"
-			}
-		]
-}
+```bash
+npm install orator
 ```
 
-And suddenly the bunyan logging will write to a file and stdout, and you can configure 20 Docker instances to each have a different Worker ID.
+## Configuration
 
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `Product` | string | `"Unnamed_Service"` | Application name identifier |
+| `ProductVersion` | string | `"0.0.1"` | Application version string |
+| `ServicePort` | number | `8080` | Port for the service server to listen on |
+| `APIServerPort` | number | - | Legacy alias for ServicePort (automatically migrated) |
+| `RestifyConfiguration` | object | `{}` | Configuration passed to Restify when using the Restify service server |
 
+## Documentation
+
+Full documentation is available in the [`docs`](./docs) folder, or served locally:
+
+```bash
+npx docsify-cli serve docs
+```
+
+- [Architecture](docs/architecture.md) - Service server abstraction design
+- [Getting Started](docs/getting-started.md) - Step-by-step setup guide
+- [Static File Serving](docs/static-files.md) - Serving files from disk
+- [IPC Server](docs/ipc-server.md) - In-process service invocation
+
+## Related Packages
+
+- [orator-serviceserver-base](https://github.com/stevenvelozo/orator-serviceserver-base) - Abstract base class for service servers
+- [orator-serviceserver-restify](https://github.com/stevenvelozo/orator-serviceserver-restify) - Restify service server implementation
+- [orator-http-proxy](https://github.com/stevenvelozo/orator-http-proxy) - HTTP proxy pass-through for Orator
+- [orator-static-server](https://github.com/stevenvelozo/orator-static-server) - Static file serving module
+- [fable](https://github.com/stevenvelozo/fable) - Service provider framework
+- [meadow](https://github.com/stevenvelozo/meadow) - Data access layer with automatic REST endpoints
