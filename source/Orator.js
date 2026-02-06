@@ -68,6 +68,12 @@ class Orator extends libFableServiceProviderBase
 		{
 			this.oldLibMime = true;
 		}
+
+		// Ensure FilePersistence is available for the magic subdomain subfolder check in addStaticRoute
+		if (!this.fable.FilePersistence)
+		{
+			this.fable.serviceManager.instantiateServiceProvider('FilePersistence');
+		}
 	}
 
 	/**
@@ -410,7 +416,19 @@ class Orator extends libFableServiceProviderBase
 
 		this.fable.log.info('Orator mapping static route to files: '+tmpRoute+' ==> '+pFilePath+' '+tmpDefaultFile);
 
-		// Add the route
+		// Try the service server's built-in serveStatic first (e.g. restify's serveStaticFiles plugin).
+		// This handles MIME types, caching headers, and streaming correctly without our manual intervention.
+		if (typeof(this.serviceServer.serveStatic) === 'function')
+		{
+			let tmpServeStaticOptions = Object.assign({ directory: pFilePath, default: tmpDefaultFile }, pParams);
+			if (this.serviceServer.serveStatic(tmpRoute, tmpServeStaticOptions))
+			{
+				return true;
+			}
+		}
+
+		// Fall back to the serve-static library approach (used by the IPC service server and other
+		// service servers that don't have a built-in serveStatic implementation).
 		this.serviceServer.get(tmpRoute,
 			(pRequest, pResponse, fNext) =>
 			{
@@ -440,7 +458,14 @@ class Orator extends libFableServiceProviderBase
 							return pRequest.url;
 					};
 
-					this.setMimeHeader(pRequest.url, pResponse);
+					// When the URL is a directory (e.g. '/' or '/docs/'), use the default file for MIME detection
+					// so the browser gets text/html instead of application/octet-stream
+					let tmpMimeTarget = pRequest.url;
+					if (tmpMimeTarget.endsWith('/') || tmpMimeTarget.indexOf('.') < 0)
+					{
+						tmpMimeTarget = tmpDefaultFile;
+					}
+					this.setMimeHeader(tmpMimeTarget, pResponse);
 
 					const tmpServe = libServeStatic(servePath, Object.assign({ index: tmpDefaultFile }, pParams));
 					tmpServe(pRequest, pResponse, libFinalHandler(pRequest, pResponse));
