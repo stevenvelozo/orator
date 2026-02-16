@@ -264,13 +264,17 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								// Trigger auto-registration of OratorStaticServer
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
-								tmpOrator.setMimeHeader('index.html', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('index.html', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('text/html');
 
-								tmpOrator.setMimeHeader('/path/to/page.html', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('/path/to/page.html', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('text/html');
 
 								tmpOrator.log.info('HTML MIME type correctly detected');
@@ -290,10 +294,13 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
-								tmpOrator.setMimeHeader('style.css', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('style.css', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('text/css');
 
 								tmpOrator.log.info('CSS MIME type correctly detected');
@@ -313,10 +320,13 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
-								tmpOrator.setMimeHeader('data.json', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('data.json', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('application/json');
 
 								tmpOrator.log.info('JSON MIME type correctly detected');
@@ -336,10 +346,13 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
-								tmpOrator.setMimeHeader('app.js', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('app.js', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('application/javascript');
 
 								tmpOrator.log.info('JavaScript MIME type correctly detected');
@@ -359,19 +372,22 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
-								tmpOrator.setMimeHeader('photo.png', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('photo.png', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('image/png');
 
-								tmpOrator.setMimeHeader('logo.jpg', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('logo.jpg', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('image/jpeg');
 
-								tmpOrator.setMimeHeader('icon.gif', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('icon.gif', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('image/gif');
 
-								tmpOrator.setMimeHeader('vector.svg', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('vector.svg', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('image/svg+xml');
 
 								tmpOrator.log.info('Image MIME types correctly detected');
@@ -391,19 +407,22 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
-								tmpOrator.setMimeHeader('document.pdf', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('document.pdf', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('application/pdf');
 
-								tmpOrator.setMimeHeader('archive.zip', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('archive.zip', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('application/zip');
 
-								tmpOrator.setMimeHeader('data.xml', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('data.xml', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('application/xml');
 
-								tmpOrator.setMimeHeader('readme.txt', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('readme.txt', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('text/plain');
 
 								tmpOrator.log.info('Document and archive MIME types correctly detected');
@@ -423,13 +442,16 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
-								tmpOrator.setMimeHeader('mystery.xyz123', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('mystery.xyz123', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('application/octet-stream');
 
-								tmpOrator.setMimeHeader('noextension', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('noextension', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('application/octet-stream');
 
 								tmpOrator.log.info('Unknown MIME types fall back to application/octet-stream');
@@ -449,13 +471,16 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
-								tmpOrator.setMimeHeader('/assets/css/main.css', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('/assets/css/main.css', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('text/css');
 
-								tmpOrator.setMimeHeader('/deep/nested/path/to/image.png', tmpMockResponse);
+								tmpStaticServer.setMimeHeader('/deep/nested/path/to/image.png', tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('image/png');
 
 								tmpOrator.log.info('MIME type detected correctly from paths with directories');
@@ -645,6 +670,10 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								// Trigger auto-registration of OratorStaticServer
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								// Test the MIME detection logic directly with a mock response
 								let tmpCapturedHeaders = {};
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
@@ -657,7 +686,7 @@ suite
 								{
 									tmpMimeTarget = 'index.html';
 								}
-								tmpOrator.setMimeHeader(tmpMimeTarget, tmpMockResponse);
+								tmpStaticServer.setMimeHeader(tmpMimeTarget, tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('text/html');
 
 								// A URL like '/somepath' (no extension, no slash) should also fall back
@@ -667,7 +696,7 @@ suite
 								{
 									tmpMimeTarget = 'index.html';
 								}
-								tmpOrator.setMimeHeader(tmpMimeTarget, tmpMockResponse);
+								tmpStaticServer.setMimeHeader(tmpMimeTarget, tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('text/html');
 
 								// A URL with an extension should use its own extension
@@ -677,7 +706,7 @@ suite
 								{
 									tmpMimeTarget = 'index.html';
 								}
-								tmpOrator.setMimeHeader(tmpMimeTarget, tmpMockResponse);
+								tmpStaticServer.setMimeHeader(tmpMimeTarget, tmpMockResponse);
 								Expect(tmpCapturedHeaders['Content-Type']).to.equal('text/css');
 
 								tmpOrator.log.info('Directory and extensionless MIME detection verified');
@@ -695,7 +724,7 @@ suite
 			{
 				test
 				(
-					'Orator constructor should auto-instantiate FilePersistence if not present',
+					'addStaticRoute should auto-instantiate FilePersistence if not present',
 					(fDone) =>
 					{
 						let tmpFable = new libFable(defaultFableSettings);
@@ -704,19 +733,24 @@ suite
 
 						tmpFable.serviceManager.addServiceType('Orator', libOrator);
 						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
+						tmpOrator.initialize(
+							() =>
+							{
+								// FilePersistence is auto-instantiated by OratorStaticServer.addStaticRoute
+								tmpOrator.addStaticRoute(_StaticContentPath);
 
-						// After constructing Orator, FilePersistence should now be available
-						Expect(tmpFable.FilePersistence).to.be.an('object');
-						Expect(tmpFable.FilePersistence.libFS).to.be.an('object');
-						Expect(tmpFable.FilePersistence.libFS.existsSync).to.be.a('function');
-						tmpOrator.log.info('FilePersistence auto-instantiated by Orator constructor');
-						return fDone();
+								Expect(tmpFable.FilePersistence).to.be.an('object');
+								Expect(tmpFable.FilePersistence.libFS).to.be.an('object');
+								Expect(tmpFable.FilePersistence.libFS.existsSync).to.be.a('function');
+								tmpOrator.log.info('FilePersistence auto-instantiated by addStaticRoute');
+								return fDone();
+							});
 					}
 				);
 
 				test
 				(
-					'Orator constructor should not re-instantiate FilePersistence if already present',
+					'addStaticRoute should not re-instantiate FilePersistence if already present',
 					(fDone) =>
 					{
 						let tmpFable = new libFable(defaultFableSettings);
@@ -726,11 +760,16 @@ suite
 
 						tmpFable.serviceManager.addServiceType('Orator', libOrator);
 						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
+						tmpOrator.initialize(
+							() =>
+							{
+								tmpOrator.addStaticRoute(_StaticContentPath);
 
-						// Should still be the same instance, not a new one
-						Expect(tmpFable.FilePersistence).to.equal(tmpOriginal);
-						tmpOrator.log.info('FilePersistence preserved when already present');
-						return fDone();
+								// Should still be the same instance, not a new one
+								Expect(tmpFable.FilePersistence).to.equal(tmpOriginal);
+								tmpOrator.log.info('FilePersistence preserved when already present');
+								return fDone();
+							});
 					}
 				);
 			}
@@ -1089,7 +1128,7 @@ suite
 					(fDone) =>
 					{
 						let tmpFable = new libFable(defaultFableSettings);
-						// FilePersistence is now auto-instantiated by Orator's constructor
+						// FilePersistence is now auto-instantiated by OratorStaticServer.addStaticRoute
 						tmpFable.serviceManager.addServiceType('Orator', libOrator);
 						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
 						tmpOrator.startService();
@@ -1123,7 +1162,7 @@ suite
 					(fDone) =>
 					{
 						let tmpFable = new libFable(defaultFableSettings);
-						// FilePersistence is now auto-instantiated by Orator's constructor
+						// FilePersistence is now auto-instantiated by OratorStaticServer.addStaticRoute
 						tmpFable.serviceManager.addServiceType('Orator', libOrator);
 						let tmpOrator = tmpFable.serviceManager.instantiateServiceProvider('Orator', {});
 						tmpOrator.startService();
@@ -1299,19 +1338,13 @@ suite
 						tmpOrator.initialize(
 							() =>
 							{
+								// Trigger auto-registration of OratorStaticServer
+								tmpOrator.addStaticRoute(_StaticContentPath);
+								let tmpStaticServer = tmpFable.OratorStaticServer;
+
 								// The oldLibMime flag should be a boolean
-								Expect(tmpOrator.oldLibMime).to.be.a('boolean');
-								// With the current version of the mime library, it should use the lookup function
-								let libMime = require('mime');
-								if ('lookup' in libMime)
-								{
-									Expect(tmpOrator.oldLibMime).to.equal(true);
-								}
-								else
-								{
-									Expect(tmpOrator.oldLibMime).to.equal(false);
-								}
-								tmpOrator.log.info(`oldLibMime flag is ${tmpOrator.oldLibMime}`);
+								Expect(tmpStaticServer.oldLibMime).to.be.a('boolean');
+								tmpOrator.log.info(`oldLibMime flag is ${tmpStaticServer.oldLibMime}`);
 								return fDone();
 							});
 					}

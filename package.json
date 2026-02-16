@@ -56,10 +56,8 @@
     },
     "dependencies": {
         "fable-serviceproviderbase": "^3.0.15",
-        "finalhandler": "^1.3.1",
         "find-my-way": "^9.1.0",
-        "mime": "^3.0.0",
         "orator-serviceserver-base": "^1.0.1",
-        "serve-static": "^1.16.2"
+        "orator-static-server": "^1.0.1"
     }
 }
