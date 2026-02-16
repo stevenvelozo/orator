@@ -1,6 +1,6 @@
 {
     "name": "orator",
-    "version": "5.0.3",
+    "version": "6.0.0",
     "description": "Unopinionated API http server abstraction - REST or IPC",
     "main": "source/Orator.js",
     "scripts": {
@@ -51,13 +51,13 @@
     },
     "homepage": "https://github.com/stevenvelozo/orator",
     "devDependencies": {
-        "fable": "^3.1.51",
-        "quackage": "^1.0.45"
+        "fable": "^3.1.53",
+        "quackage": "^1.0.48"
     },
     "dependencies": {
-        "fable-serviceproviderbase": "^3.0.15",
+        "fable-serviceproviderbase": "^3.0.17",
         "find-my-way": "^9.1.0",
-        "orator-serviceserver-base": "^1.0.1",
-        "orator-static-server": "^1.0.1"
+        "orator-serviceserver-base": "^1.0.2",
+        "orator-static-server": "^2.0.0"
     }
 }
