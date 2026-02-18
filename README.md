@@ -76,9 +76,15 @@ npx docsify-cli serve docs
 
 ## Related Packages
 
-- [orator-serviceserver-base](https://github.com/stevenvelozo/orator-serviceserver-base) - Abstract base class for service servers
 - [orator-serviceserver-restify](https://github.com/stevenvelozo/orator-serviceserver-restify) - Restify service server implementation
-- [orator-http-proxy](https://github.com/stevenvelozo/orator-http-proxy) - HTTP proxy pass-through for Orator
-- [orator-static-server](https://github.com/stevenvelozo/orator-static-server) - Static file serving module
-- [fable](https://github.com/stevenvelozo/fable) - Service provider framework
-- [meadow](https://github.com/stevenvelozo/meadow) - Data access layer with automatic REST endpoints
+- [orator-serviceserver-base](https://github.com/stevenvelozo/orator-serviceserver-base) - Abstract service server base class
+- [orator-static-server](https://github.com/stevenvelozo/orator-static-server) - Static file serving
+- [fable](https://github.com/stevenvelozo/fable) - Application services framework
+
+## License
+
+MIT
+
+## Contributing
+
+Pull requests are welcome. For details on our code of conduct, contribution process, and testing requirements, see the [Retold Contributing Guide](https://github.com/stevenvelozo/retold/blob/main/docs/contributing.md).
