@@ -51,13 +51,13 @@
     },
     "homepage": "https://github.com/stevenvelozo/orator",
     "devDependencies": {
-        "fable": "^3.1.55",
+        "fable": "^3.1.57",
         "quackage": "^1.0.51"
     },
     "dependencies": {
         "fable-serviceproviderbase": "^3.0.18",
         "find-my-way": "^9.4.0",
         "orator-serviceserver-base": "^1.0.2",
-        "orator-static-server": "^2.0.0"
+        "orator-static-server": "^2.0.3"
     }
 }
