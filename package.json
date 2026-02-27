@@ -5,7 +5,7 @@
     "main": "source/Orator.js",
     "scripts": {
         "start": "node source/Orator.js",
-        "coverage": "npx nyc --reporter=lcov --reporter=text-lcov ./node_modules/mocha/bin/_mocha -- -u tdd -R spec",
+        "coverage": "npx quack coverage",
         "test": "npx mocha -u tdd -R spec",
         "build": "npx quack build",
         "docker-dev-build-image": "docker build ./ -f Dockerfile_LUXURYCode -t retold/orator:local",
