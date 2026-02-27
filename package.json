@@ -6,11 +6,11 @@
     "scripts": {
         "start": "node source/Orator.js",
         "coverage": "npx quack coverage",
-        "test": "npx mocha -u tdd -R spec",
+        "test": "npx quack test",
         "build": "npx quack build",
         "docker-dev-build-image": "docker build ./ -f Dockerfile_LUXURYCode -t retold/orator:local",
         "docker-dev-run": "docker run -it -d --name orator-dev -p 15277:8080 -p 34566:8086 -v \"$PWD/.config:/home/coder/.config\"  -v \"$PWD:/home/coder/orator\" -u \"$(id -u):$(id -g)\" -e \"DOCKER_USER=$USER\" orator-image:local",
-        "tests": "npx mocha -u tdd --exit -R spec --grep",
+        "tests": "npx quack test -g",
         "docker-dev-build": "docker build ./ -f Dockerfile_LUXURYCode -t orator-image:local",
         "docker-dev-shell": "docker exec -it orator-dev /bin/bash"
     },
