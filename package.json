@@ -52,7 +52,7 @@
     "homepage": "https://github.com/stevenvelozo/orator",
     "devDependencies": {
         "fable": "^3.1.57",
-        "quackage": "^1.0.51"
+        "quackage": "^1.0.58"
     },
     "dependencies": {
         "fable-serviceproviderbase": "^3.0.18",
