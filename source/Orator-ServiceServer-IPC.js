@@ -67,7 +67,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 			{
 				if (pError)
 				{
-					this.log.error(`IPC Provider preBehaviorFunction ${pFunctionIndex} failed with error: ${pError}`, pError);
+					this.log.error(`IPC Provider preBehaviorFunction failed with error: ${pError}`, pError);
 				}
 				return fNext(pError);
 			});
@@ -104,7 +104,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 			{
 				if (pError)
 				{
-					this.log.error(`IPC Provider postBehaviorFunction ${pFunctionIndex} failed with error: ${pError}`, pError);
+					this.log.error(`IPC Provider postBehaviorFunction failed with error: ${pError}`, pError);
 				}
 				return fNext(pError);
 			});
@@ -172,7 +172,7 @@ class OratorServiceServerIPC extends libOratorServiceServerBase
 							{
 								if (pBehaviorFunctionError)
 								{
-									this.log.error(`IPC Provider behavior function ${pFunctionIndex} failed with error: ${pBehaviorFunctionError}`, pBehaviorFunctionError);
+									this.log.error(`IPC Provider behavior function failed with error: ${pBehaviorFunctionError}`, pBehaviorFunctionError);
 									return fReject(pBehaviorFunctionError);
 								}
 								return fResolve();
