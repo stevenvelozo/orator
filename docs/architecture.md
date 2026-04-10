@@ -84,9 +84,9 @@ _Fable.Orator.invoke('GET', '/api/data', {},
 The service server base class uses a template method pattern for route registration. The base class validates inputs, and derived classes implement the `do*` methods with actual behavior:
 
 ```
-Base: get(pRoute, ...) → validates pRoute → calls doGet(pRoute, ...)
-  └── Restify: doGet(pRoute, ...) → this.server.get(pRoute, ...)
-  └── IPC: doGet(pRoute, ...) → this.addRouteProcessor('GET', pRoute, ...)
+Base: get(pRoute, ...) -> validates pRoute -> calls doGet(pRoute, ...)
+  └── Restify: doGet(pRoute, ...) -> this.server.get(pRoute, ...)
+  └── IPC: doGet(pRoute, ...) -> this.addRouteProcessor('GET', pRoute, ...)
 ```
 
 This pattern allows derived classes to focus on implementation without duplicating validation logic.

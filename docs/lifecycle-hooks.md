@@ -21,11 +21,11 @@ The `onBeforeInitializeAsync` step is where the service server is set up. If no 
 When `startService()` is called, Orator executes these hooks in order:
 
 ```
-[initialize() — if not already initialized]
+[initialize() -- if not already initialized]
     ↓
 onBeforeStartService(fNext)
     ↓
-onStartService(fNext) — calls serviceServer.listen()
+onStartService(fNext) -- calls serviceServer.listen()
     ↓
 onAfterStartService(fNext)
 ```
