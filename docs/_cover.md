@@ -1,4 +1,4 @@
-# Orator <small>5</small>
+# Orator
 
 > An unopinionated API server abstraction for REST and IPC services
 
