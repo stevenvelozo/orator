@@ -415,6 +415,38 @@ class Orator extends libFableServiceProviderBase
 
 		return this.fable.OratorStaticServer.addStaticRoute(pFilePath, pDefaultFile, pRoute, pRouteStrip, pParams);
 	}
+
+	/**
+	 * Register a static-file route with a per-file CDN fallback map.
+	 *
+	 * Behaves like addStaticRoute for every local hit. For any request whose
+	 * relative path is a key in pFallbackMap and whose file isn't present
+	 * on disk, responds with 302 to the mapped URL instead of a 404. Any
+	 * request whose relative path isn't in the map behaves exactly as
+	 * addStaticRoute would (local hit → stream, local miss → 404).
+	 *
+	 * @param {string} pFilePath The path on disk that we are serving files from.
+	 * @param {string?} pDefaultFile (optional) The default file served if no specific file is requested.
+	 * @param {string?} pRoute (optional) The route matcher that will be used. Defaults to everything.
+	 * @param {string?} pRouteStrip (optional) If provided, this prefix will be removed from URL paths before being served.
+	 * @param {object?} pParams (optional) Additional parameters to pass to serve-static.
+	 * @param {Object<string,string>?} pFallbackMap (optional) Map of relative path (under the route prefix) to absolute URL for CDN fallback.
+	 * @return {boolean} true if the handler was successfully installed, otherwise false.
+	 */
+	addStaticRouteWithFallbacks(pFilePath, pDefaultFile, pRoute, pRouteStrip, pParams, pFallbackMap)
+	{
+		if (!this.fable.serviceManager.servicesMap.hasOwnProperty('OratorStaticServer'))
+		{
+			this.fable.serviceManager.addServiceType('OratorStaticServer', libOratorStaticServer);
+		}
+		if (!this.fable.OratorStaticServer)
+		{
+			this.fable.serviceManager.instantiateServiceProvider('OratorStaticServer', {}, 'OratorStaticServer-AutoInit');
+		}
+
+		return this.fable.OratorStaticServer.addStaticRouteWithFallbacks(
+			pFilePath, pDefaultFile, pRoute, pRouteStrip, pParams, pFallbackMap);
+	}
 }
 
 module.exports = Orator;
