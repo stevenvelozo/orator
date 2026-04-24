@@ -353,7 +353,8 @@ suite
 								let tmpMockResponse = { setHeader: function(pName, pValue) { tmpCapturedHeaders[pName] = pValue; } };
 
 								tmpStaticServer.setMimeHeader('app.js', tmpMockResponse);
-								Expect(tmpCapturedHeaders['Content-Type']).to.equal('application/javascript');
+								// mime v4 returns the IANA-canonical 'text/javascript'; earlier versions returned 'application/javascript'.
+								Expect(tmpCapturedHeaders['Content-Type']).to.be.oneOf(['text/javascript', 'application/javascript']);
 
 								tmpOrator.log.info('JavaScript MIME type correctly detected');
 								return fDone();
