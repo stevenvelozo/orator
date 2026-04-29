@@ -11,7 +11,19 @@ const libFableServiceProviderBase = require('fable-serviceproviderbase');
 
 const libDefaultOratorServiceServer = require('./Orator-Default-ServiceServer.js');
 
-const libOratorStaticServer = require('orator-static-server');
+// orator-static-server is lazy-loaded so that browser bundles using orator's
+// IPC mode don't pay the cost of (or trip over) its server-only deps. Only
+// setMimeHeader / addStaticRoute / addStaticRouteWithFallbacks need it, and
+// none of those are reachable from IPC-only consumers.
+let libOratorStaticServer = null;
+const getOratorStaticServer = () =>
+{
+	if (!libOratorStaticServer)
+	{
+		libOratorStaticServer = require('orator-static-server');
+	}
+	return libOratorStaticServer;
+};
 
 const defaultOratorConfiguration = require('./Orator-Default-Configuration.js');
 
@@ -381,7 +393,7 @@ class Orator extends libFableServiceProviderBase
 			// Force auto-registration so the method is available
 			if (!this.fable.serviceManager.servicesMap.hasOwnProperty('OratorStaticServer'))
 			{
-				this.fable.serviceManager.addServiceType('OratorStaticServer', libOratorStaticServer);
+				this.fable.serviceManager.addServiceType('OratorStaticServer', getOratorStaticServer());
 			}
 			this.fable.serviceManager.instantiateServiceProvider('OratorStaticServer', {}, 'OratorStaticServer-AutoInit');
 		}
@@ -404,7 +416,7 @@ class Orator extends libFableServiceProviderBase
 		// Auto-register the OratorStaticServer service type if it hasn't been registered yet
 		if (!this.fable.serviceManager.servicesMap.hasOwnProperty('OratorStaticServer'))
 		{
-			this.fable.serviceManager.addServiceType('OratorStaticServer', libOratorStaticServer);
+			this.fable.serviceManager.addServiceType('OratorStaticServer', getOratorStaticServer());
 		}
 
 		// Auto-instantiate a default OratorStaticServer instance if none exists
@@ -437,7 +449,7 @@ class Orator extends libFableServiceProviderBase
 	{
 		if (!this.fable.serviceManager.servicesMap.hasOwnProperty('OratorStaticServer'))
 		{
-			this.fable.serviceManager.addServiceType('OratorStaticServer', libOratorStaticServer);
+			this.fable.serviceManager.addServiceType('OratorStaticServer', getOratorStaticServer());
 		}
 		if (!this.fable.OratorStaticServer)
 		{

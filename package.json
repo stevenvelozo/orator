@@ -1,6 +1,6 @@
 {
     "name": "orator",
-    "version": "6.1.0",
+    "version": "6.1.1",
     "description": "Unopinionated API http server abstraction - REST or IPC",
     "main": "source/Orator.js",
     "scripts": {
@@ -15,7 +15,8 @@
         "docker-dev-shell": "docker exec -it orator-dev /bin/bash"
     },
     "browser": {
-        "./source/Orator-Default-ServiceServer.js": "./source/Orator-Default-ServiceServer-Web.js"
+        "./source/Orator-Default-ServiceServer.js": "./source/Orator-Default-ServiceServer-Web.js",
+        "orator-static-server": false
     },
     "repository": {
         "type": "git",
@@ -53,12 +54,12 @@
     "devDependencies": {
         "fable": "^3.1.71",
         "pict-docuserve": "^0.1.5",
-        "quackage": "^1.1.2"
+        "quackage": "^1.1.3"
     },
     "dependencies": {
         "fable-serviceproviderbase": "^3.0.19",
         "find-my-way": "^9.5.0",
         "orator-serviceserver-base": "^1.0.7",
-        "orator-static-server": "^2.1.2"
+        "orator-static-server": "^2.1.3"
     }
 }

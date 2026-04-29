@@ -1,33 +1,38 @@
 "use strict";
 
 var _excluded = ["version", "host"];
-function _get() { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get.bind(); } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(arguments.length < 3 ? target : receiver); } return desc.value; }; } return _get.apply(this, arguments); }
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _superPropGet(t, o, e, r) { var p = _get(_getPrototypeOf(1 & r ? t.prototype : t), o, e); return 2 & r && "function" == typeof p ? function (t) { return p.apply(e, t); } : p; }
+function _get() { return _get = "undefined" != typeof Reflect && Reflect.get ? Reflect.get.bind() : function (e, t, r) { var p = _superPropBase(e, t); if (p) { var n = Object.getOwnPropertyDescriptor(p, t); return n.get ? n.get.call(arguments.length < 3 ? e : r) : n.value; } }, _get.apply(null, arguments); }
+function _superPropBase(t, o) { for (; !{}.hasOwnProperty.call(t, o) && null !== (t = _getPrototypeOf(t));); return t; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _objectWithoutProperties(e, t) { if (null == e) return {}; var o, r, i = _objectWithoutPropertiesLoose(e, t); if (Object.getOwnPropertySymbols) { var n = Object.getOwnPropertySymbols(e); for (r = 0; r < n.length; r++) o = n[r], -1 === t.indexOf(o) && {}.propertyIsEnumerable.call(e, o) && (i[o] = e[o]); } return i; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 (function (f) {
   if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object" && typeof module !== "undefined") {
     module.exports = f();
@@ -79,7 +84,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         (function () {
           'use strict';
 
-          var objectAssign = require('object-assign');
+          var objectAssign = require('object.assign/polyfill')();
 
           // compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
           // original notice:
@@ -504,7 +509,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           // 11. Expected to throw an error:
           // assert.throws(block, Error_opt, message_opt);
 
-          assert["throws"] = function (block, /*optional*/error, /*optional*/message) {
+          assert.throws = function (block, /*optional*/error, /*optional*/message) {
             _throws(true, block, error, message);
           };
 
@@ -537,7 +542,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }).call(this);
       }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
     }, {
-      "object-assign": 23,
+      "object.assign/polyfill": 64,
       "util/": 4
     }],
     2: [function (require, module, exports) {
@@ -1076,72 +1081,323 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
     }, {
       "./support/isBuffer": 3,
-      "_process": 24,
+      "_process": 66,
       "inherits": 2
     }],
-    5: [function (require, module, exports) {
-      /**
-      * Fable Core Pre-initialization Service Base
-      *
-      * For a couple services, we need to be able to instantiate them before the Fable object is fully initialized.
-      * This is a base class for those services.
-      *
-      * @author <steven@velozo.com>
-      */
-      var FableCoreServiceProviderBase = /*#__PURE__*/function () {
-        function FableCoreServiceProviderBase(pOptions, pServiceHash) {
-          _classCallCheck(this, FableCoreServiceProviderBase);
-          this.fable = false;
-          this.options = _typeof(pOptions) === 'object' ? pOptions : {};
-          this.serviceType = 'Unknown';
-
-          // The hash will be a non-standard UUID ... the UUID service uses this base class!
-          this.UUID = "CORESVC-".concat(Math.floor(Math.random() * (99999 - 10000) + 10000));
-          this.Hash = typeof pServiceHash === 'string' ? pServiceHash : "".concat(this.UUID);
-        }
-        _createClass(FableCoreServiceProviderBase, [{
-          key: "connectFable",
-          value:
-          // After fable is initialized, it would be expected to be wired in as a normal service.
-          function connectFable(pFable) {
-            this.fable = pFable;
-            return true;
-          }
-        }]);
-        return FableCoreServiceProviderBase;
-      }();
-      _defineProperty(FableCoreServiceProviderBase, "isFableService", true);
-      module.exports = FableCoreServiceProviderBase;
-    }, {}],
+    5: [function (require, module, exports) {}, {}],
     6: [function (require, module, exports) {
+      'use strict';
+
+      var bind = require('function-bind');
+      var $apply = require('./functionApply');
+      var $call = require('./functionCall');
+      var $reflectApply = require('./reflectApply');
+
+      /** @type {import('./actualApply')} */
+      module.exports = $reflectApply || bind.call($call, $apply);
+    }, {
+      "./functionApply": 7,
+      "./functionCall": 8,
+      "./reflectApply": 10,
+      "function-bind": 42
+    }],
+    7: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./functionApply')} */
+      module.exports = Function.prototype.apply;
+    }, {}],
+    8: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./functionCall')} */
+      module.exports = Function.prototype.call;
+    }, {}],
+    9: [function (require, module, exports) {
+      'use strict';
+
+      var bind = require('function-bind');
+      var $TypeError = require('es-errors/type');
+      var $call = require('./functionCall');
+      var $actualApply = require('./actualApply');
+
+      /** @type {(args: [Function, thisArg?: unknown, ...args: unknown[]]) => Function} TODO FIXME, find a way to use import('.') */
+      module.exports = function callBindBasic(args) {
+        if (args.length < 1 || typeof args[0] !== 'function') {
+          throw new $TypeError('a function is required');
+        }
+        return $actualApply(bind, $call, args);
+      };
+    }, {
+      "./actualApply": 6,
+      "./functionCall": 8,
+      "es-errors/type": 19,
+      "function-bind": 42
+    }],
+    10: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./reflectApply')} */
+      module.exports = typeof Reflect !== 'undefined' && Reflect && Reflect.apply;
+    }, {}],
+    11: [function (require, module, exports) {
+      'use strict';
+
+      var GetIntrinsic = require('get-intrinsic');
+      var callBindBasic = require('call-bind-apply-helpers');
+
+      /** @type {(thisArg: string, searchString: string, position?: number) => number} */
+      var $indexOf = callBindBasic([GetIntrinsic('%String.prototype.indexOf%')]);
+
+      /** @type {import('.')} */
+      module.exports = function callBoundIntrinsic(name, allowMissing) {
+        /* eslint no-extra-parens: 0 */
+
+        var intrinsic = /** @type {(this: unknown, ...args: unknown[]) => unknown} */GetIntrinsic(name, !!allowMissing);
+        if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
+          return callBindBasic(/** @type {const} */[intrinsic]);
+        }
+        return intrinsic;
+      };
+    }, {
+      "call-bind-apply-helpers": 9,
+      "get-intrinsic": 43
+    }],
+    12: [function (require, module, exports) {
+      'use strict';
+
+      var callBind = require('call-bind-apply-helpers');
+      var gOPD = require('gopd');
+      var hasProtoAccessor;
+      try {
+        // eslint-disable-next-line no-extra-parens, no-proto
+        hasProtoAccessor = /** @type {{ __proto__?: typeof Array.prototype }} */[].__proto__ === Array.prototype;
+      } catch (e) {
+        if (!e || _typeof(e) !== 'object' || !('code' in e) || e.code !== 'ERR_PROTO_ACCESS') {
+          throw e;
+        }
+      }
+
+      // eslint-disable-next-line no-extra-parens
+      var desc = !!hasProtoAccessor && gOPD && gOPD(Object.prototype, /** @type {keyof typeof Object.prototype} */'__proto__');
+      var $Object = Object;
+      var $getPrototypeOf = $Object.getPrototypeOf;
+
+      /** @type {import('./get')} */
+      module.exports = desc && typeof desc.get === 'function' ? callBind([desc.get]) : typeof $getPrototypeOf === 'function' ? /** @type {import('./get')} */function getDunder(value) {
+        // eslint-disable-next-line eqeqeq
+        return $getPrototypeOf(value == null ? value : $Object(value));
+      } : false;
+    }, {
+      "call-bind-apply-helpers": 9,
+      "gopd": 48
+    }],
+    13: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('.')} */
+      var $defineProperty = Object.defineProperty || false;
+      if ($defineProperty) {
+        try {
+          $defineProperty({}, 'a', {
+            value: 1
+          });
+        } catch (e) {
+          // IE 8 has a broken defineProperty
+          $defineProperty = false;
+        }
+      }
+      module.exports = $defineProperty;
+    }, {}],
+    14: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./eval')} */
+      module.exports = EvalError;
+    }, {}],
+    15: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('.')} */
+      module.exports = Error;
+    }, {}],
+    16: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./range')} */
+      module.exports = RangeError;
+    }, {}],
+    17: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./ref')} */
+      module.exports = ReferenceError;
+    }, {}],
+    18: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./syntax')} */
+      module.exports = SyntaxError;
+    }, {}],
+    19: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./type')} */
+      module.exports = TypeError;
+    }, {}],
+    20: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./uri')} */
+      module.exports = URIError;
+    }, {}],
+    21: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('.')} */
+      module.exports = Object;
+    }, {}],
+    22: [function (require, module, exports) {
+      module.exports = {
+        "name": "fable-serviceproviderbase",
+        "version": "3.0.19",
+        "description": "Simple base classes for fable services.",
+        "main": "source/Fable-ServiceProviderBase.js",
+        "scripts": {
+          "start": "node source/Fable-ServiceProviderBase.js",
+          "test": "npx quack test",
+          "tests": "npx quack test -g",
+          "coverage": "npx quack coverage",
+          "build": "npx quack build",
+          "types": "tsc -p ./tsconfig.build.json",
+          "check": "tsc -p . --noEmit"
+        },
+        "types": "types/source/Fable-ServiceProviderBase.d.ts",
+        "mocha": {
+          "diff": true,
+          "extension": ["js"],
+          "package": "./package.json",
+          "reporter": "spec",
+          "slow": "75",
+          "timeout": "5000",
+          "ui": "tdd",
+          "watch-files": ["source/**/*.js", "test/**/*.js"],
+          "watch-ignore": ["lib/vendor"]
+        },
+        "repository": {
+          "type": "git",
+          "url": "https://github.com/stevenvelozo/fable-serviceproviderbase.git"
+        },
+        "keywords": ["entity", "behavior"],
+        "author": "Steven Velozo <steven@velozo.com> (http://velozo.com/)",
+        "license": "MIT",
+        "bugs": {
+          "url": "https://github.com/stevenvelozo/fable-serviceproviderbase/issues"
+        },
+        "homepage": "https://github.com/stevenvelozo/fable-serviceproviderbase",
+        "devDependencies": {
+          "@types/mocha": "^10.0.10",
+          "fable": "^3.1.62",
+          "quackage": "^1.0.58",
+          "typescript": "^5.9.3"
+        }
+      };
+    }, {}],
+    23: [function (require, module, exports) {
       /**
       * Fable Service Base
       * @author <steven@velozo.com>
       */
-      var FableServiceProviderBase = /*#__PURE__*/_createClass(function FableServiceProviderBase(pFable, pOptions, pServiceHash) {
-        _classCallCheck(this, FableServiceProviderBase);
-        this.fable = pFable;
-        this.options = _typeof(pOptions) === 'object' ? pOptions : _typeof(pFable) === 'object' && !pFable.isFable ? pFable : {};
-        this.serviceType = 'Unknown';
-        if (typeof pFable.getUUID == 'function') {
-          this.UUID = pFable.getUUID();
-        } else {
-          this.UUID = "NoFABLESVC-".concat(Math.floor(Math.random() * (99999 - 10000) + 10000));
-        }
-        this.Hash = typeof pServiceHash === 'string' ? pServiceHash : "".concat(this.UUID);
 
-        // Pull back a few things
-        this.log = this.fable.log;
-        this.servicesMap = this.fable.servicesMap;
-        this.services = this.fable.services;
-      });
+      var libPackage = require('../package.json');
+      var FableServiceProviderBase = /*#__PURE__*/function () {
+        /**
+         * The constructor can be used in two ways:
+         * 1) With a fable, options object and service hash (the options object and service hash are optional)a
+         * 2) With an object or nothing as the first parameter, where it will be treated as the options object
+         *
+         * @param {import('fable')|Record<string, any>} [pFable] - (optional) The fable instance, or the options object if there is no fable
+         * @param {Record<string, any>|string} [pOptions] - (optional) The options object, or the service hash if there is no fable
+         * @param {string} [pServiceHash] - (optional) The service hash to identify this service instance
+         */
+        function FableServiceProviderBase(pFable, pOptions, pServiceHash) {
+          _classCallCheck(this, FableServiceProviderBase);
+          /** @type {import('fable')} */
+          this.fable;
+          /** @type {string} */
+          this.UUID;
+          /** @type {Record<string, any>} */
+          this.options;
+          /** @type {Record<string, any>} */
+          this.services;
+          /** @type {Record<string, any>} */
+          this.servicesMap;
+
+          // Check if a fable was passed in; connect it if so
+          if (_typeof(pFable) === 'object' && pFable.isFable) {
+            this.connectFable(pFable);
+          } else {
+            this.fable = false;
+          }
+
+          // Initialize the services map if it wasn't passed in
+          /** @type {Record<string, any>} */
+          this._PackageFableServiceProvider = libPackage;
+
+          // initialize options and UUID based on whether the fable was passed in or not.
+          if (this.fable) {
+            this.UUID = pFable.getUUID();
+            this.options = _typeof(pOptions) === 'object' ? pOptions : {};
+          } else {
+            // With no fable, check to see if there was an object passed into either of the first two
+            // Parameters, and if so, treat it as the options object
+            this.options = _typeof(pFable) === 'object' && !pFable.isFable ? pFable : _typeof(pOptions) === 'object' ? pOptions : {};
+            this.UUID = "CORE-SVC-".concat(Math.floor(Math.random() * (99999 - 10000) + 10000));
+          }
+
+          // It's expected that the deriving class will set this
+          this.serviceType = "Unknown-".concat(this.UUID);
+
+          // The service hash is used to identify the specific instantiation of the service in the services map
+          this.Hash = typeof pServiceHash === 'string' ? pServiceHash : !this.fable && typeof pOptions === 'string' ? pOptions : "".concat(this.UUID);
+        }
+
+        /**
+         * @param {import('fable')} pFable
+         */
+        return _createClass(FableServiceProviderBase, [{
+          key: "connectFable",
+          value: function connectFable(pFable) {
+            if (_typeof(pFable) !== 'object' || !pFable.isFable) {
+              var tmpErrorMessage = "Fable Service Provider Base: Cannot connect to Fable, invalid Fable object passed in.  The pFable parameter was a [".concat(_typeof(pFable), "].}");
+              console.log(tmpErrorMessage);
+              return new Error(tmpErrorMessage);
+            }
+            if (!this.fable) {
+              this.fable = pFable;
+            }
+            if (!this.log) {
+              this.log = this.fable.Logging;
+            }
+            if (!this.services) {
+              this.services = this.fable.services;
+            }
+            if (!this.servicesMap) {
+              this.servicesMap = this.fable.servicesMap;
+            }
+            return true;
+          }
+        }]);
+      }();
       _defineProperty(FableServiceProviderBase, "isFableService", true);
       module.exports = FableServiceProviderBase;
-      module.exports.CoreServiceProviderBase = require('./Fable-ServiceProviderBase-Preinit.js');
+
+      // This is left here in case we want to go back to having different code/base class for "core" services
+      module.exports.CoreServiceProviderBase = FableServiceProviderBase;
     }, {
-      "./Fable-ServiceProviderBase-Preinit.js": 5
+      "../package.json": 22
     }],
-    7: [function (require, module, exports) {
+    24: [function (require, module, exports) {
       'use strict';
 
       var UTF8_ACCEPT = 12;
@@ -1167,10 +1423,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         while (percentPosition > -1 && percentPosition < length) {
           var high = hexCodeToInt(uri[percentPosition + 1], 4);
           var low = hexCodeToInt(uri[percentPosition + 2], 0);
-          var _byte = high | low;
-          var type = UTF8_DATA[_byte];
+          var byte = high | low;
+          var type = UTF8_DATA[byte];
           state = UTF8_DATA[256 + state + type];
-          codepoint = codepoint << 6 | _byte & UTF8_DATA[364 + type];
+          codepoint = codepoint << 6 | byte & UTF8_DATA[364 + type];
           if (state === UTF8_ACCEPT) {
             decoded += uri.slice(last, startOfOctets);
             decoded += codepoint <= 0xFFFF ? String.fromCharCode(codepoint) : String.fromCharCode(0xD7C0 + (codepoint >> 10), 0xDC00 + (codepoint & 0x3FF));
@@ -1217,7 +1473,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       }
       module.exports = decodeURIComponent;
     }, {}],
-    8: [function (require, module, exports) {
+    25: [function (require, module, exports) {
       'use strict';
 
       // do not edit .js files directly - edit src/index.jst
@@ -1250,7 +1506,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         return a !== a && b !== b;
       };
     }, {}],
-    9: [function (require, module, exports) {
+    26: [function (require, module, exports) {
       "use strict";
 
       var parse = require("./parse");
@@ -1267,14 +1523,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
        * - `import qs from 'fast-querystring'`
        */
       module.exports = fastQuerystring;
-      module.exports["default"] = fastQuerystring;
+      module.exports.default = fastQuerystring;
       module.exports.parse = parse;
       module.exports.stringify = stringify;
     }, {
-      "./parse": 11,
-      "./stringify": 12
+      "./parse": 28,
+      "./stringify": 29
     }],
-    10: [function (require, module, exports) {
+    27: [function (require, module, exports) {
       // This file is taken from Node.js project.
       // Full implementation can be found from https://github.com/nodejs/node/blob/main/lib/internal/querystring.js
 
@@ -1366,7 +1622,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         encodeString: encodeString
       };
     }, {}],
-    11: [function (require, module, exports) {
+    28: [function (require, module, exports) {
       "use strict";
 
       var fastDecode = require("fast-decode-uri-component");
@@ -1484,9 +1740,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       }
       module.exports = parse;
     }, {
-      "fast-decode-uri-component": 7
+      "fast-decode-uri-component": 24
     }],
-    12: [function (require, module, exports) {
+    29: [function (require, module, exports) {
       "use strict";
 
       var _require = require("./internals/querystring"),
@@ -1548,9 +1804,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       }
       module.exports = stringify;
     }, {
-      "./internals/querystring": 10
+      "./internals/querystring": 27
     }],
-    13: [function (require, module, exports) {
+    30: [function (require, module, exports) {
       'use strict';
 
       /*
@@ -1594,11 +1850,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         safeDecodeURIComponent = _require4.safeDecodeURIComponent;
       var FULL_PATH_REGEXP = /^https?:\/\/.*?\//;
       var OPTIONAL_PARAM_REGEXP = /(\/:[^/()]*?)\?(\/?)/;
+      var ESCAPE_REGEXP = /[.*+?^${}()|[\]\\]/g;
+      var REMOVE_DUPLICATE_SLASHES_REGEXP = /\/\/+/g;
       if (!isRegexSafe(FULL_PATH_REGEXP)) {
         throw new Error('the FULL_PATH_REGEXP is not safe, update this module');
       }
       if (!isRegexSafe(OPTIONAL_PARAM_REGEXP)) {
         throw new Error('the OPTIONAL_PARAM_REGEXP is not safe, update this module');
+      }
+      if (!isRegexSafe(ESCAPE_REGEXP)) {
+        throw new Error('the ESCAPE_REGEXP is not safe, update this module');
+      }
+      if (!isRegexSafe(REMOVE_DUPLICATE_SLASHES_REGEXP)) {
+        throw new Error('the REMOVE_DUPLICATE_SLASHES_REGEXP is not safe, update this module');
       }
       function Router(opts) {
         if (!(this instanceof Router)) {
@@ -1629,7 +1893,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           this.querystringParser = opts.querystringParser;
         } else {
           this.querystringParser = function (query) {
-            return query === '' ? {} : querystring.parse(query);
+            return query.length === 0 ? {} : querystring.parse(query);
           };
         }
         this.caseSensitive = opts.caseSensitive === undefined ? true : opts.caseSensitive;
@@ -1638,6 +1902,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         this.maxParamLength = opts.maxParamLength || 100;
         this.allowUnsafeRegex = opts.allowUnsafeRegex || false;
         this.constrainer = new Constrainer(opts.constraints);
+        this.useSemicolonDelimiter = opts.useSemicolonDelimiter || false;
         this.routes = [];
         this.trees = {};
       }
@@ -1661,7 +1926,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         if (optionalParamMatch) {
           assert(path.length === optionalParamMatch.index + optionalParamMatch[0].length, 'Optional Parameter needs to be the last parameter of the path');
           var pathFull = path.replace(OPTIONAL_PARAM_REGEXP, '$1$2');
-          var pathOptional = path.replace(OPTIONAL_PARAM_REGEXP, '$2');
+          var pathOptional = path.replace(OPTIONAL_PARAM_REGEXP, '$2') || '/';
           this.on(method, pathFull, opts, handler, store);
           this.on(method, pathOptional, opts, handler, store);
           return;
@@ -1714,28 +1979,30 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         var currentNode = this.trees[method];
         var parentNodePathIndex = currentNode.prefix.length;
         var params = [];
-        for (var _i = 0; _i <= pattern.length; _i++) {
-          if (pattern.charCodeAt(_i) === 58 && pattern.charCodeAt(_i + 1) === 58) {
+        for (var i = 0; i <= pattern.length; i++) {
+          if (pattern.charCodeAt(i) === 58 && pattern.charCodeAt(i + 1) === 58) {
             // It's a double colon
-            _i++;
+            i++;
             continue;
           }
-          var isParametricNode = pattern.charCodeAt(_i) === 58 && pattern.charCodeAt(_i + 1) !== 58;
-          var isWildcardNode = pattern.charCodeAt(_i) === 42;
-          if (isParametricNode || isWildcardNode || _i === pattern.length && _i !== parentNodePathIndex) {
-            var staticNodePath = pattern.slice(parentNodePathIndex, _i);
+          var isParametricNode = pattern.charCodeAt(i) === 58 && pattern.charCodeAt(i + 1) !== 58;
+          var isWildcardNode = pattern.charCodeAt(i) === 42;
+          if (isParametricNode || isWildcardNode || i === pattern.length && i !== parentNodePathIndex) {
+            var staticNodePath = pattern.slice(parentNodePathIndex, i);
             if (!this.caseSensitive) {
               staticNodePath = staticNodePath.toLowerCase();
             }
-            staticNodePath = staticNodePath.split('::').join(':');
-            staticNodePath = staticNodePath.split('%').join('%25');
+            staticNodePath = staticNodePath.replaceAll('::', ':');
+            staticNodePath = staticNodePath.replaceAll('%', '%25');
             // add the static part of the route to the tree
             currentNode = currentNode.createStaticChild(staticNodePath);
           }
           if (isParametricNode) {
             var isRegexNode = false;
+            var isParamSafe = true;
+            var backtrack = '';
             var regexps = [];
-            var lastParamStartIndex = _i + 1;
+            var lastParamStartIndex = i + 1;
             for (var j = lastParamStartIndex;; j++) {
               var charCode = pattern.charCodeAt(j);
               var isRegexParam = charCode === 40;
@@ -1753,8 +2020,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
                   }
                   regexps.push(trimRegExpStartAndEnd(regexString));
                   j = endOfRegexIndex + 1;
+                  isParamSafe = true;
                 } else {
-                  regexps.push('(.*?)');
+                  regexps.push(isParamSafe ? '(.*?)' : "(".concat(backtrack, "|(?:(?!").concat(backtrack, ").)*)"));
+                  isParamSafe = false;
                 }
                 var staticPartStartIndex = j;
                 for (; j < pattern.length; j++) {
@@ -1767,19 +2036,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
                 }
                 var staticPart = pattern.slice(staticPartStartIndex, j);
                 if (staticPart) {
-                  staticPart = staticPart.split('::').join(':');
-                  staticPart = staticPart.split('%').join('%25');
-                  regexps.push(escapeRegExp(staticPart));
+                  staticPart = staticPart.replaceAll('::', ':');
+                  staticPart = staticPart.replaceAll('%', '%25');
+                  regexps.push(backtrack = escapeRegExp(staticPart));
                 }
                 lastParamStartIndex = j + 1;
                 if (isEndOfNode || pattern.charCodeAt(j) === 47 || j === pattern.length) {
                   var nodePattern = isRegexNode ? '()' + staticPart : staticPart;
-                  var nodePath = pattern.slice(_i, j);
-                  pattern = pattern.slice(0, _i + 1) + nodePattern + pattern.slice(j);
-                  _i += nodePattern.length;
+                  var nodePath = pattern.slice(i, j);
+                  pattern = pattern.slice(0, i + 1) + nodePattern + pattern.slice(j);
+                  i += nodePattern.length;
                   var regex = isRegexNode ? new RegExp('^' + regexps.join('') + '$') : null;
                   currentNode = currentNode.createParametricChild(regex, staticPart || null, nodePath);
-                  parentNodePathIndex = _i + 1;
+                  parentNodePathIndex = i + 1;
                   break;
                 }
               }
@@ -1788,8 +2057,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             // add the wildcard parameter
             params.push('*');
             currentNode = currentNode.createWildcardChild();
-            parentNodePathIndex = _i + 1;
-            if (_i !== pattern.length - 1) {
+            parentNodePathIndex = i + 1;
+            if (i !== pattern.length - 1) {
               throw new Error('Wildcard must be the last character in the route');
             }
           }
@@ -1827,6 +2096,133 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         this.routes.push(route);
         currentNode.addRoute(route, this.constrainer);
       };
+      Router.prototype.hasRoute = function hasRoute(method, path, constraints) {
+        var route = this.findRoute(method, path, constraints);
+        return route !== null;
+      };
+      Router.prototype.findRoute = function findNode(method, path) {
+        var constraints = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+        if (this.trees[method] === undefined) {
+          return null;
+        }
+        var pattern = path;
+        var currentNode = this.trees[method];
+        var parentNodePathIndex = currentNode.prefix.length;
+        var params = [];
+        for (var i = 0; i <= pattern.length; i++) {
+          if (pattern.charCodeAt(i) === 58 && pattern.charCodeAt(i + 1) === 58) {
+            // It's a double colon
+            i++;
+            continue;
+          }
+          var isParametricNode = pattern.charCodeAt(i) === 58 && pattern.charCodeAt(i + 1) !== 58;
+          var isWildcardNode = pattern.charCodeAt(i) === 42;
+          if (isParametricNode || isWildcardNode || i === pattern.length && i !== parentNodePathIndex) {
+            var staticNodePath = pattern.slice(parentNodePathIndex, i);
+            if (!this.caseSensitive) {
+              staticNodePath = staticNodePath.toLowerCase();
+            }
+            staticNodePath = staticNodePath.replaceAll('::', ':');
+            staticNodePath = staticNodePath.replaceAll('%', '%25');
+            // add the static part of the route to the tree
+            currentNode = currentNode.getStaticChild(staticNodePath);
+            if (currentNode === null) {
+              return null;
+            }
+          }
+          if (isParametricNode) {
+            var isRegexNode = false;
+            var isParamSafe = true;
+            var backtrack = '';
+            var regexps = [];
+            var lastParamStartIndex = i + 1;
+            for (var j = lastParamStartIndex;; j++) {
+              var charCode = pattern.charCodeAt(j);
+              var isRegexParam = charCode === 40;
+              var isStaticPart = charCode === 45 || charCode === 46;
+              var isEndOfNode = charCode === 47 || j === pattern.length;
+              if (isRegexParam || isStaticPart || isEndOfNode) {
+                var paramName = pattern.slice(lastParamStartIndex, j);
+                params.push(paramName);
+                isRegexNode = isRegexNode || isRegexParam || isStaticPart;
+                if (isRegexParam) {
+                  var endOfRegexIndex = getClosingParenthensePosition(pattern, j);
+                  var regexString = pattern.slice(j, endOfRegexIndex + 1);
+                  if (!this.allowUnsafeRegex) {
+                    assert(isRegexSafe(new RegExp(regexString)), "The regex '".concat(regexString, "' is not safe!"));
+                  }
+                  regexps.push(trimRegExpStartAndEnd(regexString));
+                  j = endOfRegexIndex + 1;
+                  isParamSafe = false;
+                } else {
+                  regexps.push(isParamSafe ? '(.*?)' : "(".concat(backtrack, "|(?:(?!").concat(backtrack, ").)*)"));
+                  isParamSafe = false;
+                }
+                var staticPartStartIndex = j;
+                for (; j < pattern.length; j++) {
+                  var _charCode2 = pattern.charCodeAt(j);
+                  if (_charCode2 === 47) break;
+                  if (_charCode2 === 58) {
+                    var nextCharCode = pattern.charCodeAt(j + 1);
+                    if (nextCharCode === 58) j++;else break;
+                  }
+                }
+                var staticPart = pattern.slice(staticPartStartIndex, j);
+                if (staticPart) {
+                  staticPart = staticPart.replaceAll('::', ':');
+                  staticPart = staticPart.replaceAll('%', '%25');
+                  regexps.push(backtrack = escapeRegExp(staticPart));
+                }
+                lastParamStartIndex = j + 1;
+                if (isEndOfNode || pattern.charCodeAt(j) === 47 || j === pattern.length) {
+                  var nodePattern = isRegexNode ? '()' + staticPart : staticPart;
+                  var nodePath = pattern.slice(i, j);
+                  pattern = pattern.slice(0, i + 1) + nodePattern + pattern.slice(j);
+                  i += nodePattern.length;
+                  var regex = isRegexNode ? new RegExp('^' + regexps.join('') + '$') : null;
+                  currentNode = currentNode.getParametricChild(regex, staticPart || null, nodePath);
+                  if (currentNode === null) {
+                    return null;
+                  }
+                  parentNodePathIndex = i + 1;
+                  break;
+                }
+              }
+            }
+          } else if (isWildcardNode) {
+            // add the wildcard parameter
+            params.push('*');
+            currentNode = currentNode.getWildcardChild();
+            parentNodePathIndex = i + 1;
+            if (i !== pattern.length - 1) {
+              throw new Error('Wildcard must be the last character in the route');
+            }
+          }
+        }
+        if (!this.caseSensitive) {
+          pattern = pattern.toLowerCase();
+        }
+        var _iterator3 = _createForOfIteratorHelper(this.routes),
+          _step3;
+        try {
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+            var existRoute = _step3.value;
+            var routeConstraints = existRoute.opts.constraints || {};
+            if (existRoute.method === method && existRoute.pattern === pattern && deepEqual(routeConstraints, constraints)) {
+              return {
+                handler: existRoute.handler,
+                store: existRoute.store,
+                params: existRoute.params
+              };
+            }
+          }
+        } catch (err) {
+          _iterator3.e(err);
+        } finally {
+          _iterator3.f();
+        }
+        return null;
+      };
       Router.prototype.hasConstraintStrategy = function (strategyName) {
         return this.constrainer.hasConstraintStrategy(strategyName);
       };
@@ -1863,17 +2259,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           path = trimLastSlash(path);
         }
         var methods = Array.isArray(method) ? method : [method];
-        var _iterator3 = _createForOfIteratorHelper(methods),
-          _step3;
+        var _iterator4 = _createForOfIteratorHelper(methods),
+          _step4;
         try {
-          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-            var _method2 = _step3.value;
+          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+            var _method2 = _step4.value;
             this._off(_method2, path, constraints);
           }
         } catch (err) {
-          _iterator3.e(err);
+          _iterator4.e(err);
         } finally {
-          _iterator3.f();
+          _iterator4.f();
         }
       };
       Router.prototype._off = function _off(method, path, constraints) {
@@ -1939,7 +2335,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         var querystring;
         var shouldDecodeParam;
         try {
-          sanitizedUrl = safeDecodeURI(path);
+          sanitizedUrl = safeDecodeURI(path, this.useSemicolonDelimiter);
           path = sanitizedUrl.path;
           querystring = sanitizedUrl.querystring;
           shouldDecodeParam = sanitizedUrl.shouldDecodeParam;
@@ -1988,50 +2384,50 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             continue;
           }
           if (currentNode.kind === NODE_TYPES.WILDCARD) {
-            var param = originPath.slice(pathIndex);
-            if (shouldDecodeParam) {
-              param = safeDecodeURIComponent(param);
-            }
-            params.push(param);
-            pathIndex = pathLen;
-            continue;
-          }
-          if (currentNode.kind === NODE_TYPES.PARAMETRIC) {
-            var paramEndIndex = originPath.indexOf('/', pathIndex);
-            if (paramEndIndex === -1) {
-              paramEndIndex = pathLen;
-            }
-            var _param = originPath.slice(pathIndex, paramEndIndex);
+            var _param = originPath.slice(pathIndex);
             if (shouldDecodeParam) {
               _param = safeDecodeURIComponent(_param);
             }
-            if (currentNode.isRegex) {
-              var matchedParameters = currentNode.regex.exec(_param);
-              if (matchedParameters === null) continue;
-              for (var _i2 = 1; _i2 < matchedParameters.length; _i2++) {
-                var matchedParam = matchedParameters[_i2];
-                if (matchedParam.length > maxParamLength) {
-                  return null;
-                }
-                params.push(matchedParam);
-              }
-            } else {
-              if (_param.length > maxParamLength) {
+            params.push(_param);
+            pathIndex = pathLen;
+            continue;
+          }
+
+          // parametric node
+          var paramEndIndex = originPath.indexOf('/', pathIndex);
+          if (paramEndIndex === -1) {
+            paramEndIndex = pathLen;
+          }
+          var param = originPath.slice(pathIndex, paramEndIndex);
+          if (shouldDecodeParam) {
+            param = safeDecodeURIComponent(param);
+          }
+          if (currentNode.isRegex) {
+            var matchedParameters = currentNode.regex.exec(param);
+            if (matchedParameters === null) continue;
+            for (var i = 1; i < matchedParameters.length; i++) {
+              var matchedParam = matchedParameters[i];
+              if (matchedParam.length > maxParamLength) {
                 return null;
               }
-              params.push(_param);
+              params.push(matchedParam);
             }
-            pathIndex = paramEndIndex;
+          } else {
+            if (param.length > maxParamLength) {
+              return null;
+            }
+            params.push(param);
           }
+          pathIndex = paramEndIndex;
         }
       };
       Router.prototype._rebuild = function (routes) {
         this.reset();
-        var _iterator4 = _createForOfIteratorHelper(routes),
-          _step4;
+        var _iterator5 = _createForOfIteratorHelper(routes),
+          _step5;
         try {
-          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-            var route = _step4.value;
+          for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+            var route = _step5.value;
             var method = route.method,
               path = route.path,
               opts = route.opts,
@@ -2040,9 +2436,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             this._on(method, path, opts, handler, store);
           }
         } catch (err) {
-          _iterator4.e(err);
+          _iterator5.e(err);
         } finally {
-          _iterator4.f();
+          _iterator5.f();
         }
       };
       Router.prototype._defaultRoute = function (req, res, ctx) {
@@ -2099,27 +2495,34 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       };
       var _loop = function _loop() {
         /* eslint no-prototype-builtins: "off" */
-        if (!httpMethods.hasOwnProperty(i)) return "continue";
+        if (!httpMethods.hasOwnProperty(i)) return 1; // continue
         var m = httpMethods[i];
         var methodName = m.toLowerCase();
-        if (Router.prototype[methodName]) throw new Error('Method already exists: ' + methodName);
         Router.prototype[methodName] = function (path, handler, store) {
           return this.on(m, path, handler, store);
         };
       };
       for (var i in httpMethods) {
-        var _ret = _loop();
-        if (_ret === "continue") continue;
+        if (_loop()) continue;
       }
       Router.prototype.all = function (path, handler, store) {
         this.on(httpMethods, path, handler, store);
       };
+      Router.sanitizeUrlPath = function sanitizeUrlPath(url, useSemicolonDelimiter) {
+        var decoded = safeDecodeURI(url, useSemicolonDelimiter);
+        if (decoded.shouldDecodeParam) {
+          return safeDecodeURIComponent(decoded.path);
+        }
+        return decoded.path;
+      };
+      Router.removeDuplicateSlashes = removeDuplicateSlashes;
+      Router.trimLastSlash = trimLastSlash;
       module.exports = Router;
       function escapeRegExp(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return string.replace(ESCAPE_REGEXP, '\\$&');
       }
       function removeDuplicateSlashes(path) {
-        return path.replace(/\/\/+/g, '/');
+        return path.indexOf('//') !== -1 ? path.replace(REMOVE_DUPLICATE_SLASHES_REGEXP, '/') : path;
       }
       function trimLastSlash(path) {
         if (path.length > 1 && path.charCodeAt(path.length - 1) === 47) {
@@ -2146,14 +2549,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         while (idx < path.length) {
           idx++;
 
-          // ignore skipped chars
-          if (path[idx] === '\\') {
+          // ignore skipped chars "\"
+          if (path.charCodeAt(idx) === 92) {
             idx++;
             continue;
           }
-          if (path[idx] === ')') {
+          if (path.charCodeAt(idx) === 41) {
             parentheses--;
-          } else if (path[idx] === '(') {
+          } else if (path.charCodeAt(idx) === 40) {
             parentheses++;
           }
           if (!parentheses) return idx;
@@ -2167,18 +2570,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         return Object.assign({}, route.store);
       }
     }, {
-      "./lib/constrainer": 14,
-      "./lib/http-methods": 16,
-      "./lib/node": 17,
-      "./lib/pretty-print": 18,
-      "./lib/strategies/http-method": 21,
-      "./lib/url-sanitizer": 22,
+      "./lib/constrainer": 31,
+      "./lib/http-methods": 33,
+      "./lib/node": 34,
+      "./lib/pretty-print": 36,
+      "./lib/strategies/http-method": 39,
+      "./lib/url-sanitizer": 40,
       "assert": 1,
-      "fast-deep-equal": 8,
-      "fast-querystring": 9,
-      "safe-regex2": 25
+      "fast-deep-equal": 25,
+      "fast-querystring": 26,
+      "safe-regex2": 78
     }],
-    14: [function (require, module, exports) {
+    31: [function (require, module, exports) {
       'use strict';
 
       var acceptVersionStrategy = require('./strategies/accept-version');
@@ -2196,13 +2599,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
           // validate and optimize prototypes of given custom strategies
           if (customStrategies) {
-            for (var _i3 = 0, _Object$values = Object.values(customStrategies); _i3 < _Object$values.length; _i3++) {
-              var strategy = _Object$values[_i3];
+            for (var _i = 0, _Object$values = Object.values(customStrategies); _i < _Object$values.length; _i++) {
+              var strategy = _Object$values[_i];
               this.addConstraintStrategy(strategy);
             }
           }
         }
-        _createClass(Constrainer, [{
+        return _createClass(Constrainer, [{
           key: "isStrategyUsed",
           value: function isStrategyUsed(strategyName) {
             return this.strategiesInUse.has(strategyName) || this.asyncStrategiesInUse.has(strategyName);
@@ -2257,6 +2660,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             if (constraints) {
               var beforeSize = this.strategiesInUse.size;
               for (var key in constraints) {
+                if (!Object.hasOwn(constraints, key)) continue;
                 var strategy = this.strategies[key];
                 if (strategy.isAsync) {
                   this.asyncStrategiesInUse.add(key);
@@ -2281,6 +2685,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           key: "validateConstraints",
           value: function validateConstraints(constraints) {
             for (var key in constraints) {
+              if (!Object.hasOwn(constraints, key)) continue;
               var value = constraints[key];
               if (typeof value === 'undefined') {
                 throw new Error('Can\'t pass an undefined constraint value, must pass null or no key at all');
@@ -2304,11 +2709,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               return;
             }
             constraints = constraints || {};
-            var _iterator5 = _createForOfIteratorHelper(this.asyncStrategiesInUse),
-              _step5;
+            var _iterator6 = _createForOfIteratorHelper(this.asyncStrategiesInUse),
+              _step6;
             try {
               var _loop2 = function _loop2() {
-                var key = _step5.value;
+                var key = _step6.value;
                 var strategy = _this2.strategies[key];
                 strategy.deriveConstraint(req, ctx, function (err, constraintValue) {
                   if (err !== null) {
@@ -2321,13 +2726,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
                   }
                 });
               };
-              for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+              for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
                 _loop2();
               }
             } catch (err) {
-              _iterator5.e(err);
+              _iterator6.e(err);
             } finally {
-              _iterator5.f();
+              _iterator6.f();
             }
           }
 
@@ -2339,45 +2744,44 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           value: function _buildDeriveConstraints() {
             if (this.strategiesInUse.size === 0) return;
             var lines = ['return {'];
-            var _iterator6 = _createForOfIteratorHelper(this.strategiesInUse),
-              _step6;
+            var _iterator7 = _createForOfIteratorHelper(this.strategiesInUse),
+              _step7;
             try {
-              for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-                var key = _step6.value;
+              for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+                var key = _step7.value;
                 var strategy = this.strategies[key];
                 // Optimization: inline the derivation for the common built in constraints
                 if (!strategy.isCustom) {
                   if (key === 'version') {
                     lines.push('   version: req.headers[\'accept-version\'],');
-                  } else if (key === 'host') {
-                    lines.push('   host: req.headers.host || req.headers[\':authority\'],');
                   } else {
-                    throw new Error('unknown non-custom strategy for compiling constraint derivation function');
+                    lines.push('   host: req.headers.host || req.headers[\':authority\'],');
                   }
                 } else {
                   lines.push("  ".concat(strategy.name, ": this.strategies.").concat(key, ".deriveConstraint(req, ctx),"));
                 }
               }
             } catch (err) {
-              _iterator6.e(err);
+              _iterator7.e(err);
             } finally {
-              _iterator6.f();
+              _iterator7.f();
             }
             lines.push('}');
             this.deriveSyncConstraints = new Function('req', 'ctx', lines.join('\n')).bind(this); // eslint-disable-line
           }
         }]);
-        return Constrainer;
       }();
       module.exports = Constrainer;
     }, {
-      "./strategies/accept-host": 19,
-      "./strategies/accept-version": 20,
+      "./strategies/accept-host": 37,
+      "./strategies/accept-version": 38,
       "assert": 1
     }],
-    15: [function (require, module, exports) {
+    32: [function (require, module, exports) {
       'use strict';
 
+      var _require5 = require('./null-object'),
+        NullObject = _require5.NullObject;
       var httpMethodStrategy = require('./strategies/http-method');
       var HandlerStorage = /*#__PURE__*/function () {
         function HandlerStorage() {
@@ -2389,7 +2793,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }
 
         // This is the hot path for node handler finding -- change with care!
-        _createClass(HandlerStorage, [{
+        return _createClass(HandlerStorage, [{
           key: "getMatchingHandler",
           value: function getMatchingHandler(derivedConstraints) {
             if (derivedConstraints === undefined) {
@@ -2413,8 +2817,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             if (constraintsNames.length === 0) {
               this.unconstrainedHandler = handlerObject;
             }
-            for (var _i4 = 0, _constraintsNames = constraintsNames; _i4 < _constraintsNames.length; _i4++) {
-              var constraint = _constraintsNames[_i4];
+            for (var _i2 = 0, _constraintsNames = constraintsNames; _i2 < _constraintsNames.length; _i2++) {
+              var constraint = _constraintsNames[_i2];
               if (!this.constraints.includes(constraint)) {
                 if (constraint === 'version') {
                   // always check the version constraint first as it is the most selective
@@ -2425,8 +2829,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               }
             }
             var isMergedTree = constraintsNames.includes(httpMethodStrategy.name);
-            if (!isMergedTree && this.handlers.length >= 32) {
-              throw new Error('find-my-way supports a maximum of 32 route handlers per node when there are constraints, limit reached');
+            if (!isMergedTree && this.handlers.length >= 31) {
+              throw new Error('find-my-way supports a maximum of 31 route handlers per node when there are constraints, limit reached');
             }
             this.handlers.push(handlerObject);
             // Sort the most constrained handlers to the front of the list of handlers so they are tested first.
@@ -2440,11 +2844,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }, {
           key: "_compileCreateParamsObject",
           value: function _compileCreateParamsObject(params) {
-            var lines = [];
+            var fnBody = [];
+            fnBody.push('const fn = function _createParamsObject (paramsArray) {');
+            fnBody.push('const params = new NullObject()');
             for (var i = 0; i < params.length; i++) {
-              lines.push("'".concat(params[i], "': paramsArray[").concat(i, "]"));
+              fnBody.push("params['".concat(params[i], "'] = paramsArray[").concat(i, "]"));
             }
-            return new Function('paramsArray', "return {".concat(lines.join(','), "}")); // eslint-disable-line
+            fnBody.push('return params');
+            fnBody.push('}');
+            fnBody.push('return fn');
+            return new Function('NullObject', fnBody.join('\n'))(NullObject); // eslint-disable-line
           }
         }, {
           key: "_getHandlerMatchingConstraints",
@@ -2494,27 +2903,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           key: "_compileGetHandlerMatchingConstraints",
           value: function _compileGetHandlerMatchingConstraints(constrainer) {
             this.constrainedHandlerStores = {};
-            var _iterator7 = _createForOfIteratorHelper(this.constraints),
-              _step7;
+            var _iterator8 = _createForOfIteratorHelper(this.constraints),
+              _step8;
             try {
-              for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-                var _constraint = _step7.value;
+              for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+                var _constraint = _step8.value;
                 var store = constrainer.newStoreForConstraint(_constraint);
                 this.constrainedHandlerStores[_constraint] = store;
                 this._buildConstraintStore(store, _constraint);
               }
             } catch (err) {
-              _iterator7.e(err);
+              _iterator8.e(err);
             } finally {
-              _iterator7.f();
+              _iterator8.f();
             }
             var lines = [];
             lines.push("\n    let candidates = ".concat((1 << this.handlers.length) - 1, "\n    let mask, matches\n    "));
-            var _iterator8 = _createForOfIteratorHelper(this.constraints),
-              _step8;
+            var _iterator9 = _createForOfIteratorHelper(this.constraints),
+              _step9;
             try {
-              for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
-                var _constraint2 = _step8.value;
+              for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {
+                var _constraint2 = _step9.value;
                 // Setup the mask for indexes this constraint applies to. The mask bits are set to 1 for each position if the constraint applies.
                 lines.push("\n      mask = ".concat(this._constrainedIndexBitmask(_constraint2), "\n      value = derivedConstraints.").concat(_constraint2, "\n      "));
 
@@ -2529,11 +2938,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               // An example: a request comes in for version 1.x, and this node has a handler that matches the path, but there's no version constraint. For SemVer, the find-my-way semantics do not match this handler to that request.
               // This function is used by Nodes with handlers to match when they don't have any constrained routes to exclude request that do have must match derived constraints present.
             } catch (err) {
-              _iterator8.e(err);
+              _iterator9.e(err);
             } finally {
-              _iterator8.f();
+              _iterator9.f();
             }
             for (var constraint in constrainer.strategies) {
+              if (!Object.hasOwn(constrainer.strategies, constraint)) continue;
               var strategy = constrainer.strategies[constraint];
               if (strategy.mustMatchWhenDerived && !this.constraints.includes(constraint)) {
                 lines.push("if (derivedConstraints.".concat(constraint, " !== undefined) return null"));
@@ -2545,20 +2955,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             this._getHandlerMatchingConstraints = new Function('derivedConstraints', lines.join('\n')); // eslint-disable-line
           }
         }]);
-        return HandlerStorage;
       }();
       module.exports = HandlerStorage;
     }, {
-      "./strategies/http-method": 21
+      "./null-object": 35,
+      "./strategies/http-method": 39
     }],
-    16: [function (require, module, exports) {
+    33: [function (require, module, exports) {
       'use strict';
 
-      // defined by Node.js http module, a snapshot from Node.js 18.12.0
-      var httpMethods = ['ACL', 'BIND', 'CHECKOUT', 'CONNECT', 'COPY', 'DELETE', 'GET', 'HEAD', 'LINK', 'LOCK', 'M-SEARCH', 'MERGE', 'MKACTIVITY', 'MKCALENDAR', 'MKCOL', 'MOVE', 'NOTIFY', 'OPTIONS', 'PATCH', 'POST', 'PROPFIND', 'PROPPATCH', 'PURGE', 'PUT', 'REBIND', 'REPORT', 'SEARCH', 'SOURCE', 'SUBSCRIBE', 'TRACE', 'UNBIND', 'UNLINK', 'UNLOCK', 'UNSUBSCRIBE'];
+      // defined by Node.js http module, a snapshot from Node.js 22.9.0
+      var httpMethods = ['ACL', 'BIND', 'CHECKOUT', 'CONNECT', 'COPY', 'DELETE', 'GET', 'HEAD', 'LINK', 'LOCK', 'M-SEARCH', 'MERGE', 'MKACTIVITY', 'MKCALENDAR', 'MKCOL', 'MOVE', 'NOTIFY', 'OPTIONS', 'PATCH', 'POST', 'PROPFIND', 'PROPPATCH', 'PURGE', 'PUT', 'QUERY', 'REBIND', 'REPORT', 'SEARCH', 'SOURCE', 'SUBSCRIBE', 'TRACE', 'UNBIND', 'UNLINK', 'UNLOCK', 'UNSUBSCRIBE'];
       module.exports = httpMethods;
     }, {}],
-    17: [function (require, module, exports) {
+    34: [function (require, module, exports) {
       'use strict';
 
       var HandlerStorage = require('./handler-storage');
@@ -2574,7 +2984,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           this.routes = null;
           this.handlerStorage = null;
         }
-        _createClass(Node, [{
+        return _createClass(Node, [{
           key: "addRoute",
           value: function addRoute(route, constrainer) {
             if (this.routes === null) {
@@ -2588,19 +2998,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             this.handlerStorage.addHandler(constrainer, route);
           }
         }]);
-        return Node;
       }();
       var ParentNode = /*#__PURE__*/function (_Node) {
-        _inherits(ParentNode, _Node);
-        var _super = _createSuper(ParentNode);
         function ParentNode() {
           var _this3;
           _classCallCheck(this, ParentNode);
-          _this3 = _super.call(this);
+          _this3 = _callSuper(this, ParentNode);
           _this3.staticChildren = {};
           return _this3;
         }
-        _createClass(ParentNode, [{
+        _inherits(ParentNode, _Node);
+        return _createClass(ParentNode, [{
           key: "findStaticMatchingChild",
           value: function findStaticMatchingChild(path, pathIndex) {
             var staticChild = this.staticChildren[path.charAt(pathIndex)];
@@ -2608,6 +3016,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               return null;
             }
             return staticChild;
+          }
+        }, {
+          key: "getStaticChild",
+          value: function getStaticChild(path) {
+            var pathIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+            if (path.length === pathIndex) {
+              return this;
+            }
+            var staticChild = this.findStaticMatchingChild(path, pathIndex);
+            if (staticChild) {
+              return staticChild.getStaticChild(path, pathIndex + staticChild.prefix.length);
+            }
+            return null;
           }
         }, {
           key: "createStaticChild",
@@ -2631,15 +3052,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             return this.staticChildren[label];
           }
         }]);
-        return ParentNode;
       }(Node);
       var StaticNode = /*#__PURE__*/function (_ParentNode) {
-        _inherits(StaticNode, _ParentNode);
-        var _super2 = _createSuper(StaticNode);
         function StaticNode(prefix) {
           var _this4;
           _classCallCheck(this, StaticNode);
-          _this4 = _super2.call(this);
+          _this4 = _callSuper(this, StaticNode);
           _this4.prefix = prefix;
           _this4.wildcardChild = null;
           _this4.parametricChildren = [];
@@ -2647,14 +3065,24 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           _this4._compilePrefixMatch();
           return _this4;
         }
-        _createClass(StaticNode, [{
-          key: "createParametricChild",
-          value: function createParametricChild(regex, staticSuffix, nodePath) {
+        _inherits(StaticNode, _ParentNode);
+        return _createClass(StaticNode, [{
+          key: "getParametricChild",
+          value: function getParametricChild(regex) {
             var regexpSource = regex && regex.source;
             var parametricChild = this.parametricChildren.find(function (child) {
               var childRegexSource = child.regex && child.regex.source;
               return childRegexSource === regexpSource;
             });
+            if (parametricChild) {
+              return parametricChild;
+            }
+            return null;
+          }
+        }, {
+          key: "createParametricChild",
+          value: function createParametricChild(regex, staticSuffix, nodePath) {
+            var parametricChild = this.getParametricChild(regex);
             if (parametricChild) {
               parametricChild.nodePaths.add(nodePath);
               return parametricChild;
@@ -2673,12 +3101,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             return parametricChild;
           }
         }, {
+          key: "getWildcardChild",
+          value: function getWildcardChild() {
+            return this.wildcardChild;
+          }
+        }, {
           key: "createWildcardChild",
           value: function createWildcardChild() {
-            if (this.wildcardChild) {
-              return this.wildcardChild;
-            }
-            this.wildcardChild = new WildcardNode();
+            this.wildcardChild = this.getWildcardChild() || new WildcardNode();
             return this.wildcardChild;
           }
         }, {
@@ -2738,15 +3168,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             this.matchPrefix = new Function('path', 'i', "return ".concat(lines.join(' && '))); // eslint-disable-line
           }
         }]);
-        return StaticNode;
       }(ParentNode);
       var ParametricNode = /*#__PURE__*/function (_ParentNode2) {
-        _inherits(ParametricNode, _ParentNode2);
-        var _super3 = _createSuper(ParametricNode);
         function ParametricNode(regex, staticSuffix, nodePath) {
           var _this5;
           _classCallCheck(this, ParametricNode);
-          _this5 = _super3.call(this);
+          _this5 = _callSuper(this, ParametricNode);
           _this5.isRegex = !!regex;
           _this5.regex = regex || null;
           _this5.staticSuffix = staticSuffix || null;
@@ -2754,31 +3181,29 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           _this5.nodePaths = new Set([nodePath]);
           return _this5;
         }
-        _createClass(ParametricNode, [{
+        _inherits(ParametricNode, _ParentNode2);
+        return _createClass(ParametricNode, [{
           key: "getNextNode",
           value: function getNextNode(path, pathIndex) {
             return this.findStaticMatchingChild(path, pathIndex);
           }
         }]);
-        return ParametricNode;
       }(ParentNode);
       var WildcardNode = /*#__PURE__*/function (_Node2) {
-        _inherits(WildcardNode, _Node2);
-        var _super4 = _createSuper(WildcardNode);
         function WildcardNode() {
           var _this6;
           _classCallCheck(this, WildcardNode);
-          _this6 = _super4.call(this);
+          _this6 = _callSuper(this, WildcardNode);
           _this6.kind = NODE_TYPES.WILDCARD;
           return _this6;
         }
-        _createClass(WildcardNode, [{
+        _inherits(WildcardNode, _Node2);
+        return _createClass(WildcardNode, [{
           key: "getNextNode",
           value: function getNextNode() {
             return null;
           }
         }]);
-        return WildcardNode;
       }(Node);
       module.exports = {
         StaticNode: StaticNode,
@@ -2787,9 +3212,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         NODE_TYPES: NODE_TYPES
       };
     }, {
-      "./handler-storage": 15
+      "./handler-storage": 32
     }],
-    18: [function (require, module, exports) {
+    35: [function (require, module, exports) {
+      'use strict';
+
+      var NullObject = function NullObject() {};
+      NullObject.prototype = Object.create(null);
+      module.exports = {
+        NullObject: NullObject
+      };
+    }, {}],
+    36: [function (require, module, exports) {
       'use strict';
 
       var deepEqual = require('fast-deep-equal');
@@ -2806,7 +3240,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           var nodePrefix = isLast ? '└── ' : '├── ';
           var childPrefix = isLast ? '    ' : '│   ';
           var nodeData = value[treeDataSymbol] || '';
-          var prefixedNodeData = nodeData.split('\n').join('\n' + parentPrefix + childPrefix);
+          var prefixedNodeData = nodeData.replaceAll('\n', '\n' + parentPrefix + childPrefix);
           tree += parentPrefix + nodePrefix + key + prefixedNodeData + '\n';
           tree += printObjectTree(value, parentPrefix + childPrefix);
         }
@@ -2834,11 +3268,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         if (!Array.isArray(includeMetaKeys)) {
           includeMetaKeys = Reflect.ownKeys(metaDataObject);
         }
-        var _iterator9 = _createForOfIteratorHelper(includeMetaKeys),
-          _step9;
+        var _iterator0 = _createForOfIteratorHelper(includeMetaKeys),
+          _step0;
         try {
-          for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {
-            var metaKey = _step9.value;
+          for (_iterator0.s(); !(_step0 = _iterator0.n()).done;) {
+            var metaKey = _step0.value;
             if (!Object.prototype.hasOwnProperty.call(metaDataObject, metaKey)) continue;
             var serializedKey = metaKey.toString();
             var metaValue = metaDataObject[metaKey];
@@ -2848,16 +3282,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             }
           }
         } catch (err) {
-          _iterator9.e(err);
+          _iterator0.e(err);
         } finally {
-          _iterator9.f();
+          _iterator0.f();
         }
         return filteredMetaData;
       }
       function serializeMetaData(metaData) {
         var serializedMetaData = '';
-        for (var _i5 = 0, _Object$entries = Object.entries(metaData); _i5 < _Object$entries.length; _i5++) {
-          var _Object$entries$_i = _slicedToArray(_Object$entries[_i5], 2),
+        for (var _i3 = 0, _Object$entries = Object.entries(metaData); _i3 < _Object$entries.length; _i3++) {
+          var _Object$entries$_i = _slicedToArray(_Object$entries[_i3], 2),
             key = _Object$entries$_i[0],
             value = _Object$entries$_i[1];
           serializedMetaData += "\n\u2022 (".concat(key, ") ").concat(value);
@@ -2888,20 +3322,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       }
       function mergeSimilarRoutes(routes) {
         return routes.reduce(function (mergedRoutes, route) {
-          var _iterator10 = _createForOfIteratorHelper(mergedRoutes),
-            _step10;
+          var _iterator1 = _createForOfIteratorHelper(mergedRoutes),
+            _step1;
           try {
-            for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
-              var nodeRoute = _step10.value;
+            for (_iterator1.s(); !(_step1 = _iterator1.n()).done;) {
+              var nodeRoute = _step1.value;
               if (deepEqual(route.opts.constraints, nodeRoute.opts.constraints) && deepEqual(route.metaData, nodeRoute.metaData)) {
                 nodeRoute.method += ', ' + route.method;
                 return mergedRoutes;
               }
             }
           } catch (err) {
-            _iterator10.e(err);
+            _iterator1.e(err);
           } finally {
-            _iterator10.f();
+            _iterator1.f();
           }
           mergedRoutes.push(route);
           return mergedRoutes;
@@ -2931,14 +3365,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           prefix = '';
         }
         if (node.staticChildren) {
-          for (var _i6 = 0, _Object$values2 = Object.values(node.staticChildren); _i6 < _Object$values2.length; _i6++) {
-            var child = _Object$values2[_i6];
+          for (var _i4 = 0, _Object$values2 = Object.values(node.staticChildren); _i4 < _Object$values2.length; _i4++) {
+            var child = _Object$values2[_i4];
             buildObjectTree(child, tree, prefix + child.prefix, options);
           }
         }
         if (node.parametricChildren) {
-          for (var _i7 = 0, _Object$values3 = Object.values(node.parametricChildren); _i7 < _Object$values3.length; _i7++) {
-            var _child = _Object$values3[_i7];
+          for (var _i5 = 0, _Object$values3 = Object.values(node.parametricChildren); _i5 < _Object$values3.length; _i5++) {
+            var _child = _Object$values3[_i5];
             var childPrefix = Array.from(_child.nodePaths).join('|');
             buildObjectTree(_child, tree, prefix + childPrefix, options);
           }
@@ -2956,24 +3390,24 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         prettyPrintTree: prettyPrintTree
       };
     }, {
-      "./strategies/http-method": 21,
-      "fast-deep-equal": 8
+      "./strategies/http-method": 39,
+      "fast-deep-equal": 25
     }],
-    19: [function (require, module, exports) {
+    37: [function (require, module, exports) {
       'use strict';
 
       var assert = require('assert');
       function HostStorage() {
-        var hosts = {};
+        var hosts = new Map();
         var regexHosts = [];
         return {
           get: function get(host) {
-            var exact = hosts[host];
+            var exact = hosts.get(host);
             if (exact) {
               return exact;
             }
-            for (var _i8 = 0, _regexHosts = regexHosts; _i8 < _regexHosts.length; _i8++) {
-              var regex = _regexHosts[_i8];
+            for (var _i6 = 0, _regexHosts = regexHosts; _i6 < _regexHosts.length; _i6++) {
+              var regex = _regexHosts[_i6];
               if (regex.host.test(host)) {
                 return regex.value;
               }
@@ -2986,7 +3420,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
                 value: value
               });
             } else {
-              hosts[host] = value;
+              hosts.set(host, value);
             }
           }
         };
@@ -3002,7 +3436,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     }, {
       "assert": 1
     }],
-    20: [function (require, module, exports) {
+    38: [function (require, module, exports) {
       'use strict';
 
       var assert = require('assert');
@@ -3010,7 +3444,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         if (!(this instanceof SemVerStore)) {
           return new SemVerStore();
         }
-        this.store = {};
+        this.store = new Map();
         this.maxMajor = 0;
         this.maxMinors = {};
         this.maxPatches = {};
@@ -3019,35 +3453,38 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         if (typeof version !== 'string') {
           throw new TypeError('Version should be a string');
         }
-        var _version$split = version.split('.'),
+        var _version$split = version.split('.', 3),
           _version$split2 = _slicedToArray(_version$split, 3),
           major = _version$split2[0],
           minor = _version$split2[1],
           patch = _version$split2[2];
-        major = Number(major) || 0;
+        if (isNaN(major)) {
+          throw new TypeError('Major version must be a numeric value');
+        }
+        major = Number(major);
         minor = Number(minor) || 0;
         patch = Number(patch) || 0;
         if (major >= this.maxMajor) {
           this.maxMajor = major;
-          this.store.x = store;
-          this.store['*'] = store;
-          this.store['x.x'] = store;
-          this.store['x.x.x'] = store;
+          this.store.set('x', store);
+          this.store.set('*', store);
+          this.store.set('x.x', store);
+          this.store.set('x.x.x', store);
         }
         if (minor >= (this.maxMinors[major] || 0)) {
           this.maxMinors[major] = minor;
-          this.store["".concat(major, ".x")] = store;
-          this.store["".concat(major, ".x.x")] = store;
+          this.store.set("".concat(major, ".x"), store);
+          this.store.set("".concat(major, ".x.x"), store);
         }
-        if (patch >= (this.store["".concat(major, ".").concat(minor)] || 0)) {
+        if (patch >= (this.maxPatches["".concat(major, ".").concat(minor)] || 0)) {
           this.maxPatches["".concat(major, ".").concat(minor)] = patch;
-          this.store["".concat(major, ".").concat(minor, ".x")] = store;
+          this.store.set("".concat(major, ".").concat(minor, ".x"), store);
         }
-        this.store["".concat(major, ".").concat(minor, ".").concat(patch)] = store;
+        this.store.set("".concat(major, ".").concat(minor, ".").concat(patch), store);
         return this;
       };
       SemVerStore.prototype.get = function (version) {
-        return this.store[version];
+        return this.store.get(version);
       };
       module.exports = {
         name: 'version',
@@ -3060,30 +3497,30 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     }, {
       "assert": 1
     }],
-    21: [function (require, module, exports) {
+    39: [function (require, module, exports) {
       'use strict';
 
       module.exports = {
         name: '__fmw_internal_strategy_merged_tree_http_method__',
         storage: function storage() {
-          var handlers = {};
+          var handlers = new Map();
           return {
             get: function get(type) {
-              return handlers[type] || null;
+              return handlers.get(type) || null;
             },
             set: function set(type, store) {
-              handlers[type] = store;
+              handlers.set(type, store);
             }
           };
         },
+        /* c8 ignore next 1 */
         deriveConstraint: function deriveConstraint(req) {
-          /* istanbul ignore next */
           return req.method;
         },
         mustMatchWhenDerived: true
       };
     }, {}],
-    22: [function (require, module, exports) {
+    40: [function (require, module, exports) {
       'use strict';
 
       // It must spot all the chars where decodeURIComponent(x) !== decodeURI(x)
@@ -3118,7 +3555,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }
         return null;
       }
-      function safeDecodeURI(path) {
+
+      /**
+       * Safely decodes a URI path, preserving reserved characters in querystring.
+       *
+       * @param {string} path - The full request path, possibly including querystring.
+       * @param {boolean} [useSemicolonDelimiter] - When true, also treat `;` as a query delimiter.
+       * @returns {{ path: string, querystring: string, shouldDecodeParam: boolean }}
+       * An object containing the decoded path, the raw querystring, and a flag indicating
+       * whether any path parameters contain percent-encoded reserved characters.
+       */
+      function safeDecodeURI(path, useSemicolonDelimiter) {
         var shouldDecode = false;
         var shouldDecodeParam = false;
         var querystring = '';
@@ -3141,8 +3588,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             }
             // Some systems do not follow RFC and separate the path and query
             // string with a `;` character (code 59), e.g. `/foo;jsessionid=123456`.
-            // Thus, we need to split on `;` as well as `?` and `#`.
-          } else if (charCode === 63 || charCode === 59 || charCode === 35) {
+            // Thus, we need to split on `;` as well as `?` and `#` if the useSemicolonDelimiter option is enabled.
+          } else if (charCode === 63 || charCode === 35 || charCode === 59 && useSemicolonDelimiter) {
             querystring = path.slice(i + 1);
             path = path.slice(0, i);
             break;
@@ -3176,90 +3623,1473 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         safeDecodeURIComponent: safeDecodeURIComponent
       };
     }, {}],
-    23: [function (require, module, exports) {
-      /*
-      object-assign
-      (c) Sindre Sorhus
-      @license MIT
-      */
-
+    41: [function (require, module, exports) {
       'use strict';
 
-      /* eslint-disable no-unused-vars */
-      var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-      var hasOwnProperty = Object.prototype.hasOwnProperty;
-      var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-      function toObject(val) {
-        if (val === null || val === undefined) {
-          throw new TypeError('Object.assign cannot be called with null or undefined');
+      /* eslint no-invalid-this: 1 */
+      var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
+      var toStr = Object.prototype.toString;
+      var max = Math.max;
+      var funcType = '[object Function]';
+      var concatty = function concatty(a, b) {
+        var arr = [];
+        for (var i = 0; i < a.length; i += 1) {
+          arr[i] = a[i];
         }
-        return Object(val);
-      }
-      function shouldUseNative() {
+        for (var j = 0; j < b.length; j += 1) {
+          arr[j + a.length] = b[j];
+        }
+        return arr;
+      };
+      var slicy = function slicy(arrLike, offset) {
+        var arr = [];
+        for (var i = offset || 0, j = 0; i < arrLike.length; i += 1, j += 1) {
+          arr[j] = arrLike[i];
+        }
+        return arr;
+      };
+      var joiny = function joiny(arr, joiner) {
+        var str = '';
+        for (var i = 0; i < arr.length; i += 1) {
+          str += arr[i];
+          if (i + 1 < arr.length) {
+            str += joiner;
+          }
+        }
+        return str;
+      };
+      module.exports = function bind(that) {
+        var target = this;
+        if (typeof target !== 'function' || toStr.apply(target) !== funcType) {
+          throw new TypeError(ERROR_MESSAGE + target);
+        }
+        var args = slicy(arguments, 1);
+        var bound;
+        var binder = function binder() {
+          if (this instanceof bound) {
+            var result = target.apply(this, concatty(args, arguments));
+            if (Object(result) === result) {
+              return result;
+            }
+            return this;
+          }
+          return target.apply(that, concatty(args, arguments));
+        };
+        var boundLength = max(0, target.length - args.length);
+        var boundArgs = [];
+        for (var i = 0; i < boundLength; i++) {
+          boundArgs[i] = '$' + i;
+        }
+        bound = Function('binder', 'return function (' + joiny(boundArgs, ',') + '){ return binder.apply(this,arguments); }')(binder);
+        if (target.prototype) {
+          var Empty = function Empty() {};
+          Empty.prototype = target.prototype;
+          bound.prototype = new Empty();
+          Empty.prototype = null;
+        }
+        return bound;
+      };
+    }, {}],
+    42: [function (require, module, exports) {
+      'use strict';
+
+      var implementation = require('./implementation');
+      module.exports = Function.prototype.bind || implementation;
+    }, {
+      "./implementation": 41
+    }],
+    43: [function (require, module, exports) {
+      'use strict';
+
+      var undefined;
+      var $Object = require('es-object-atoms');
+      var $Error = require('es-errors');
+      var $EvalError = require('es-errors/eval');
+      var $RangeError = require('es-errors/range');
+      var $ReferenceError = require('es-errors/ref');
+      var $SyntaxError = require('es-errors/syntax');
+      var $TypeError = require('es-errors/type');
+      var $URIError = require('es-errors/uri');
+      var abs = require('math-intrinsics/abs');
+      var floor = require('math-intrinsics/floor');
+      var max = require('math-intrinsics/max');
+      var min = require('math-intrinsics/min');
+      var pow = require('math-intrinsics/pow');
+      var round = require('math-intrinsics/round');
+      var sign = require('math-intrinsics/sign');
+      var $Function = Function;
+
+      // eslint-disable-next-line consistent-return
+      var getEvalledConstructor = function getEvalledConstructor(expressionSyntax) {
         try {
-          if (!Object.assign) {
-            return false;
+          return $Function('"use strict"; return (' + expressionSyntax + ').constructor;')();
+        } catch (e) {}
+      };
+      var $gOPD = require('gopd');
+      var $defineProperty = require('es-define-property');
+      var throwTypeError = function throwTypeError() {
+        throw new $TypeError();
+      };
+      var ThrowTypeError = $gOPD ? function () {
+        try {
+          // eslint-disable-next-line no-unused-expressions, no-caller, no-restricted-properties
+          arguments.callee; // IE 8 does not throw here
+          return throwTypeError;
+        } catch (calleeThrows) {
+          try {
+            // IE 8 throws on Object.getOwnPropertyDescriptor(arguments, '')
+            return $gOPD(arguments, 'callee').get;
+          } catch (gOPDthrows) {
+            return throwTypeError;
           }
-
-          // Detect buggy property enumeration order in older V8 versions.
-
-          // https://bugs.chromium.org/p/v8/issues/detail?id=4118
-          var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
-          test1[5] = 'de';
-          if (Object.getOwnPropertyNames(test1)[0] === '5') {
-            return false;
-          }
-
-          // https://bugs.chromium.org/p/v8/issues/detail?id=3056
-          var test2 = {};
-          for (var i = 0; i < 10; i++) {
-            test2['_' + String.fromCharCode(i)] = i;
-          }
-          var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-            return test2[n];
-          });
-          if (order2.join('') !== '0123456789') {
-            return false;
-          }
-
-          // https://bugs.chromium.org/p/v8/issues/detail?id=3056
-          var test3 = {};
-          'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-            test3[letter] = letter;
-          });
-          if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
-            return false;
-          }
-          return true;
-        } catch (err) {
-          // We don't expect any of the above to throw, but better to be safe.
-          return false;
+        }
+      }() : throwTypeError;
+      var hasSymbols = require('has-symbols')();
+      var getProto = require('get-proto');
+      var $ObjectGPO = require('get-proto/Object.getPrototypeOf');
+      var $ReflectGPO = require('get-proto/Reflect.getPrototypeOf');
+      var $apply = require('call-bind-apply-helpers/functionApply');
+      var $call = require('call-bind-apply-helpers/functionCall');
+      var needsEval = {};
+      var TypedArray = typeof Uint8Array === 'undefined' || !getProto ? undefined : getProto(Uint8Array);
+      var INTRINSICS = {
+        __proto__: null,
+        '%AggregateError%': typeof AggregateError === 'undefined' ? undefined : AggregateError,
+        '%Array%': Array,
+        '%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined : ArrayBuffer,
+        '%ArrayIteratorPrototype%': hasSymbols && getProto ? getProto([][Symbol.iterator]()) : undefined,
+        '%AsyncFromSyncIteratorPrototype%': undefined,
+        '%AsyncFunction%': needsEval,
+        '%AsyncGenerator%': needsEval,
+        '%AsyncGeneratorFunction%': needsEval,
+        '%AsyncIteratorPrototype%': needsEval,
+        '%Atomics%': typeof Atomics === 'undefined' ? undefined : Atomics,
+        '%BigInt%': typeof BigInt === 'undefined' ? undefined : BigInt,
+        '%BigInt64Array%': typeof BigInt64Array === 'undefined' ? undefined : BigInt64Array,
+        '%BigUint64Array%': typeof BigUint64Array === 'undefined' ? undefined : BigUint64Array,
+        '%Boolean%': Boolean,
+        '%DataView%': typeof DataView === 'undefined' ? undefined : DataView,
+        '%Date%': Date,
+        '%decodeURI%': decodeURI,
+        '%decodeURIComponent%': decodeURIComponent,
+        '%encodeURI%': encodeURI,
+        '%encodeURIComponent%': encodeURIComponent,
+        '%Error%': $Error,
+        '%eval%': eval,
+        // eslint-disable-line no-eval
+        '%EvalError%': $EvalError,
+        '%Float16Array%': typeof Float16Array === 'undefined' ? undefined : Float16Array,
+        '%Float32Array%': typeof Float32Array === 'undefined' ? undefined : Float32Array,
+        '%Float64Array%': typeof Float64Array === 'undefined' ? undefined : Float64Array,
+        '%FinalizationRegistry%': typeof FinalizationRegistry === 'undefined' ? undefined : FinalizationRegistry,
+        '%Function%': $Function,
+        '%GeneratorFunction%': needsEval,
+        '%Int8Array%': typeof Int8Array === 'undefined' ? undefined : Int8Array,
+        '%Int16Array%': typeof Int16Array === 'undefined' ? undefined : Int16Array,
+        '%Int32Array%': typeof Int32Array === 'undefined' ? undefined : Int32Array,
+        '%isFinite%': isFinite,
+        '%isNaN%': isNaN,
+        '%IteratorPrototype%': hasSymbols && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined,
+        '%JSON%': (typeof JSON === "undefined" ? "undefined" : _typeof(JSON)) === 'object' ? JSON : undefined,
+        '%Map%': typeof Map === 'undefined' ? undefined : Map,
+        '%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols || !getProto ? undefined : getProto(new Map()[Symbol.iterator]()),
+        '%Math%': Math,
+        '%Number%': Number,
+        '%Object%': $Object,
+        '%Object.getOwnPropertyDescriptor%': $gOPD,
+        '%parseFloat%': parseFloat,
+        '%parseInt%': parseInt,
+        '%Promise%': typeof Promise === 'undefined' ? undefined : Promise,
+        '%Proxy%': typeof Proxy === 'undefined' ? undefined : Proxy,
+        '%RangeError%': $RangeError,
+        '%ReferenceError%': $ReferenceError,
+        '%Reflect%': typeof Reflect === 'undefined' ? undefined : Reflect,
+        '%RegExp%': RegExp,
+        '%Set%': typeof Set === 'undefined' ? undefined : Set,
+        '%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols || !getProto ? undefined : getProto(new Set()[Symbol.iterator]()),
+        '%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined : SharedArrayBuffer,
+        '%String%': String,
+        '%StringIteratorPrototype%': hasSymbols && getProto ? getProto(''[Symbol.iterator]()) : undefined,
+        '%Symbol%': hasSymbols ? Symbol : undefined,
+        '%SyntaxError%': $SyntaxError,
+        '%ThrowTypeError%': ThrowTypeError,
+        '%TypedArray%': TypedArray,
+        '%TypeError%': $TypeError,
+        '%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined : Uint8Array,
+        '%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined : Uint8ClampedArray,
+        '%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined : Uint16Array,
+        '%Uint32Array%': typeof Uint32Array === 'undefined' ? undefined : Uint32Array,
+        '%URIError%': $URIError,
+        '%WeakMap%': typeof WeakMap === 'undefined' ? undefined : WeakMap,
+        '%WeakRef%': typeof WeakRef === 'undefined' ? undefined : WeakRef,
+        '%WeakSet%': typeof WeakSet === 'undefined' ? undefined : WeakSet,
+        '%Function.prototype.call%': $call,
+        '%Function.prototype.apply%': $apply,
+        '%Object.defineProperty%': $defineProperty,
+        '%Object.getPrototypeOf%': $ObjectGPO,
+        '%Math.abs%': abs,
+        '%Math.floor%': floor,
+        '%Math.max%': max,
+        '%Math.min%': min,
+        '%Math.pow%': pow,
+        '%Math.round%': round,
+        '%Math.sign%': sign,
+        '%Reflect.getPrototypeOf%': $ReflectGPO
+      };
+      if (getProto) {
+        try {
+          null.error; // eslint-disable-line no-unused-expressions
+        } catch (e) {
+          // https://github.com/tc39/proposal-shadowrealm/pull/384#issuecomment-1364264229
+          var errorProto = getProto(getProto(e));
+          INTRINSICS['%Error.prototype%'] = errorProto;
         }
       }
-      module.exports = shouldUseNative() ? Object.assign : function (target, source) {
-        var from;
-        var to = toObject(target);
-        var symbols;
-        for (var s = 1; s < arguments.length; s++) {
-          from = Object(arguments[s]);
-          for (var key in from) {
-            if (hasOwnProperty.call(from, key)) {
-              to[key] = from[key];
+      var doEval = function doEval(name) {
+        var value;
+        if (name === '%AsyncFunction%') {
+          value = getEvalledConstructor('async function () {}');
+        } else if (name === '%GeneratorFunction%') {
+          value = getEvalledConstructor('function* () {}');
+        } else if (name === '%AsyncGeneratorFunction%') {
+          value = getEvalledConstructor('async function* () {}');
+        } else if (name === '%AsyncGenerator%') {
+          var fn = doEval('%AsyncGeneratorFunction%');
+          if (fn) {
+            value = fn.prototype;
+          }
+        } else if (name === '%AsyncIteratorPrototype%') {
+          var gen = doEval('%AsyncGenerator%');
+          if (gen && getProto) {
+            value = getProto(gen.prototype);
+          }
+        }
+        INTRINSICS[name] = value;
+        return value;
+      };
+      var LEGACY_ALIASES = {
+        __proto__: null,
+        '%ArrayBufferPrototype%': ['ArrayBuffer', 'prototype'],
+        '%ArrayPrototype%': ['Array', 'prototype'],
+        '%ArrayProto_entries%': ['Array', 'prototype', 'entries'],
+        '%ArrayProto_forEach%': ['Array', 'prototype', 'forEach'],
+        '%ArrayProto_keys%': ['Array', 'prototype', 'keys'],
+        '%ArrayProto_values%': ['Array', 'prototype', 'values'],
+        '%AsyncFunctionPrototype%': ['AsyncFunction', 'prototype'],
+        '%AsyncGenerator%': ['AsyncGeneratorFunction', 'prototype'],
+        '%AsyncGeneratorPrototype%': ['AsyncGeneratorFunction', 'prototype', 'prototype'],
+        '%BooleanPrototype%': ['Boolean', 'prototype'],
+        '%DataViewPrototype%': ['DataView', 'prototype'],
+        '%DatePrototype%': ['Date', 'prototype'],
+        '%ErrorPrototype%': ['Error', 'prototype'],
+        '%EvalErrorPrototype%': ['EvalError', 'prototype'],
+        '%Float32ArrayPrototype%': ['Float32Array', 'prototype'],
+        '%Float64ArrayPrototype%': ['Float64Array', 'prototype'],
+        '%FunctionPrototype%': ['Function', 'prototype'],
+        '%Generator%': ['GeneratorFunction', 'prototype'],
+        '%GeneratorPrototype%': ['GeneratorFunction', 'prototype', 'prototype'],
+        '%Int8ArrayPrototype%': ['Int8Array', 'prototype'],
+        '%Int16ArrayPrototype%': ['Int16Array', 'prototype'],
+        '%Int32ArrayPrototype%': ['Int32Array', 'prototype'],
+        '%JSONParse%': ['JSON', 'parse'],
+        '%JSONStringify%': ['JSON', 'stringify'],
+        '%MapPrototype%': ['Map', 'prototype'],
+        '%NumberPrototype%': ['Number', 'prototype'],
+        '%ObjectPrototype%': ['Object', 'prototype'],
+        '%ObjProto_toString%': ['Object', 'prototype', 'toString'],
+        '%ObjProto_valueOf%': ['Object', 'prototype', 'valueOf'],
+        '%PromisePrototype%': ['Promise', 'prototype'],
+        '%PromiseProto_then%': ['Promise', 'prototype', 'then'],
+        '%Promise_all%': ['Promise', 'all'],
+        '%Promise_reject%': ['Promise', 'reject'],
+        '%Promise_resolve%': ['Promise', 'resolve'],
+        '%RangeErrorPrototype%': ['RangeError', 'prototype'],
+        '%ReferenceErrorPrototype%': ['ReferenceError', 'prototype'],
+        '%RegExpPrototype%': ['RegExp', 'prototype'],
+        '%SetPrototype%': ['Set', 'prototype'],
+        '%SharedArrayBufferPrototype%': ['SharedArrayBuffer', 'prototype'],
+        '%StringPrototype%': ['String', 'prototype'],
+        '%SymbolPrototype%': ['Symbol', 'prototype'],
+        '%SyntaxErrorPrototype%': ['SyntaxError', 'prototype'],
+        '%TypedArrayPrototype%': ['TypedArray', 'prototype'],
+        '%TypeErrorPrototype%': ['TypeError', 'prototype'],
+        '%Uint8ArrayPrototype%': ['Uint8Array', 'prototype'],
+        '%Uint8ClampedArrayPrototype%': ['Uint8ClampedArray', 'prototype'],
+        '%Uint16ArrayPrototype%': ['Uint16Array', 'prototype'],
+        '%Uint32ArrayPrototype%': ['Uint32Array', 'prototype'],
+        '%URIErrorPrototype%': ['URIError', 'prototype'],
+        '%WeakMapPrototype%': ['WeakMap', 'prototype'],
+        '%WeakSetPrototype%': ['WeakSet', 'prototype']
+      };
+      var bind = require('function-bind');
+      var hasOwn = require('hasown');
+      var $concat = bind.call($call, Array.prototype.concat);
+      var $spliceApply = bind.call($apply, Array.prototype.splice);
+      var $replace = bind.call($call, String.prototype.replace);
+      var $strSlice = bind.call($call, String.prototype.slice);
+      var $exec = bind.call($call, RegExp.prototype.exec);
+
+      /* adapted from https://github.com/lodash/lodash/blob/4.17.15/dist/lodash.js#L6735-L6744 */
+      var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
+      var reEscapeChar = /\\(\\)?/g; /** Used to match backslashes in property paths. */
+      var stringToPath = function stringToPath(string) {
+        var first = $strSlice(string, 0, 1);
+        var last = $strSlice(string, -1);
+        if (first === '%' && last !== '%') {
+          throw new $SyntaxError('invalid intrinsic syntax, expected closing `%`');
+        } else if (last === '%' && first !== '%') {
+          throw new $SyntaxError('invalid intrinsic syntax, expected opening `%`');
+        }
+        var result = [];
+        $replace(string, rePropName, function (match, number, quote, subString) {
+          result[result.length] = quote ? $replace(subString, reEscapeChar, '$1') : number || match;
+        });
+        return result;
+      };
+      /* end adaptation */
+
+      var getBaseIntrinsic = function getBaseIntrinsic(name, allowMissing) {
+        var intrinsicName = name;
+        var alias;
+        if (hasOwn(LEGACY_ALIASES, intrinsicName)) {
+          alias = LEGACY_ALIASES[intrinsicName];
+          intrinsicName = '%' + alias[0] + '%';
+        }
+        if (hasOwn(INTRINSICS, intrinsicName)) {
+          var value = INTRINSICS[intrinsicName];
+          if (value === needsEval) {
+            value = doEval(intrinsicName);
+          }
+          if (typeof value === 'undefined' && !allowMissing) {
+            throw new $TypeError('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+          }
+          return {
+            alias: alias,
+            name: intrinsicName,
+            value: value
+          };
+        }
+        throw new $SyntaxError('intrinsic ' + name + ' does not exist!');
+      };
+      module.exports = function GetIntrinsic(name, allowMissing) {
+        if (typeof name !== 'string' || name.length === 0) {
+          throw new $TypeError('intrinsic name must be a non-empty string');
+        }
+        if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
+          throw new $TypeError('"allowMissing" argument must be a boolean');
+        }
+        if ($exec(/^%?[^%]*%?$/, name) === null) {
+          throw new $SyntaxError('`%` may not be present anywhere but at the beginning and end of the intrinsic name');
+        }
+        var parts = stringToPath(name);
+        var intrinsicBaseName = parts.length > 0 ? parts[0] : '';
+        var intrinsic = getBaseIntrinsic('%' + intrinsicBaseName + '%', allowMissing);
+        var intrinsicRealName = intrinsic.name;
+        var value = intrinsic.value;
+        var skipFurtherCaching = false;
+        var alias = intrinsic.alias;
+        if (alias) {
+          intrinsicBaseName = alias[0];
+          $spliceApply(parts, $concat([0, 1], alias));
+        }
+        for (var i = 1, isOwn = true; i < parts.length; i += 1) {
+          var part = parts[i];
+          var first = $strSlice(part, 0, 1);
+          var last = $strSlice(part, -1);
+          if ((first === '"' || first === "'" || first === '`' || last === '"' || last === "'" || last === '`') && first !== last) {
+            throw new $SyntaxError('property names with quotes must have matching quotes');
+          }
+          if (part === 'constructor' || !isOwn) {
+            skipFurtherCaching = true;
+          }
+          intrinsicBaseName += '.' + part;
+          intrinsicRealName = '%' + intrinsicBaseName + '%';
+          if (hasOwn(INTRINSICS, intrinsicRealName)) {
+            value = INTRINSICS[intrinsicRealName];
+          } else if (value != null) {
+            if (!(part in value)) {
+              if (!allowMissing) {
+                throw new $TypeError('base intrinsic for ' + name + ' exists, but the property is not available.');
+              }
+              return void undefined;
+            }
+            if ($gOPD && i + 1 >= parts.length) {
+              var desc = $gOPD(value, part);
+              isOwn = !!desc;
+
+              // By convention, when a data property is converted to an accessor
+              // property to emulate a data property that does not suffer from
+              // the override mistake, that accessor's getter is marked with
+              // an `originalValue` property. Here, when we detect this, we
+              // uphold the illusion by pretending to see that original data
+              // property, i.e., returning the value rather than the getter
+              // itself.
+              if (isOwn && 'get' in desc && !('originalValue' in desc.get)) {
+                value = desc.get;
+              } else {
+                value = value[part];
+              }
+            } else {
+              isOwn = hasOwn(value, part);
+              value = value[part];
+            }
+            if (isOwn && !skipFurtherCaching) {
+              INTRINSICS[intrinsicRealName] = value;
             }
           }
-          if (getOwnPropertySymbols) {
-            symbols = getOwnPropertySymbols(from);
-            for (var i = 0; i < symbols.length; i++) {
-              if (propIsEnumerable.call(from, symbols[i])) {
-                to[symbols[i]] = from[symbols[i]];
+        }
+        return value;
+      };
+    }, {
+      "call-bind-apply-helpers/functionApply": 7,
+      "call-bind-apply-helpers/functionCall": 8,
+      "es-define-property": 13,
+      "es-errors": 15,
+      "es-errors/eval": 14,
+      "es-errors/range": 16,
+      "es-errors/ref": 17,
+      "es-errors/syntax": 18,
+      "es-errors/type": 19,
+      "es-errors/uri": 20,
+      "es-object-atoms": 21,
+      "function-bind": 42,
+      "get-proto": 46,
+      "get-proto/Object.getPrototypeOf": 44,
+      "get-proto/Reflect.getPrototypeOf": 45,
+      "gopd": 48,
+      "has-symbols": 49,
+      "hasown": 51,
+      "math-intrinsics/abs": 52,
+      "math-intrinsics/floor": 53,
+      "math-intrinsics/max": 55,
+      "math-intrinsics/min": 56,
+      "math-intrinsics/pow": 57,
+      "math-intrinsics/round": 58,
+      "math-intrinsics/sign": 59
+    }],
+    44: [function (require, module, exports) {
+      'use strict';
+
+      var $Object = require('es-object-atoms');
+
+      /** @type {import('./Object.getPrototypeOf')} */
+      module.exports = $Object.getPrototypeOf || null;
+    }, {
+      "es-object-atoms": 21
+    }],
+    45: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./Reflect.getPrototypeOf')} */
+      module.exports = typeof Reflect !== 'undefined' && Reflect.getPrototypeOf || null;
+    }, {}],
+    46: [function (require, module, exports) {
+      'use strict';
+
+      var reflectGetProto = require('./Reflect.getPrototypeOf');
+      var originalGetProto = require('./Object.getPrototypeOf');
+      var getDunderProto = require('dunder-proto/get');
+
+      /** @type {import('.')} */
+      module.exports = reflectGetProto ? function getProto(O) {
+        // @ts-expect-error TS can't narrow inside a closure, for some reason
+        return reflectGetProto(O);
+      } : originalGetProto ? function getProto(O) {
+        if (!O || _typeof(O) !== 'object' && typeof O !== 'function') {
+          throw new TypeError('getProto: not an object');
+        }
+        // @ts-expect-error TS can't narrow inside a closure, for some reason
+        return originalGetProto(O);
+      } : getDunderProto ? function getProto(O) {
+        // @ts-expect-error TS can't narrow inside a closure, for some reason
+        return getDunderProto(O);
+      } : null;
+    }, {
+      "./Object.getPrototypeOf": 44,
+      "./Reflect.getPrototypeOf": 45,
+      "dunder-proto/get": 12
+    }],
+    47: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./gOPD')} */
+      module.exports = Object.getOwnPropertyDescriptor;
+    }, {}],
+    48: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('.')} */
+      var $gOPD = require('./gOPD');
+      if ($gOPD) {
+        try {
+          $gOPD([], 'length');
+        } catch (e) {
+          // IE 8 has a broken gOPD
+          $gOPD = null;
+        }
+      }
+      module.exports = $gOPD;
+    }, {
+      "./gOPD": 47
+    }],
+    49: [function (require, module, exports) {
+      'use strict';
+
+      var origSymbol = typeof Symbol !== 'undefined' && Symbol;
+      var hasSymbolSham = require('./shams');
+
+      /** @type {import('.')} */
+      module.exports = function hasNativeSymbols() {
+        if (typeof origSymbol !== 'function') {
+          return false;
+        }
+        if (typeof Symbol !== 'function') {
+          return false;
+        }
+        if (_typeof(origSymbol('foo')) !== 'symbol') {
+          return false;
+        }
+        if (_typeof(Symbol('bar')) !== 'symbol') {
+          return false;
+        }
+        return hasSymbolSham();
+      };
+    }, {
+      "./shams": 50
+    }],
+    50: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./shams')} */
+      /* eslint complexity: [2, 18], max-statements: [2, 33] */
+      module.exports = function hasSymbols() {
+        if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') {
+          return false;
+        }
+        if (_typeof(Symbol.iterator) === 'symbol') {
+          return true;
+        }
+
+        /** @type {{ [k in symbol]?: unknown }} */
+        var obj = {};
+        var sym = Symbol('test');
+        var symObj = Object(sym);
+        if (typeof sym === 'string') {
+          return false;
+        }
+        if (Object.prototype.toString.call(sym) !== '[object Symbol]') {
+          return false;
+        }
+        if (Object.prototype.toString.call(symObj) !== '[object Symbol]') {
+          return false;
+        }
+
+        // temp disabled per https://github.com/ljharb/object.assign/issues/17
+        // if (sym instanceof Symbol) { return false; }
+        // temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+        // if (!(symObj instanceof Symbol)) { return false; }
+
+        // if (typeof Symbol.prototype.toString !== 'function') { return false; }
+        // if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
+
+        var symVal = 42;
+        obj[sym] = symVal;
+        for (var _ in obj) {
+          return false;
+        } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
+        if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) {
+          return false;
+        }
+        if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) {
+          return false;
+        }
+        var syms = Object.getOwnPropertySymbols(obj);
+        if (syms.length !== 1 || syms[0] !== sym) {
+          return false;
+        }
+        if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) {
+          return false;
+        }
+        if (typeof Object.getOwnPropertyDescriptor === 'function') {
+          // eslint-disable-next-line no-extra-parens
+          var descriptor = /** @type {PropertyDescriptor} */Object.getOwnPropertyDescriptor(obj, sym);
+          if (descriptor.value !== symVal || descriptor.enumerable !== true) {
+            return false;
+          }
+        }
+        return true;
+      };
+    }, {}],
+    51: [function (require, module, exports) {
+      'use strict';
+
+      var call = Function.prototype.call;
+      var $hasOwn = Object.prototype.hasOwnProperty;
+      var bind = require('function-bind');
+
+      /** @type {import('.')} */
+      module.exports = bind.call(call, $hasOwn);
+    }, {
+      "function-bind": 42
+    }],
+    52: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./abs')} */
+      module.exports = Math.abs;
+    }, {}],
+    53: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./floor')} */
+      module.exports = Math.floor;
+    }, {}],
+    54: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./isNaN')} */
+      module.exports = Number.isNaN || function isNaN(a) {
+        return a !== a;
+      };
+    }, {}],
+    55: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./max')} */
+      module.exports = Math.max;
+    }, {}],
+    56: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./min')} */
+      module.exports = Math.min;
+    }, {}],
+    57: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./pow')} */
+      module.exports = Math.pow;
+    }, {}],
+    58: [function (require, module, exports) {
+      'use strict';
+
+      /** @type {import('./round')} */
+      module.exports = Math.round;
+    }, {}],
+    59: [function (require, module, exports) {
+      'use strict';
+
+      var $isNaN = require('./isNaN');
+
+      /** @type {import('./sign')} */
+      module.exports = function sign(number) {
+        if ($isNaN(number) || number === 0) {
+          return number;
+        }
+        return number < 0 ? -1 : +1;
+      };
+    }, {
+      "./isNaN": 54
+    }],
+    60: [function (require, module, exports) {
+      'use strict';
+
+      var keysShim;
+      if (!Object.keys) {
+        // modified from https://github.com/es-shims/es5-shim
+        var has = Object.prototype.hasOwnProperty;
+        var toStr = Object.prototype.toString;
+        var isArgs = require('./isArguments'); // eslint-disable-line global-require
+        var isEnumerable = Object.prototype.propertyIsEnumerable;
+        var hasDontEnumBug = !isEnumerable.call({
+          toString: null
+        }, 'toString');
+        var hasProtoEnumBug = isEnumerable.call(function () {}, 'prototype');
+        var dontEnums = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'];
+        var equalsConstructorPrototype = function equalsConstructorPrototype(o) {
+          var ctor = o.constructor;
+          return ctor && ctor.prototype === o;
+        };
+        var excludedKeys = {
+          $applicationCache: true,
+          $console: true,
+          $external: true,
+          $frame: true,
+          $frameElement: true,
+          $frames: true,
+          $innerHeight: true,
+          $innerWidth: true,
+          $onmozfullscreenchange: true,
+          $onmozfullscreenerror: true,
+          $outerHeight: true,
+          $outerWidth: true,
+          $pageXOffset: true,
+          $pageYOffset: true,
+          $parent: true,
+          $scrollLeft: true,
+          $scrollTop: true,
+          $scrollX: true,
+          $scrollY: true,
+          $self: true,
+          $webkitIndexedDB: true,
+          $webkitStorageInfo: true,
+          $window: true
+        };
+        var hasAutomationEqualityBug = function () {
+          /* global window */
+          if (typeof window === 'undefined') {
+            return false;
+          }
+          for (var k in window) {
+            try {
+              if (!excludedKeys['$' + k] && has.call(window, k) && window[k] !== null && _typeof(window[k]) === 'object') {
+                try {
+                  equalsConstructorPrototype(window[k]);
+                } catch (e) {
+                  return true;
+                }
+              }
+            } catch (e) {
+              return true;
+            }
+          }
+          return false;
+        }();
+        var equalsConstructorPrototypeIfNotBuggy = function equalsConstructorPrototypeIfNotBuggy(o) {
+          /* global window */
+          if (typeof window === 'undefined' || !hasAutomationEqualityBug) {
+            return equalsConstructorPrototype(o);
+          }
+          try {
+            return equalsConstructorPrototype(o);
+          } catch (e) {
+            return false;
+          }
+        };
+        keysShim = function keys(object) {
+          var isObject = object !== null && _typeof(object) === 'object';
+          var isFunction = toStr.call(object) === '[object Function]';
+          var isArguments = isArgs(object);
+          var isString = isObject && toStr.call(object) === '[object String]';
+          var theKeys = [];
+          if (!isObject && !isFunction && !isArguments) {
+            throw new TypeError('Object.keys called on a non-object');
+          }
+          var skipProto = hasProtoEnumBug && isFunction;
+          if (isString && object.length > 0 && !has.call(object, 0)) {
+            for (var i = 0; i < object.length; ++i) {
+              theKeys.push(String(i));
+            }
+          }
+          if (isArguments && object.length > 0) {
+            for (var j = 0; j < object.length; ++j) {
+              theKeys.push(String(j));
+            }
+          } else {
+            for (var name in object) {
+              if (!(skipProto && name === 'prototype') && has.call(object, name)) {
+                theKeys.push(String(name));
               }
             }
           }
+          if (hasDontEnumBug) {
+            var skipConstructor = equalsConstructorPrototypeIfNotBuggy(object);
+            for (var k = 0; k < dontEnums.length; ++k) {
+              if (!(skipConstructor && dontEnums[k] === 'constructor') && has.call(object, dontEnums[k])) {
+                theKeys.push(dontEnums[k]);
+              }
+            }
+          }
+          return theKeys;
+        };
+      }
+      module.exports = keysShim;
+    }, {
+      "./isArguments": 62
+    }],
+    61: [function (require, module, exports) {
+      'use strict';
+
+      var slice = Array.prototype.slice;
+      var isArgs = require('./isArguments');
+      var origKeys = Object.keys;
+      var keysShim = origKeys ? function keys(o) {
+        return origKeys(o);
+      } : require('./implementation');
+      var originalKeys = Object.keys;
+      keysShim.shim = function shimObjectKeys() {
+        if (Object.keys) {
+          var keysWorksWithArguments = function () {
+            // Safari 5.0 bug
+            var args = Object.keys(arguments);
+            return args && args.length === arguments.length;
+          }(1, 2);
+          if (!keysWorksWithArguments) {
+            Object.keys = function keys(object) {
+              // eslint-disable-line func-name-matching
+              if (isArgs(object)) {
+                return originalKeys(slice.call(object));
+              }
+              return originalKeys(object);
+            };
+          }
+        } else {
+          Object.keys = keysShim;
         }
-        return to;
+        return Object.keys || keysShim;
+      };
+      module.exports = keysShim;
+    }, {
+      "./implementation": 60,
+      "./isArguments": 62
+    }],
+    62: [function (require, module, exports) {
+      'use strict';
+
+      var toStr = Object.prototype.toString;
+      module.exports = function isArguments(value) {
+        var str = toStr.call(value);
+        var isArgs = str === '[object Arguments]';
+        if (!isArgs) {
+          isArgs = str !== '[object Array]' && value !== null && _typeof(value) === 'object' && typeof value.length === 'number' && value.length >= 0 && toStr.call(value.callee) === '[object Function]';
+        }
+        return isArgs;
       };
     }, {}],
-    24: [function (require, module, exports) {
+    63: [function (require, module, exports) {
+      'use strict';
+
+      // modified from https://github.com/es-shims/es6-shim
+      var objectKeys = require('object-keys');
+      var hasSymbols = require('has-symbols/shams')();
+      var callBound = require('call-bound');
+      var $Object = require('es-object-atoms');
+      var $push = callBound('Array.prototype.push');
+      var $propIsEnumerable = callBound('Object.prototype.propertyIsEnumerable');
+      var originalGetSymbols = hasSymbols ? $Object.getOwnPropertySymbols : null;
+
+      // eslint-disable-next-line no-unused-vars
+      module.exports = function assign(target, source1) {
+        if (target == null) {
+          throw new TypeError('target must be an object');
+        }
+        var to = $Object(target); // step 1
+        if (arguments.length === 1) {
+          return to; // step 2
+        }
+        for (var s = 1; s < arguments.length; ++s) {
+          var from = $Object(arguments[s]); // step 3.a.i
+
+          // step 3.a.ii:
+          var keys = objectKeys(from);
+          var getSymbols = hasSymbols && ($Object.getOwnPropertySymbols || originalGetSymbols);
+          if (getSymbols) {
+            var syms = getSymbols(from);
+            for (var j = 0; j < syms.length; ++j) {
+              var key = syms[j];
+              if ($propIsEnumerable(from, key)) {
+                $push(keys, key);
+              }
+            }
+          }
+
+          // step 3.a.iii:
+          for (var i = 0; i < keys.length; ++i) {
+            var nextKey = keys[i];
+            if ($propIsEnumerable(from, nextKey)) {
+              // step 3.a.iii.2
+              var propValue = from[nextKey]; // step 3.a.iii.2.a
+              to[nextKey] = propValue; // step 3.a.iii.2.b
+            }
+          }
+        }
+        return to; // step 4
+      };
+    }, {
+      "call-bound": 11,
+      "es-object-atoms": 21,
+      "has-symbols/shams": 50,
+      "object-keys": 61
+    }],
+    64: [function (require, module, exports) {
+      'use strict';
+
+      var implementation = require('./implementation');
+      var lacksProperEnumerationOrder = function lacksProperEnumerationOrder() {
+        if (!Object.assign) {
+          return false;
+        }
+        /*
+         * v8, specifically in node 4.x, has a bug with incorrect property enumeration order
+         * note: this does not detect the bug unless there's 20 characters
+         */
+        var str = 'abcdefghijklmnopqrst';
+        var letters = str.split('');
+        var map = {};
+        for (var i = 0; i < letters.length; ++i) {
+          map[letters[i]] = letters[i];
+        }
+        var obj = Object.assign({}, map);
+        var actual = '';
+        for (var k in obj) {
+          actual += k;
+        }
+        return str !== actual;
+      };
+      var assignHasPendingExceptions = function assignHasPendingExceptions() {
+        if (!Object.assign || !Object.preventExtensions) {
+          return false;
+        }
+        /*
+         * Firefox 37 still has "pending exception" logic in its Object.assign implementation,
+         * which is 72% slower than our shim, and Firefox 40's native implementation.
+         */
+        var thrower = Object.preventExtensions({
+          1: 2
+        });
+        try {
+          Object.assign(thrower, 'xy');
+        } catch (e) {
+          return thrower[1] === 'y';
+        }
+        return false;
+      };
+      module.exports = function getPolyfill() {
+        if (!Object.assign) {
+          return implementation;
+        }
+        if (lacksProperEnumerationOrder()) {
+          return implementation;
+        }
+        if (assignHasPendingExceptions()) {
+          return implementation;
+        }
+        return Object.assign;
+      };
+    }, {
+      "./implementation": 63
+    }],
+    65: [function (require, module, exports) {
+      var libFableServiceProviderBase = require('fable-serviceproviderbase');
+
+      /**
+       * @template [TRequest=any]
+       * @template [TResponse=any]
+       * @typedef {(pRequest: TRequest, pResponse: TResponse, fNext: (pError?: Error) => void) => void} RequestHandler
+       */
+      /**
+       * A route handler type that accepts either a single request handler or an array of request handlers.
+       * This accommodates frameworks like restify where middleware (e.g. bodyParser) returns an array of handlers.
+       *
+       * @template [TRequest=any]
+       * @template [TResponse=any]
+       * @typedef {RequestHandler<TRequest, TResponse> | RequestHandler<TRequest, TResponse>[]} RouteHandler
+       */
+      /**
+       * OratorServiceServerBase class represents the base class for the Orator service server.
+       * It provides basic functionality for handling what is usually an HTTP service's lifecycle, content parsing, and route creation.
+       * Derived classes can override the base functions to implement specific handlers (e.g. restify or express).
+       *
+       * @class
+       * @template [TRequest=any] - The request type for the concrete server implementation.
+       * @template [TResponse=any] - The response type for the concrete server implementation.
+       * @template [TServer=any] - The server type for the concrete server implementation.
+       */
+      var OratorServiceServerBase = /*#__PURE__*/function (_libFableServiceProvi) {
+        /**
+         * @param {import('fable')|Record<string, any>} [pFable] - (optional) The fable instance, or the options object if there is no fable
+         * @param {Record<string, any>|string} [pOptions] - (optional) The options object, or the service hash if there is no fable
+         * @param {string} [pServiceHash] - (optional) The service hash to identify this service instance
+         */
+        function OratorServiceServerBase(pFable, pOptions, pServiceHash) {
+          var _this7;
+          _classCallCheck(this, OratorServiceServerBase);
+          _this7 = _callSuper(this, OratorServiceServerBase, [pFable, pOptions, pServiceHash]);
+          _this7.serviceType = 'OratorServiceServer';
+          _this7.ServiceServerType = 'Base';
+          _this7.Name = _this7.fable.settings.Product;
+          _this7.URL = 'BASE_SERVICE_SERVER';
+          _this7.Port = _this7.options.ServicePort;
+          _this7.Active = false;
+          return _this7;
+        }
+
+        /*
+         * Service Lifecycle Functions
+         *************************************************************************/
+
+        /**
+         * Listens for network calls on the specified port (or starts a virtual serviceserver for that "port").
+         * @param {number} pPort - The port number to listen on.
+         * @param {(pError?: Error) => void} fCallback - The callback function to execute after listening.
+         * @return {any} The result of the callback function.
+         */
+        _inherits(OratorServiceServerBase, _libFableServiceProvi);
+        return _createClass(OratorServiceServerBase, [{
+          key: "listen",
+          value: function listen(pPort, fCallback) {
+            // Sometimes, listen does not listen on network calls.
+            this.Active = true;
+            return fCallback();
+          }
+
+          /**
+           * Closes the service server.
+           *
+           * @param {(pError?: Error) => any} fCallback - The callback function to be executed after closing the server.
+           * @return {any} - The result of the callback function.
+           */
+        }, {
+          key: "close",
+          value: function close(fCallback) {
+            this.Active = false;
+            return fCallback();
+          }
+          /*************************************************************************
+           * End of Service Lifecycle Functions
+           */
+
+          /*
+           * Content parsing functions
+           *************************************************************************/
+          /**
+           * Middleware function for parsing the request body.
+           *
+           * @param {Record<string, any>} [pOptions] - The options for the body parser.
+           * @return {RequestHandler<TRequest, TResponse> | RequestHandler<TRequest, TResponse>[]} - The middleware function.
+           */
+        }, {
+          key: "bodyParser",
+          value: function bodyParser(pOptions) {
+            return function (pRequest, pResponse, fNext) {
+              fNext();
+            };
+          }
+          /*************************************************************************
+           * End of Service Lifecycle Functions
+           */
+
+          /*
+           * Service Route Creation Functions
+           *
+           * These base functions provide basic validation for the routes, but don't actually
+           * do anything with them.  The design intent here is to allow derived classes to call
+           * these functions to validate that they conform to expected standards.
+           *
+           * Something like:
+          		get (pRoute, ...fRouteProcessingFunctions)
+          	{
+          		if (!super.get(pRoute, ...fRouteProcessingFunctions))
+          		{
+          			this.log.error(`Restify provider failed to map route [${pRoute}]!`);
+          			return false;
+          		}
+          			//...now we can do our actual get mapping function!....
+          	}
+          	 * This pattern and calling super is totally optional, obviously.
+           *************************************************************************/
+          /**
+           * Registers a global handler function to be used by the Orator service server.
+           *
+           * @param {RequestHandler<TRequest, TResponse>} fHandlerFunction - The handler function to be registered. It should have the prototype function(Request, Response, Next).
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "use",
+          value: function use(fHandlerFunction) {
+            if (typeof fHandlerFunction != 'function') {
+              this.log.error("Orator USE global handler mapping failed -- parameter was expected to be a function with prototype function(Request, Response, Next) but type was ".concat(_typeof(fHandlerFunction), " instead of a string."));
+              return false;
+            }
+            return true;
+          }
+
+          /**
+           * Registers a global handler function to be used by the Orator service server that runs before routing.
+           *
+           * @param {RequestHandler<TRequest, TResponse>} fHandlerFunction - The handler function to be registered. It should have the prototype function(Request, Response, Next).
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "pre",
+          value: function pre(fHandlerFunction) {
+            if (typeof fHandlerFunction != 'function') {
+              this.log.error("Orator PRE global handler mapping failed -- parameter was expected to be a function with prototype function(Request, Response, Next) but type was ".concat(_typeof(fHandlerFunction), " instead."));
+              return false;
+            }
+            return true;
+          }
+
+          /**
+           * Handles HTTP GET requests -- this is a base function that does nothing; override by the serviceserver is expected.
+           *
+           * @param {string} pRoute - The route of the request.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "doGet",
+          value: function doGet(pRoute) {
+            return true;
+          }
+          /**
+           * Maps a GET request handler for the specified route.
+           *
+           * @param {string} pRoute - The route to handle GET requests for.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to be executed for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "get",
+          value: function get(pRoute) {
+            if (typeof pRoute != 'string') {
+              this.log.error("Orator GET Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
+              return false;
+            }
+            for (var _len = arguments.length, fRouteProcessingFunctions = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+              fRouteProcessingFunctions[_key - 1] = arguments[_key];
+            }
+            return this.doGet.apply(this, [pRoute].concat(fRouteProcessingFunctions));
+          }
+          /**
+           * A helper method that maps a GET request method with a body parser middleware.
+           *
+           * @param {string} pRoute - The route path.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The route processing functions.
+           * @returns {any} - Result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "getWithBodyParser",
+          value: function getWithBodyParser(pRoute) {
+            for (var _len2 = arguments.length, fRouteProcessingFunctions = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+              fRouteProcessingFunctions[_key2 - 1] = arguments[_key2];
+            }
+            return this.get.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
+          }
+
+          /**
+           * Handles HTTP PUT requests -- this is a base function that does nothing; override by the serviceserver is expected.
+           *
+           * @param {string} pRoute - The route to handle.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "doPut",
+          value: function doPut(pRoute) {
+            return true;
+          }
+          /**
+           * Maps a PUT request handler for the specified route.
+           *
+           * @param {string} pRoute - The route to be mapped.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to be executed for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "put",
+          value: function put(pRoute) {
+            if (typeof pRoute != 'string') {
+              this.log.error("Orator PUT Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
+              return false;
+            }
+            for (var _len3 = arguments.length, fRouteProcessingFunctions = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+              fRouteProcessingFunctions[_key3 - 1] = arguments[_key3];
+            }
+            return this.doPut.apply(this, [pRoute].concat(fRouteProcessingFunctions));
+          }
+          /**
+           * A helper method that maps a PUT request method with a body parser middleware.
+           *
+           * @param {string} pRoute - The route to send the PUT request to.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - Optional route processing functions.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "putWithBodyParser",
+          value: function putWithBodyParser(pRoute) {
+            for (var _len4 = arguments.length, fRouteProcessingFunctions = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+              fRouteProcessingFunctions[_key4 - 1] = arguments[_key4];
+            }
+            return this.put.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
+          }
+
+          /**
+           * Handles the HTTP POST request for a specific route.
+           *
+           * @param {string} pRoute - The route to handle the POST request for.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "doPost",
+          value: function doPost(pRoute) {
+            return true;
+          }
+          /**
+           * Maps a POST request handler for the specified route.
+           *
+           * @param {string} pRoute - The route to send the POST request to.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to be executed for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "post",
+          value: function post(pRoute) {
+            if (typeof pRoute != 'string') {
+              this.log.error("Orator POST Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
+              return false;
+            }
+            for (var _len5 = arguments.length, fRouteProcessingFunctions = new Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+              fRouteProcessingFunctions[_key5 - 1] = arguments[_key5];
+            }
+            return this.doPost.apply(this, [pRoute].concat(fRouteProcessingFunctions));
+          }
+          /**
+           * A helper method that maps a POST request method with a body parser middleware.
+           *
+           * @param {string} pRoute - The route to handle the POST request for.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "postWithBodyParser",
+          value: function postWithBodyParser(pRoute) {
+            for (var _len6 = arguments.length, fRouteProcessingFunctions = new Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
+              fRouteProcessingFunctions[_key6 - 1] = arguments[_key6];
+            }
+            return this.post.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
+          }
+
+          /**
+           * Handles HTTP DELETE requests -- this is a base function that does nothing; override by the serviceserver is expected.
+           *
+           * @param {string} pRoute - The route of the resource to delete.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to be executed to delete the resource.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "doDel",
+          value: function doDel(pRoute) {
+            return true;
+          }
+          /**
+           * Maps a DEL request handler for the specified route.
+           *
+           * @param {string} pRoute - The route to map the delete function to.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The additional processing functions to execute
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "del",
+          value: function del(pRoute) {
+            if (typeof pRoute != 'string') {
+              this.log.error("Orator DEL Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
+              return false;
+            }
+            for (var _len7 = arguments.length, fRouteProcessingFunctions = new Array(_len7 > 1 ? _len7 - 1 : 0), _key7 = 1; _key7 < _len7; _key7++) {
+              fRouteProcessingFunctions[_key7 - 1] = arguments[_key7];
+            }
+            return this.doDel.apply(this, [pRoute].concat(fRouteProcessingFunctions));
+          }
+          /**
+           * A helper method that maps a DEL request method with a body parser middleware.
+           *
+           * @param {string} pRoute - The route path for the DELETE request.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - Additional route processing functions.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "delWithBodyParser",
+          value: function delWithBodyParser(pRoute) {
+            for (var _len8 = arguments.length, fRouteProcessingFunctions = new Array(_len8 > 1 ? _len8 - 1 : 0), _key8 = 1; _key8 < _len8; _key8++) {
+              fRouteProcessingFunctions[_key8 - 1] = arguments[_key8];
+            }
+            return this.del.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
+          }
+
+          /**
+           * Handles HTTP PATCH requests -- this is a base function that does nothing; override by the serviceserver is expected.
+           *
+           * @param {string} pRoute - The route to send the PATCH request to.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to apply to the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "doPatch",
+          value: function doPatch(pRoute) {
+            return true;
+          }
+          /**
+           * Maps a PATCH request handler for the specified route.
+           *
+           * @param {string} pRoute - The route mapping.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The route processing functions.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "patch",
+          value: function patch(pRoute) {
+            if (typeof pRoute != 'string') {
+              this.log.error("Orator PATCH Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
+              return false;
+            }
+            for (var _len9 = arguments.length, fRouteProcessingFunctions = new Array(_len9 > 1 ? _len9 - 1 : 0), _key9 = 1; _key9 < _len9; _key9++) {
+              fRouteProcessingFunctions[_key9 - 1] = arguments[_key9];
+            }
+            return this.doPatch.apply(this, [pRoute].concat(fRouteProcessingFunctions));
+          }
+          /**
+           * A helper method that maps a PATCH request method with a body parser middleware.
+           *
+           * @param {string} pRoute - The route to map.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - Route processing functions.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "patchWithBodyParser",
+          value: function patchWithBodyParser(pRoute) {
+            for (var _len0 = arguments.length, fRouteProcessingFunctions = new Array(_len0 > 1 ? _len0 - 1 : 0), _key0 = 1; _key0 < _len0; _key0++) {
+              fRouteProcessingFunctions[_key0 - 1] = arguments[_key0];
+            }
+            return this.patch.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
+          }
+
+          /**
+           * Handles HTTP OPT requests -- this is a base function that does nothing; override by the serviceserver is expected.
+           *
+           * @param {string} pRoute - The route.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to apply to the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "doOpts",
+          value: function doOpts(pRoute) {
+            return true;
+          }
+          /**
+           * Maps a OPT request handler for the specified route.
+           *
+           * @param {string} pRoute - The route to be mapped.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "opts",
+          value: function opts(pRoute) {
+            if (typeof pRoute != 'string') {
+              this.log.error("Orator OPTS Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
+              return false;
+            }
+            for (var _len1 = arguments.length, fRouteProcessingFunctions = new Array(_len1 > 1 ? _len1 - 1 : 0), _key1 = 1; _key1 < _len1; _key1++) {
+              fRouteProcessingFunctions[_key1 - 1] = arguments[_key1];
+            }
+            return this.doOpts.apply(this, [pRoute].concat(fRouteProcessingFunctions));
+          }
+          /**
+           * A helper method that maps a OPT request method with a body parser middleware.
+           * @param {string} pRoute - The route path.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The route processing functions.
+           * @returns {Object} - The result of the opts method.
+           */
+        }, {
+          key: "optsWithBodyParser",
+          value: function optsWithBodyParser(pRoute) {
+            for (var _len10 = arguments.length, fRouteProcessingFunctions = new Array(_len10 > 1 ? _len10 - 1 : 0), _key10 = 1; _key10 < _len10; _key10++) {
+              fRouteProcessingFunctions[_key10 - 1] = arguments[_key10];
+            }
+            return this.opts.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
+          }
+
+          /**
+           * Handles HTTP HEAD requests -- this is a base function that does nothing; override by the serviceserver is expected.
+           *
+           * @param {string} pRoute - The route to handle the HEAD request for.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "doHead",
+          value: function doHead(pRoute) {
+            return true;
+          }
+          /**
+           * Maps a HEAD request handler for the specified route.
+           *
+           * @param {string} pRoute - The route to handle the HEAD request for.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "head",
+          value: function head(pRoute) {
+            if (typeof pRoute != 'string') {
+              this.log.error("Orator HEAD Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
+              return false;
+            }
+            return true;
+          }
+          /**
+           * A helper method that combines the HEAD method with the bodyParser middleware.
+           *
+           * @param {string} pRoute - The route path for the HEAD request.
+           * @param {...RouteHandler<TRequest, TResponse>} fRouteProcessingFunctions - Optional route processing functions.
+           * @returns {any} - The result of adding the route to the concrete service provider (ex. a route object, a boolean).
+           */
+        }, {
+          key: "headWithBodyParser",
+          value: function headWithBodyParser(pRoute) {
+            for (var _len11 = arguments.length, fRouteProcessingFunctions = new Array(_len11 > 1 ? _len11 - 1 : 0), _key11 = 1; _key11 < _len11; _key11++) {
+              fRouteProcessingFunctions[_key11 - 1] = arguments[_key11];
+            }
+            return this.head.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
+          }
+          /*************************************************************************
+           * End of Service Route Creation Functions
+           */
+
+          /**
+           * Serve static files from a directory -- this is a base function that uses serve-static;
+           * derived classes can override to use their own static file serving implementation (e.g. restify's built-in serveStatic plugin).
+           *
+           * @param {string} pRoute - The route to serve static files on.
+           * @param {Object} pOptions - Options for the static file server.
+           * @param {string} pOptions.directory - The directory to serve files from.
+           * @param {string} [pOptions.default] - The default file to serve (e.g. 'index.html').
+           * @returns {boolean} - Returns false in the base class; override in derived classes.
+           */
+        }, {
+          key: "serveStatic",
+          value: function serveStatic(pRoute, pOptions) {
+            // The base class version of this does nothing -- override in derived classes
+            this.log.debug("Orator serveStatic called for route [".concat(pRoute, "] and landed on the base class; the service provider likely does not implement static file serving."));
+            return false;
+          }
+
+          /**
+           * Invokes a method on the service server programmatically -- expects to be overloaded by the service provider.
+           *
+           * @param {string} pMethod - The method to invoke.
+           * @param {string} pRoute - The route to invoke the method on.
+           * @param {any} pData - The data to pass to the method.
+           * @param {Function} fCallback - The callback function to execute after the method is invoked.
+           * @returns {boolean} - Returns true if the method was successfully invoked, false otherwise.
+           */
+        }, {
+          key: "invoke",
+          value: function invoke(pMethod, pRoute, pData, fCallback) {
+            // The base class version of this does nothing
+            this.log.debug("Orator invoke called for route [".concat(pRoute, "] and landed on the base class; the service provider likely does not implement programmatic invoke capabilities."), pData);
+            fCallback();
+            return false;
+          }
+        }]);
+      }(libFableServiceProviderBase);
+      module.exports = OratorServiceServerBase;
+    }, {
+      "fable-serviceproviderbase": 23
+    }],
+    66: [function (require, module, exports) {
       // shim for using process in browser
       var process = module.exports = {};
 
@@ -3436,92 +5266,445 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         return 0;
       };
     }, {}],
-    25: [function (require, module, exports) {
-      'use strict';
+    67: [function (require, module, exports) {
+      "use strict";
 
-      var parse = require('ret');
-      var types = parse.types;
-      module.exports = function (re, opts) {
-        if (!opts) opts = {};
-        var replimit = opts.limit === undefined ? 25 : opts.limit;
-        if (isRegExp(re)) re = re.source;else if (typeof re !== 'string') re = String(re);
-        try {
-          re = parse(re);
-        } catch (err) {
-          return false;
-        }
-        var reps = 0;
-        return function walk(node, starHeight) {
-          var i;
-          var ok;
-          var len;
-          if (node.type === types.REPETITION) {
-            starHeight++;
-            reps++;
-            if (starHeight > 1) return false;
-            if (reps > replimit) return false;
+      var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, {
+          enumerable: true,
+          get: function get() {
+            return m[k];
           }
-          if (node.options) {
-            for (i = 0, len = node.options.length; i < len; i++) {
-              ok = walk({
-                stack: node.options[i]
-              }, starHeight);
-              if (!ok) return false;
-            }
-          }
-          var stack = node.stack || node.value && node.value.stack;
-          if (!stack) return true;
-          for (i = 0; i < stack.length; i++) {
-            ok = walk(stack[i], starHeight);
-            if (!ok) return false;
-          }
-          return true;
-        }(re, 0);
+        });
+      } : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+      var __exportStar = this && this.__exportStar || function (m, exports) {
+        for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
       };
-      function isRegExp(x) {
-        return {}.toString.call(x) === '[object RegExp]';
-      }
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.types = void 0;
+      /* istanbul ignore file */
+      var types_1 = require("./types");
+      Object.defineProperty(exports, "types", {
+        enumerable: true,
+        get: function get() {
+          return types_1.types;
+        }
+      });
+      __exportStar(require("./tokenizer"), exports);
+      __exportStar(require("./reconstruct"), exports);
+      var tokenizer_1 = require("./tokenizer");
+      var reconstruct_1 = require("./reconstruct");
+      __exportStar(require("./types"), exports);
+      exports.default = tokenizer_1.tokenizer;
+      module.exports = tokenizer_1.tokenizer;
+      module.exports.types = types_1.types;
+      module.exports.reconstruct = reconstruct_1.reconstruct;
     }, {
-      "ret": 26
+      "./reconstruct": 68,
+      "./tokenizer": 71,
+      "./types": 72
     }],
-    26: [function (require, module, exports) {
-      var util = require('./util');
-      var types = require('./types');
-      var sets = require('./sets');
-      var positions = require('./positions');
-      module.exports = function (regexpStr) {
-        var i = 0,
-          l,
-          c,
-          start = {
-            type: types.ROOT,
-            stack: []
-          },
-          // Keep track of last clause/group and stack.
-          lastGroup = start,
-          last = start.stack,
-          groupStack = [];
-        var repeatErr = function repeatErr(i) {
-          util.error(regexpStr, "Nothing to repeat at column ".concat(i - 1));
-        };
+    68: [function (require, module, exports) {
+      "use strict";
 
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.reconstruct = void 0;
+      var types_1 = require("./types");
+      var write_set_tokens_1 = require("./write-set-tokens");
+      var reduceStack = function reduceStack(stack) {
+        return stack.map(exports.reconstruct).join('');
+      };
+      var createAlternate = function createAlternate(token) {
+        if ('options' in token) {
+          return token.options.map(reduceStack).join('|');
+        } else if ('stack' in token) {
+          return reduceStack(token.stack);
+        } else {
+          throw new Error("options or stack must be Root or Group token");
+        }
+      };
+      exports.reconstruct = function (token) {
+        switch (token.type) {
+          case types_1.types.ROOT:
+            return createAlternate(token);
+          case types_1.types.CHAR:
+            {
+              var c = String.fromCharCode(token.value);
+              // Note that the escaping for characters inside classes is handled
+              // in the write-set-tokens module so '-' and ']' are not escaped here
+              return (/[[\\{}$^.|?*+()]/.test(c) ? '\\' : '') + c;
+            }
+          case types_1.types.POSITION:
+            if (token.value === '^' || token.value === '$') {
+              return token.value;
+            } else {
+              return "\\".concat(token.value);
+            }
+          case types_1.types.REFERENCE:
+            return "\\".concat(token.value);
+          case types_1.types.SET:
+            return write_set_tokens_1.writeSetTokens(token);
+          case types_1.types.GROUP:
+            {
+              // Check token.remember
+              var prefix = token.name ? "?<".concat(token.name, ">") : token.remember ? '' : token.followedBy ? '?=' : token.notFollowedBy ? '?!' : '?:';
+              return "(".concat(prefix).concat(createAlternate(token), ")");
+            }
+          case types_1.types.REPETITION:
+            {
+              var min = token.min,
+                max = token.max;
+              var endWith;
+              if (min === 0 && max === 1) {
+                endWith = '?';
+              } else if (min === 1 && max === Infinity) {
+                endWith = '+';
+              } else if (min === 0 && max === Infinity) {
+                endWith = '*';
+              } else if (max === Infinity) {
+                endWith = "{".concat(min, ",}");
+              } else if (min === max) {
+                endWith = "{".concat(min, "}");
+              } else {
+                endWith = "{".concat(min, ",").concat(max, "}");
+              }
+              return "".concat(exports.reconstruct(token.value)).concat(endWith);
+            }
+          case types_1.types.RANGE:
+            return "".concat(write_set_tokens_1.setChar(token.from), "-").concat(write_set_tokens_1.setChar(token.to));
+          default:
+            throw new Error("Invalid token type ".concat(token));
+        }
+      };
+    }, {
+      "./types": 72,
+      "./write-set-tokens": 77
+    }],
+    69: [function (require, module, exports) {
+      "use strict";
+
+      var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, {
+          enumerable: true,
+          get: function get() {
+            return m[k];
+          }
+        });
+      } : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+      var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+        Object.defineProperty(o, "default", {
+          enumerable: true,
+          value: v
+        });
+      } : function (o, v) {
+        o["default"] = v;
+      });
+      var __importStar = this && this.__importStar || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
+        return result;
+      };
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.NOTANYCHAR = exports.WHITESPACE = exports.WORDS = exports.INTS = void 0;
+      var Sets = __importStar(require("./sets"));
+      var types_1 = require("./types");
+      function setToLookup(tokens) {
+        var _lookup = {};
+        var len = 0;
+        var _iterator10 = _createForOfIteratorHelper(tokens),
+          _step10;
+        try {
+          for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
+            var token = _step10.value;
+            if (token.type === types_1.types.CHAR) {
+              _lookup[token.value] = true;
+            }
+            // Note this is in an if statement because
+            // the SetTokens type is (Char | Range | Set)[]
+            // so a type error is thrown if it is not.
+            // If the SetTokens type is modified the if statement
+            // can be removed
+            if (token.type === types_1.types.RANGE) {
+              _lookup["".concat(token.from, "-").concat(token.to)] = true;
+            }
+            len += 1;
+          }
+        } catch (err) {
+          _iterator10.e(err);
+        } finally {
+          _iterator10.f();
+        }
+        return {
+          lookup: function lookup() {
+            return Object.assign({}, _lookup);
+          },
+          len: len
+        };
+      }
+      exports.INTS = setToLookup(Sets.ints().set);
+      exports.WORDS = setToLookup(Sets.words().set);
+      exports.WHITESPACE = setToLookup(Sets.whitespace().set);
+      exports.NOTANYCHAR = setToLookup(Sets.anyChar().set);
+    }, {
+      "./sets": 70,
+      "./types": 72
+    }],
+    70: [function (require, module, exports) {
+      "use strict";
+
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.anyChar = exports.notWhitespace = exports.whitespace = exports.notInts = exports.ints = exports.notWords = exports.words = void 0;
+      var types_1 = require("./types");
+      var INTS = function INTS() {
+        return [{
+          type: types_1.types.RANGE,
+          from: 48,
+          to: 57
+        }];
+      };
+      var WORDS = function WORDS() {
+        return [{
+          type: types_1.types.CHAR,
+          value: 95
+        }, {
+          type: types_1.types.RANGE,
+          from: 97,
+          to: 122
+        }, {
+          type: types_1.types.RANGE,
+          from: 65,
+          to: 90
+        }, {
+          type: types_1.types.RANGE,
+          from: 48,
+          to: 57
+        }];
+      };
+      var WHITESPACE = function WHITESPACE() {
+        return [{
+          type: types_1.types.CHAR,
+          value: 9
+        }, {
+          type: types_1.types.CHAR,
+          value: 10
+        }, {
+          type: types_1.types.CHAR,
+          value: 11
+        }, {
+          type: types_1.types.CHAR,
+          value: 12
+        }, {
+          type: types_1.types.CHAR,
+          value: 13
+        }, {
+          type: types_1.types.CHAR,
+          value: 32
+        }, {
+          type: types_1.types.CHAR,
+          value: 160
+        }, {
+          type: types_1.types.CHAR,
+          value: 5760
+        }, {
+          type: types_1.types.RANGE,
+          from: 8192,
+          to: 8202
+        }, {
+          type: types_1.types.CHAR,
+          value: 8232
+        }, {
+          type: types_1.types.CHAR,
+          value: 8233
+        }, {
+          type: types_1.types.CHAR,
+          value: 8239
+        }, {
+          type: types_1.types.CHAR,
+          value: 8287
+        }, {
+          type: types_1.types.CHAR,
+          value: 12288
+        }, {
+          type: types_1.types.CHAR,
+          value: 65279
+        }];
+      };
+      var NOTANYCHAR = function NOTANYCHAR() {
+        return [{
+          type: types_1.types.CHAR,
+          value: 10
+        }, {
+          type: types_1.types.CHAR,
+          value: 13
+        }, {
+          type: types_1.types.CHAR,
+          value: 8232
+        }, {
+          type: types_1.types.CHAR,
+          value: 8233
+        }];
+      };
+      // Predefined class objects.
+      exports.words = function () {
+        return {
+          type: types_1.types.SET,
+          set: WORDS(),
+          not: false
+        };
+      };
+      exports.notWords = function () {
+        return {
+          type: types_1.types.SET,
+          set: WORDS(),
+          not: true
+        };
+      };
+      exports.ints = function () {
+        return {
+          type: types_1.types.SET,
+          set: INTS(),
+          not: false
+        };
+      };
+      exports.notInts = function () {
+        return {
+          type: types_1.types.SET,
+          set: INTS(),
+          not: true
+        };
+      };
+      exports.whitespace = function () {
+        return {
+          type: types_1.types.SET,
+          set: WHITESPACE(),
+          not: false
+        };
+      };
+      exports.notWhitespace = function () {
+        return {
+          type: types_1.types.SET,
+          set: WHITESPACE(),
+          not: true
+        };
+      };
+      exports.anyChar = function () {
+        return {
+          type: types_1.types.SET,
+          set: NOTANYCHAR(),
+          not: true
+        };
+      };
+    }, {
+      "./types": 72
+    }],
+    71: [function (require, module, exports) {
+      "use strict";
+
+      var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, {
+          enumerable: true,
+          get: function get() {
+            return m[k];
+          }
+        });
+      } : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+      var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+        Object.defineProperty(o, "default", {
+          enumerable: true,
+          value: v
+        });
+      } : function (o, v) {
+        o["default"] = v;
+      });
+      var __importStar = this && this.__importStar || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
+        return result;
+      };
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.tokenizer = void 0;
+      var util = __importStar(require("./util"));
+      var types_1 = require("./types");
+      var sets = __importStar(require("./sets"));
+      /**
+       * Valid opening characters for capture group names.
+       */
+      var captureGroupFirstChar = /^[a-zA-Z_$]$/i;
+      /**
+       * Valid characters for capture group names.
+       */
+      var captureGroupChars = /^[a-zA-Z0-9_$]$/i;
+      var digit = /\d/;
+      /**
+       * Tokenizes a regular expression (that is currently a string)
+       * @param {string} regexpStr String of regular expression to be tokenized
+       *
+       * @returns {Root}
+       */
+      exports.tokenizer = function (regexpStr) {
+        var i = 0,
+          c;
+        var start = {
+          type: types_1.types.ROOT,
+          stack: []
+        };
+        // Keep track of last clause/group and stack.
+        var lastGroup = start;
+        var last = start.stack;
+        var groupStack = [];
+        var referenceQueue = [];
+        var groupCount = 0;
+        var repeatErr = function repeatErr(col) {
+          throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: Nothing to repeat at column ").concat(col - 1));
+        };
         // Decode a few escaped characters.
         var str = util.strToChars(regexpStr);
-        l = str.length;
-
         // Iterate through each character in string.
-        while (i < l) {
-          c = str[i++];
-          switch (c) {
+        while (i < str.length) {
+          switch (c = str[i++]) {
             // Handle escaped characters, inclues a few sets.
             case '\\':
-              c = str[i++];
-              switch (c) {
+              if (i === str.length) {
+                throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: \\ at end of pattern"));
+              }
+              switch (c = str[i++]) {
                 case 'b':
-                  last.push(positions.wordBoundary());
+                  last.push({
+                    type: types_1.types.POSITION,
+                    value: 'b'
+                  });
                   break;
                 case 'B':
-                  last.push(positions.nonWordBoundary());
+                  last.push({
+                    type: types_1.types.POSITION,
+                    value: 'B'
+                  });
                   break;
                 case 'w':
                   last.push(sets.words());
@@ -3544,159 +5727,190 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
                 default:
                   // Check if c is integer.
                   // In which case it's a reference.
-                  if (/\d/.test(c)) {
-                    last.push({
-                      type: types.REFERENCE,
-                      value: parseInt(c, 10)
+                  if (digit.test(c)) {
+                    var digits = c;
+                    while (i < str.length && digit.test(str[i])) {
+                      digits += str[i++];
+                    }
+                    var value = parseInt(digits, 10);
+                    var reference = {
+                      type: types_1.types.REFERENCE,
+                      value: value
+                    };
+                    last.push(reference);
+                    referenceQueue.push({
+                      reference: reference,
+                      stack: last,
+                      index: last.length - 1
                     });
-
                     // Escaped character.
                   } else {
                     last.push({
-                      type: types.CHAR,
+                      type: types_1.types.CHAR,
                       value: c.charCodeAt(0)
                     });
                   }
               }
               break;
-
             // Positionals.
             case '^':
-              last.push(positions.begin());
-              break;
-            case '$':
-              last.push(positions.end());
-              break;
-
-            // Handle custom sets.
-            case '[':
-              // Check if this class is 'anti' i.e. [^abc].
-              var not;
-              if (str[i] === '^') {
-                not = true;
-                i++;
-              } else {
-                not = false;
-              }
-
-              // Get all the characters in class.
-              var classTokens = util.tokenizeClass(str.slice(i), regexpStr);
-
-              // Increase index by length of class.
-              i += classTokens[1];
               last.push({
-                type: types.SET,
-                set: classTokens[0],
-                not: not
+                type: types_1.types.POSITION,
+                value: '^'
               });
               break;
-
+            case '$':
+              last.push({
+                type: types_1.types.POSITION,
+                value: '$'
+              });
+              break;
+            // Handle custom sets.
+            case '[':
+              {
+                // Check if this class is 'anti' i.e. [^abc].
+                var not = void 0;
+                if (str[i] === '^') {
+                  not = true;
+                  i++;
+                } else {
+                  not = false;
+                }
+                // Get all the characters in class.
+                var classTokens = util.tokenizeClass(str.slice(i), regexpStr);
+                // Increase index by length of class.
+                i += classTokens[1];
+                last.push({
+                  type: types_1.types.SET,
+                  set: classTokens[0],
+                  not: not
+                });
+                break;
+              }
             // Class of any character except \n.
             case '.':
               last.push(sets.anyChar());
               break;
-
             // Push group onto stack.
             case '(':
-              // Create group.
-              var group = {
-                type: types.GROUP,
-                stack: [],
-                remember: true
-              };
-              c = str[i];
-
-              // If if this is a special kind of group.
-              if (c === '?') {
-                c = str[i + 1];
-                i += 2;
-
-                // Match if followed by.
-                if (c === '=') {
-                  group.followedBy = true;
-
-                  // Match if not followed by.
-                } else if (c === '!') {
-                  group.notFollowedBy = true;
-                } else if (c !== ':') {
-                  util.error(regexpStr, "Invalid group, character '".concat(c, "'") + " after '?' at column ".concat(i - 1));
+              {
+                // Create group.
+                var group = {
+                  type: types_1.types.GROUP,
+                  stack: [],
+                  remember: true
+                };
+                // If this is a special kind of group.
+                if (str[i] === '?') {
+                  c = str[i + 1];
+                  i += 2;
+                  // Match if followed by.
+                  if (c === '=') {
+                    group.followedBy = true;
+                    group.remember = false;
+                    // Match if not followed by.
+                  } else if (c === '!') {
+                    group.notFollowedBy = true;
+                    group.remember = false;
+                  } else if (c === '<') {
+                    var name = '';
+                    if (captureGroupFirstChar.test(str[i])) {
+                      name += str[i];
+                      i++;
+                    } else {
+                      throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: Invalid capture group name, character '").concat(str[i], "'") + " after '<' at column ".concat(i + 1));
+                    }
+                    while (i < str.length && captureGroupChars.test(str[i])) {
+                      name += str[i];
+                      i++;
+                    }
+                    if (!name) {
+                      throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: Invalid capture group name, character '").concat(str[i], "'") + " after '<' at column ".concat(i + 1));
+                    }
+                    if (str[i] !== '>') {
+                      throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: Unclosed capture group name, expected '>', found") + " '".concat(str[i], "' at column ").concat(i + 1));
+                    }
+                    group.name = name;
+                    i++;
+                  } else if (c === ':') {
+                    group.remember = false;
+                  } else {
+                    throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: Invalid group, character '").concat(c, "'") + " after '?' at column ".concat(i - 1));
+                  }
+                } else {
+                  groupCount += 1;
                 }
-                group.remember = false;
+                // Insert subgroup into current group stack.
+                last.push(group);
+                // Remember the current group for when the group closes.
+                groupStack.push(lastGroup);
+                // Make this new group the current group.
+                lastGroup = group;
+                last = group.stack;
+                break;
               }
-
-              // Insert subgroup into current group stack.
-              last.push(group);
-
-              // Remember the current group for when the group closes.
-              groupStack.push(lastGroup);
-
-              // Make this new group the current group.
-              lastGroup = group;
-              last = group.stack;
-              break;
-
             // Pop group out of stack.
             case ')':
               if (groupStack.length === 0) {
-                util.error(regexpStr, "Unmatched ) at column ".concat(i - 1));
+                throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: Unmatched ) at column ").concat(i - 1));
               }
               lastGroup = groupStack.pop();
-
               // Check if this group has a PIPE.
               // To get back the correct last stack.
               last = lastGroup.options ? lastGroup.options[lastGroup.options.length - 1] : lastGroup.stack;
               break;
-
             // Use pipe character to give more choices.
             case '|':
-              // Create array where options are if this is the first PIPE
-              // in this clause.
-              if (!lastGroup.options) {
-                lastGroup.options = [lastGroup.stack];
-                delete lastGroup.stack;
+              {
+                // Create array where options are if this is the first PIPE
+                // in this clause.
+                if (!lastGroup.options) {
+                  lastGroup.options = [lastGroup.stack];
+                  delete lastGroup.stack;
+                }
+                // Create a new stack and add to options for rest of clause.
+                var stack = [];
+                lastGroup.options.push(stack);
+                last = stack;
+                break;
               }
-
-              // Create a new stack and add to options for rest of clause.
-              var stack = [];
-              lastGroup.options.push(stack);
-              last = stack;
-              break;
-
             // Repetition.
             // For every repetition, remove last element from last stack
             // then insert back a RANGE object.
             // This design is chosen because there could be more than
             // one repetition symbols in a regex i.e. `a?+{2,3}`.
             case '{':
-              var rs = /^(\d+)(,(\d+)?)?\}/.exec(str.slice(i)),
-                min,
-                max;
-              if (rs !== null) {
-                if (last.length === 0) {
-                  repeatErr(i);
+              {
+                var rs = /^(\d+)(,(\d+)?)?\}/.exec(str.slice(i)),
+                  min = void 0,
+                  max = void 0;
+                if (rs !== null) {
+                  if (last.length === 0) {
+                    repeatErr(i);
+                  }
+                  min = parseInt(rs[1], 10);
+                  max = rs[2] ? rs[3] ? parseInt(rs[3], 10) : Infinity : min;
+                  i += rs[0].length;
+                  last.push({
+                    type: types_1.types.REPETITION,
+                    min: min,
+                    max: max,
+                    value: last.pop()
+                  });
+                } else {
+                  last.push({
+                    type: types_1.types.CHAR,
+                    value: 123
+                  });
                 }
-                min = parseInt(rs[1], 10);
-                max = rs[2] ? rs[3] ? parseInt(rs[3], 10) : Infinity : min;
-                i += rs[0].length;
-                last.push({
-                  type: types.REPETITION,
-                  min: min,
-                  max: max,
-                  value: last.pop()
-                });
-              } else {
-                last.push({
-                  type: types.CHAR,
-                  value: 123
-                });
+                break;
               }
-              break;
             case '?':
               if (last.length === 0) {
                 repeatErr(i);
               }
               last.push({
-                type: types.REPETITION,
+                type: types_1.types.REPETITION,
                 min: 0,
                 max: 1,
                 value: last.pop()
@@ -3707,7 +5921,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
                 repeatErr(i);
               }
               last.push({
-                type: types.REPETITION,
+                type: types_1.types.REPETITION,
                 min: 1,
                 max: Infinity,
                 value: last.pop()
@@ -3718,314 +5932,468 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
                 repeatErr(i);
               }
               last.push({
-                type: types.REPETITION,
+                type: types_1.types.REPETITION,
                 min: 0,
                 max: Infinity,
                 value: last.pop()
               });
               break;
-
             // Default is a character that is not `\[](){}?+*^$`.
             default:
               last.push({
-                type: types.CHAR,
+                type: types_1.types.CHAR,
                 value: c.charCodeAt(0)
               });
           }
         }
-
         // Check if any groups have not been closed.
         if (groupStack.length !== 0) {
-          util.error(regexpStr, 'Unterminated group');
+          throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: Unterminated group"));
         }
+        updateReferences(referenceQueue, groupCount);
         return start;
       };
-      module.exports.types = types;
+      /**
+       * This is a side effecting function that changes references to chars
+       * if there are not enough capturing groups to reference
+       * See: https://github.com/fent/ret.js/pull/39#issuecomment-1006475703
+       * See: https://github.com/fent/ret.js/issues/38
+       * @param {(Reference | Char)[]} referenceQueue
+       * @param {number} groupCount
+       * @returns {void}
+       */
+      function updateReferences(referenceQueue, groupCount) {
+        // Note: We go through the queue in reverse order so
+        // that index we use is correct even if we have to add
+        // multiple tokens to one stack
+        var _iterator11 = _createForOfIteratorHelper(referenceQueue.reverse()),
+          _step11;
+        try {
+          for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
+            var elem = _step11.value;
+            if (groupCount < elem.reference.value) {
+              // If there is nothing to reference then turn this into a char token
+              elem.reference.type = types_1.types.CHAR;
+              var valueString = elem.reference.value.toString();
+              elem.reference.value = parseInt(valueString, 8);
+              // If the number is not octal then we need to create multiple tokens
+              // https://github.com/fent/ret.js/pull/39#issuecomment-1008229226
+              if (!/^[0-7]+$/.test(valueString)) {
+                var i = 0;
+                while (valueString[i] !== '8' && valueString[i] !== '9') {
+                  i += 1;
+                }
+                if (i === 0) {
+                  // Handling case when escaped number starts with 8 or 9
+                  elem.reference.value = valueString.charCodeAt(0);
+                  i += 1;
+                } else {
+                  // If the escaped number does not start with 8 or 9, then all
+                  // 0-7 digits before the first 8/9 form the first character code
+                  // see: https://github.com/fent/ret.js/pull/39#discussion_r780747085
+                  elem.reference.value = parseInt(valueString.slice(0, i), 8);
+                }
+                if (valueString.length > i) {
+                  var _elem$stack;
+                  var tail = elem.stack.splice(elem.index + 1);
+                  var _iterator12 = _createForOfIteratorHelper(valueString.slice(i)),
+                    _step12;
+                  try {
+                    for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
+                      var char = _step12.value;
+                      elem.stack.push({
+                        type: types_1.types.CHAR,
+                        value: char.charCodeAt(0)
+                      });
+                    }
+                  } catch (err) {
+                    _iterator12.e(err);
+                  } finally {
+                    _iterator12.f();
+                  }
+                  (_elem$stack = elem.stack).push.apply(_elem$stack, _toConsumableArray(tail));
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _iterator11.e(err);
+        } finally {
+          _iterator11.f();
+        }
+      }
     }, {
-      "./positions": 27,
-      "./sets": 28,
-      "./types": 29,
-      "./util": 30
+      "./sets": 70,
+      "./types": 72,
+      "./util": 76
     }],
-    27: [function (require, module, exports) {
-      var types = require('./types');
-      exports.wordBoundary = function () {
-        return {
-          type: types.POSITION,
-          value: 'b'
-        };
-      };
-      exports.nonWordBoundary = function () {
-        return {
-          type: types.POSITION,
-          value: 'B'
-        };
-      };
-      exports.begin = function () {
-        return {
-          type: types.POSITION,
-          value: '^'
-        };
-      };
-      exports.end = function () {
-        return {
-          type: types.POSITION,
-          value: '$'
-        };
-      };
-    }, {
-      "./types": 29
-    }],
-    28: [function (require, module, exports) {
-      var types = require('./types');
-      var INTS = function INTS() {
-        return [{
-          type: types.RANGE,
-          from: 48,
-          to: 57
-        }];
-      };
-      var WORDS = function WORDS() {
-        return [{
-          type: types.CHAR,
-          value: 95
-        }, {
-          type: types.RANGE,
-          from: 97,
-          to: 122
-        }, {
-          type: types.RANGE,
-          from: 65,
-          to: 90
-        }].concat(INTS());
-      };
-      var WHITESPACE = function WHITESPACE() {
-        return [{
-          type: types.CHAR,
-          value: 9
-        }, {
-          type: types.CHAR,
-          value: 10
-        }, {
-          type: types.CHAR,
-          value: 11
-        }, {
-          type: types.CHAR,
-          value: 12
-        }, {
-          type: types.CHAR,
-          value: 13
-        }, {
-          type: types.CHAR,
-          value: 32
-        }, {
-          type: types.CHAR,
-          value: 160
-        }, {
-          type: types.CHAR,
-          value: 5760
-        }, {
-          type: types.RANGE,
-          from: 8192,
-          to: 8202
-        }, {
-          type: types.CHAR,
-          value: 8232
-        }, {
-          type: types.CHAR,
-          value: 8233
-        }, {
-          type: types.CHAR,
-          value: 8239
-        }, {
-          type: types.CHAR,
-          value: 8287
-        }, {
-          type: types.CHAR,
-          value: 12288
-        }, {
-          type: types.CHAR,
-          value: 65279
-        }];
-      };
-      var NOTANYCHAR = function NOTANYCHAR() {
-        return [{
-          type: types.CHAR,
-          value: 10
-        }, {
-          type: types.CHAR,
-          value: 13
-        }, {
-          type: types.CHAR,
-          value: 8232
-        }, {
-          type: types.CHAR,
-          value: 8233
-        }];
-      };
+    72: [function (require, module, exports) {
+      "use strict";
 
-      // Predefined class objects.
-      exports.words = function () {
-        return {
-          type: types.SET,
-          set: WORDS(),
-          not: false
-        };
+      var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, {
+          enumerable: true,
+          get: function get() {
+            return m[k];
+          }
+        });
+      } : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+      var __exportStar = this && this.__exportStar || function (m, exports) {
+        for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
       };
-      exports.notWords = function () {
-        return {
-          type: types.SET,
-          set: WORDS(),
-          not: true
-        };
-      };
-      exports.ints = function () {
-        return {
-          type: types.SET,
-          set: INTS(),
-          not: false
-        };
-      };
-      exports.notInts = function () {
-        return {
-          type: types.SET,
-          set: INTS(),
-          not: true
-        };
-      };
-      exports.whitespace = function () {
-        return {
-          type: types.SET,
-          set: WHITESPACE(),
-          not: false
-        };
-      };
-      exports.notWhitespace = function () {
-        return {
-          type: types.SET,
-          set: WHITESPACE(),
-          not: true
-        };
-      };
-      exports.anyChar = function () {
-        return {
-          type: types.SET,
-          set: NOTANYCHAR(),
-          not: true
-        };
-      };
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      __exportStar(require("./tokens"), exports);
+      __exportStar(require("./types"), exports);
+      __exportStar(require("./set-lookup"), exports);
     }, {
-      "./types": 29
+      "./set-lookup": 73,
+      "./tokens": 74,
+      "./types": 75
     }],
-    29: [function (require, module, exports) {
-      module.exports = {
-        ROOT: 0,
-        GROUP: 1,
-        POSITION: 2,
-        SET: 3,
-        RANGE: 4,
-        REPETITION: 5,
-        REFERENCE: 6,
-        CHAR: 7
-      };
+    73: [function (require, module, exports) {
+      "use strict";
+
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
     }, {}],
-    30: [function (require, module, exports) {
-      var types = require('./types');
-      var sets = require('./sets');
-      var CTRL = '@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^ ?';
-      var SLSH = {
-        '0': 0,
-        't': 9,
-        'n': 10,
-        'v': 11,
-        'f': 12,
-        'r': 13
-      };
+    74: [function (require, module, exports) {
+      "use strict";
 
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+    }, {}],
+    75: [function (require, module, exports) {
+      "use strict";
+
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.types = void 0;
+      var types;
+      (function (types) {
+        types[types["ROOT"] = 0] = "ROOT";
+        types[types["GROUP"] = 1] = "GROUP";
+        types[types["POSITION"] = 2] = "POSITION";
+        types[types["SET"] = 3] = "SET";
+        types[types["RANGE"] = 4] = "RANGE";
+        types[types["REPETITION"] = 5] = "REPETITION";
+        types[types["REFERENCE"] = 6] = "REFERENCE";
+        types[types["CHAR"] = 7] = "CHAR";
+      })(types = exports.types || (exports.types = {}));
+    }, {}],
+    76: [function (require, module, exports) {
+      "use strict";
+
+      var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, {
+          enumerable: true,
+          get: function get() {
+            return m[k];
+          }
+        });
+      } : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+      var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+        Object.defineProperty(o, "default", {
+          enumerable: true,
+          value: v
+        });
+      } : function (o, v) {
+        o["default"] = v;
+      });
+      var __importStar = this && this.__importStar || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
+        return result;
+      };
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.tokenizeClass = exports.strToChars = void 0;
+      var types_1 = require("./types");
+      var sets = __importStar(require("./sets"));
+      var CTRL = '@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^ ?';
       /**
        * Finds character representations in str and convert all to
-       * their respective characters
+       * their respective characters.
        *
-       * @param {String} str
-       * @return {String}
+       * @param {string} str
+       * @returns {string}
        */
       exports.strToChars = function (str) {
-        /* jshint maxlen: false */
-        var chars_regex = /(\[\\b\])|(\\)?\\(?:u([A-F0-9]{4})|x([A-F0-9]{2})|(0?[0-7]{2})|c([@A-Z[\\\]^?])|([0tnvfr]))/g;
-        str = str.replace(chars_regex, function (s, b, lbs, a16, b16, c8, dctrl, eslsh) {
+        var charsRegex = /(\[\\b\])|(\\)?\\(?:u([A-F0-9]{4})|x([A-F0-9]{2})|c([@A-Z[\\\]^?])|([0tnvfr]))/g;
+        return str.replace(charsRegex, function (s, b, lbs, a16, b16, dctrl, eslsh) {
           if (lbs) {
             return s;
           }
-          var code = b ? 8 : a16 ? parseInt(a16, 16) : b16 ? parseInt(b16, 16) : c8 ? parseInt(c8, 8) : dctrl ? CTRL.indexOf(dctrl) : SLSH[eslsh];
+          var code = b ? 8 : a16 ? parseInt(a16, 16) : b16 ? parseInt(b16, 16) : dctrl ? CTRL.indexOf(dctrl) : {
+            0: 0,
+            t: 9,
+            n: 10,
+            v: 11,
+            f: 12,
+            r: 13
+          }[eslsh];
           var c = String.fromCharCode(code);
-
           // Escape special regex characters.
-          if (/[[\]{}^$.|?*+()]/.test(c)) {
-            c = '\\' + c;
-          }
-          return c;
+          return /[[\]{}^$.|?*+()]/.test(c) ? "\\".concat(c) : c;
         });
-        return str;
       };
-
       /**
-       * turns class into tokens
+       * Turns class into tokens
        * reads str until it encounters a ] not preceeded by a \
        *
-       * @param {String} str
-       * @param {String} regexpStr
-       * @return {Array.<Array.<Object>, Number>}
+       * @param {string} str
+       * @param {string} regexpStr
+       * @returns {Array.<Array.<Object>, number>}
        */
       exports.tokenizeClass = function (str, regexpStr) {
-        /* jshint maxlen: false */
-        var tokens = [];
-        var regexp = /\\(?:(w)|(d)|(s)|(W)|(D)|(S))|((?:(?:\\)(.)|([^\]\\]))-(?:\\)?([^\]]))|(\])|(?:\\)?([^])/g;
-        var rs, c;
-        while ((rs = regexp.exec(str)) != null) {
-          if (rs[1]) {
-            tokens.push(sets.words());
-          } else if (rs[2]) {
-            tokens.push(sets.ints());
-          } else if (rs[3]) {
-            tokens.push(sets.whitespace());
-          } else if (rs[4]) {
-            tokens.push(sets.notWords());
-          } else if (rs[5]) {
-            tokens.push(sets.notInts());
-          } else if (rs[6]) {
-            tokens.push(sets.notWhitespace());
-          } else if (rs[7]) {
-            tokens.push({
-              type: types.RANGE,
-              from: (rs[8] || rs[9]).charCodeAt(0),
-              to: rs[10].charCodeAt(0)
-            });
-          } else if (c = rs[12]) {
-            tokens.push({
-              type: types.CHAR,
-              value: c.charCodeAt(0)
-            });
+        var _a, _b, _c, _d, _e, _f, _g;
+        var tokens = [],
+          rs,
+          c;
+        var regexp = /\\(?:(w)|(d)|(s)|(W)|(D)|(S))|((?:(?:\\)(.)|([^\]\\]))-(((?:\\)])|(((?:\\)?([^\]])))))|(\])|(?:\\)?([^])/g;
+        while ((rs = regexp.exec(str)) !== null) {
+          var p = (_g = (_f = (_e = (_d = (_c = (_b = (_a = rs[1] && sets.words()) !== null && _a !== void 0 ? _a : rs[2] && sets.ints()) !== null && _b !== void 0 ? _b : rs[3] && sets.whitespace()) !== null && _c !== void 0 ? _c : rs[4] && sets.notWords()) !== null && _d !== void 0 ? _d : rs[5] && sets.notInts()) !== null && _e !== void 0 ? _e : rs[6] && sets.notWhitespace()) !== null && _f !== void 0 ? _f : rs[7] && {
+            type: types_1.types.RANGE,
+            from: (rs[8] || rs[9]).charCodeAt(0),
+            to: (c = rs[10]).charCodeAt(c.length - 1)
+          }) !== null && _g !== void 0 ? _g : (c = rs[16]) && {
+            type: types_1.types.CHAR,
+            value: c.charCodeAt(0)
+          };
+          if (p) {
+            tokens.push(p);
           } else {
             return [tokens, regexp.lastIndex];
           }
         }
-        exports.error(regexpStr, 'Unterminated character class');
-      };
-
-      /**
-       * Shortcut to throw errors.
-       *
-       * @param {String} regexp
-       * @param {String} msg
-       */
-      exports.error = function (regexp, msg) {
-        throw new SyntaxError('Invalid regular expression: /' + regexp + '/: ' + msg);
+        throw new SyntaxError("Invalid regular expression: /".concat(regexpStr, "/: Unterminated character class"));
       };
     }, {
-      "./sets": 28,
-      "./types": 29
+      "./sets": 70,
+      "./types": 72
     }],
-    31: [function (require, module, exports) {
+    77: [function (require, module, exports) {
+      "use strict";
+
+      var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, {
+          enumerable: true,
+          get: function get() {
+            return m[k];
+          }
+        });
+      } : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+      var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+        Object.defineProperty(o, "default", {
+          enumerable: true,
+          value: v
+        });
+      } : function (o, v) {
+        o["default"] = v;
+      });
+      var __importStar = this && this.__importStar || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
+        return result;
+      };
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.writeSetTokens = exports.setChar = void 0;
+      var types_1 = require("./types");
+      var sets = __importStar(require("./sets-lookup"));
+      /**
+       * Takes character code and returns character to be displayed in a set
+       * @param {number} charCode Character code of set element
+       * @returns {string} The string for the sets character
+       */
+      function setChar(charCode) {
+        return charCode === 94 ? '\\^' : charCode === 92 ? '\\\\' : charCode === 93 ? '\\]' : charCode === 45 ? '\\-' : String.fromCharCode(charCode);
+      }
+      exports.setChar = setChar;
+      /**
+       * Test if a character set matches a 'set-lookup'
+       * @param {SetTokens} set The set to be tested
+       * @param {SetLookup} param The predefined 'set-lookup' & the number of elements in the lookup
+       * @returns {boolean} True if the character set corresponds to the 'set-lookup'
+       */
+      function isSameSet(set, _ref) {
+        var lookup = _ref.lookup,
+          len = _ref.len;
+        // If the set and the lookup are not of the same length
+        // then we immediately know that the lookup will be false
+        if (len !== set.length) {
+          return false;
+        }
+        var map = lookup();
+        var _iterator13 = _createForOfIteratorHelper(set),
+          _step13;
+        try {
+          for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
+            var elem = _step13.value;
+            if (elem.type === types_1.types.SET) {
+              return false;
+            }
+            var key = elem.type === types_1.types.CHAR ? elem.value : "".concat(elem.from, "-").concat(elem.to);
+            if (map[key]) {
+              map[key] = false;
+            } else {
+              return false;
+            }
+          }
+        } catch (err) {
+          _iterator13.e(err);
+        } finally {
+          _iterator13.f();
+        }
+        return true;
+      }
+      /**
+       * Writes the tokens for a set
+       * @param {Set} set The set to display
+       * @param {boolean} isNested Whether the token is nested inside another set token
+       * @returns {string} The tokens for the set
+       */
+      function writeSetTokens(set) {
+        var isNested = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+        if (isSameSet(set.set, sets.INTS)) {
+          return set.not ? '\\D' : '\\d';
+        }
+        if (isSameSet(set.set, sets.WORDS)) {
+          return set.not ? '\\W' : '\\w';
+        }
+        // Notanychar is only relevant when not nested inside another set token
+        if (set.not && isSameSet(set.set, sets.NOTANYCHAR)) {
+          return '.';
+        }
+        if (isSameSet(set.set, sets.WHITESPACE)) {
+          return set.not ? '\\S' : '\\s';
+        }
+        var tokenString = '';
+        for (var i = 0; i < set.set.length; i++) {
+          var subset = set.set[i];
+          tokenString += writeSetToken(subset);
+        }
+        var contents = "".concat(set.not ? '^' : '').concat(tokenString);
+        return isNested ? contents : "[".concat(contents, "]");
+      }
+      exports.writeSetTokens = writeSetTokens;
+      /**
+       * Writes a token within a set
+       * @param {Range | Char | Set} set The set token to display
+       * @returns {string} The token as a string
+       */
+      function writeSetToken(set) {
+        if (set.type === types_1.types.CHAR) {
+          return setChar(set.value);
+        } else if (set.type === types_1.types.RANGE) {
+          return "".concat(setChar(set.from), "-").concat(setChar(set.to));
+        }
+        return writeSetTokens(set, true);
+      }
+    }, {
+      "./sets-lookup": 69,
+      "./types": 72
+    }],
+    78: [function (require, module, exports) {
+      'use strict';
+
+      var parse = require('ret');
+      var _require6 = require('ret'),
+        types = _require6.types;
+
+      /**
+       * @param {*} node
+       * @param {object} opts
+       * @param {number} opts.reps - The number of repetitions encountered
+       * @param {number} opts.limit - The maximum number of repetitions allowed
+       * @param {number} starHeight - The current height of the star in the regex tree
+       * @returns {boolean}
+       */
+      function walk(node, opts, starHeight) {
+        var _node$value, _node$value2;
+        var i;
+        var ok;
+        var len;
+        if (node.type === types.REPETITION) {
+          starHeight++;
+          opts.reps++;
+          if (starHeight > 1) return false;
+          if (opts.reps > opts.limit) return false;
+        }
+        var options = node.options || ((_node$value = node.value) === null || _node$value === void 0 ? void 0 : _node$value.options);
+        if (options) {
+          for (i = 0, len = options.length; i < len; i++) {
+            ok = walk({
+              stack: options[i]
+            }, opts, starHeight);
+            if (!ok) return false;
+          }
+        }
+        var stack = node.stack || ((_node$value2 = node.value) === null || _node$value2 === void 0 ? void 0 : _node$value2.stack);
+        if (!stack) return true;
+        for (i = 0, len = stack.length; i < len; i++) {
+          ok = walk(stack[i], opts, starHeight);
+          if (!ok) return false;
+        }
+        return true;
+      }
+
+      /**
+       * @param {string|RegExp} re - The regular expression to check, can be a string or RegExp object
+       * @param {object} [options]
+       * @param {number} [options.limit=25] - The maximum number of repetitions allowed
+       * @returns {boolean} - Returns true if the regex is safe, false if it is unsafe or invalid
+       */
+      function safeRegex(re, options) {
+        var _options$limit;
+        var opts = {
+          reps: 0,
+          limit: (_options$limit = options === null || options === void 0 ? void 0 : options.limit) !== null && _options$limit !== void 0 ? _options$limit : 25
+        };
+        if (isRegExp(re)) re = re.source;else if (typeof re !== 'string') re = String(re);
+        try {
+          return walk(parse(re), opts, 0);
+        } catch (_unused) {
+          return false;
+        }
+      }
+
+      /**
+       * @param {*} x
+       * @returns {x is RegExp}
+       */
+      function isRegExp(x) {
+        return Object.prototype.toString.call(x) === '[object RegExp]';
+      }
+      module.exports = safeRegex;
+      module.exports.default = safeRegex;
+      module.exports.safeRegex = safeRegex;
+    }, {
+      "ret": 67
+    }],
+    79: [function (require, module, exports) {
       // Simple default configuration for application, when none is provided
 
       module.exports = {
@@ -4034,286 +6402,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         "ServicePort": 8080
       };
     }, {}],
-    32: [function (require, module, exports) {
+    80: [function (require, module, exports) {
       /**
       * Default Service Server
       */
       module.exports = require('./Orator-ServiceServer-IPC.js');
     }, {
-      "./Orator-ServiceServer-IPC.js": 35
+      "./Orator-ServiceServer-IPC.js": 82
     }],
-    33: [function (require, module, exports) {
-      var libFableServiceProviderBase = require('fable-serviceproviderbase');
-      var OratorServiceServerBase = /*#__PURE__*/function (_libFableServiceProvi) {
-        _inherits(OratorServiceServerBase, _libFableServiceProvi);
-        var _super5 = _createSuper(OratorServiceServerBase);
-        function OratorServiceServerBase(pFable, pOptions, pServiceHash) {
-          var _this7;
-          _classCallCheck(this, OratorServiceServerBase);
-          _this7 = _super5.call(this, pFable, pOptions, pServiceHash);
-          _this7.serviceType = 'OratorServiceServer';
-          _this7.ServiceServerType = 'Base';
-          _this7.Name = _this7.fable.settings.Product;
-          _this7.URL = 'BASE_SERVICE_SERVER';
-          _this7.Port = _this7.options.ServicePort;
-          _this7.Active = false;
-          return _this7;
-        }
-
-        /*
-         * Service Lifecycle Functions
-         *************************************************************************/
-        _createClass(OratorServiceServerBase, [{
-          key: "listen",
-          value: function listen(pPort, fCallback) {
-            // Sometimes, listen does not listen on network calls.
-            this.Active = true;
-            return fCallback();
-          }
-        }, {
-          key: "close",
-          value: function close(fCallback) {
-            this.Active = false;
-            return fCallback();
-          }
-          /*************************************************************************
-           * End of Service Lifecycle Functions
-           */
-
-          /*
-           * Content parsing functions
-           *************************************************************************/
-        }, {
-          key: "bodyParser",
-          value: function bodyParser(pOptions) {
-            return function (pRequest, pResponse, fNext) {
-              fNext();
-            };
-          }
-          /*************************************************************************
-           * End of Service Lifecycle Functions
-           */
-
-          /*
-           * Service Route Creation Functions
-           *
-           * These base functions provide basic validation for the routes, but don't actually 
-           * do anything with them.  The design intent here is to allow derived classes to call
-           * these functions to validate that they conform to expected standards.
-           *
-           * Something like:
-          		get (pRoute, ...fRouteProcessingFunctions)
-          	{
-          		if (!super.get(pRoute, ...fRouteProcessingFunctions))
-          		{
-          			this.log.error(`Restify provider failed to map route [${pRoute}]!`);
-          			return false;
-          		}
-          			//...now we can do our actual get mapping function!....
-          	}
-          	 * This pattern and calling super is totally optional, obviously.
-           *************************************************************************/
-        }, {
-          key: "use",
-          value: function use(fHandlerFunction) {
-            if (typeof fHandlerFunction != 'function') {
-              this.log.error("Orator USE global handler mapping failed -- parameter was expected to be a function with prototype function(Request, Response, Next) but type was ".concat(_typeof(fHandlerFunction), " instead of a string."));
-              return false;
-            }
-            return true;
-          }
-        }, {
-          key: "doGet",
-          value: function doGet(pRoute) {
-            return true;
-          }
-        }, {
-          key: "get",
-          value: function get(pRoute) {
-            if (typeof pRoute != 'string') {
-              this.log.error("Orator GET Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
-              return false;
-            }
-            for (var _len = arguments.length, fRouteProcessingFunctions = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-              fRouteProcessingFunctions[_key - 1] = arguments[_key];
-            }
-            return this.doGet.apply(this, [pRoute].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "getWithBodyParser",
-          value: function getWithBodyParser(pRoute) {
-            for (var _len2 = arguments.length, fRouteProcessingFunctions = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-              fRouteProcessingFunctions[_key2 - 1] = arguments[_key2];
-            }
-            return this.get.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "doPut",
-          value: function doPut(pRoute) {
-            return true;
-          }
-        }, {
-          key: "put",
-          value: function put(pRoute) {
-            if (typeof pRoute != 'string') {
-              this.log.error("Orator PUT Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
-              return false;
-            }
-            for (var _len3 = arguments.length, fRouteProcessingFunctions = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-              fRouteProcessingFunctions[_key3 - 1] = arguments[_key3];
-            }
-            return this.doPut.apply(this, [pRoute].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "putWithBodyParser",
-          value: function putWithBodyParser(pRoute) {
-            for (var _len4 = arguments.length, fRouteProcessingFunctions = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-              fRouteProcessingFunctions[_key4 - 1] = arguments[_key4];
-            }
-            return this.put.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "doPost",
-          value: function doPost(pRoute) {
-            return true;
-          }
-        }, {
-          key: "post",
-          value: function post(pRoute) {
-            if (typeof pRoute != 'string') {
-              this.log.error("Orator POST Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
-              return false;
-            }
-            for (var _len5 = arguments.length, fRouteProcessingFunctions = new Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
-              fRouteProcessingFunctions[_key5 - 1] = arguments[_key5];
-            }
-            return this.doPost.apply(this, [pRoute].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "postWithBodyParser",
-          value: function postWithBodyParser(pRoute) {
-            for (var _len6 = arguments.length, fRouteProcessingFunctions = new Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
-              fRouteProcessingFunctions[_key6 - 1] = arguments[_key6];
-            }
-            return this.post.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "doDel",
-          value: function doDel(pRoute) {
-            return true;
-          }
-        }, {
-          key: "del",
-          value: function del(pRoute) {
-            if (typeof pRoute != 'string') {
-              this.log.error("Orator DEL Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
-              return false;
-            }
-            for (var _len7 = arguments.length, fRouteProcessingFunctions = new Array(_len7 > 1 ? _len7 - 1 : 0), _key7 = 1; _key7 < _len7; _key7++) {
-              fRouteProcessingFunctions[_key7 - 1] = arguments[_key7];
-            }
-            return this.doDel.apply(this, [pRoute].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "delWithBodyParser",
-          value: function delWithBodyParser(pRoute) {
-            for (var _len8 = arguments.length, fRouteProcessingFunctions = new Array(_len8 > 1 ? _len8 - 1 : 0), _key8 = 1; _key8 < _len8; _key8++) {
-              fRouteProcessingFunctions[_key8 - 1] = arguments[_key8];
-            }
-            return this.del.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "doPatch",
-          value: function doPatch(pRoute) {
-            return true;
-          }
-        }, {
-          key: "patch",
-          value: function patch(pRoute) {
-            if (typeof pRoute != 'string') {
-              this.log.error("Orator PATCH Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
-              return false;
-            }
-            for (var _len9 = arguments.length, fRouteProcessingFunctions = new Array(_len9 > 1 ? _len9 - 1 : 0), _key9 = 1; _key9 < _len9; _key9++) {
-              fRouteProcessingFunctions[_key9 - 1] = arguments[_key9];
-            }
-            return this.doPatch.apply(this, [pRoute].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "patchWithBodyParser",
-          value: function patchWithBodyParser(pRoute) {
-            for (var _len10 = arguments.length, fRouteProcessingFunctions = new Array(_len10 > 1 ? _len10 - 1 : 0), _key10 = 1; _key10 < _len10; _key10++) {
-              fRouteProcessingFunctions[_key10 - 1] = arguments[_key10];
-            }
-            return this.patch.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "doOpts",
-          value: function doOpts(pRoute) {
-            return true;
-          }
-        }, {
-          key: "opts",
-          value: function opts(pRoute) {
-            if (typeof pRoute != 'string') {
-              this.log.error("Orator OPTS Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
-              return false;
-            }
-            for (var _len11 = arguments.length, fRouteProcessingFunctions = new Array(_len11 > 1 ? _len11 - 1 : 0), _key11 = 1; _key11 < _len11; _key11++) {
-              fRouteProcessingFunctions[_key11 - 1] = arguments[_key11];
-            }
-            return this.doOpts.apply(this, [pRoute].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "optsWithBodyParser",
-          value: function optsWithBodyParser(pRoute) {
-            for (var _len12 = arguments.length, fRouteProcessingFunctions = new Array(_len12 > 1 ? _len12 - 1 : 0), _key12 = 1; _key12 < _len12; _key12++) {
-              fRouteProcessingFunctions[_key12 - 1] = arguments[_key12];
-            }
-            return this.opts.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
-          }
-        }, {
-          key: "doHead",
-          value: function doHead(pRoute) {
-            return true;
-          }
-        }, {
-          key: "head",
-          value: function head(pRoute) {
-            if (typeof pRoute != 'string') {
-              this.log.error("Orator HEAD Route mapping failed -- route parameter was ".concat(_typeof(pRoute), " instead of a string."));
-              return false;
-            }
-            return true;
-          }
-        }, {
-          key: "headWithBodyParser",
-          value: function headWithBodyParser(pRoute) {
-            for (var _len13 = arguments.length, fRouteProcessingFunctions = new Array(_len13 > 1 ? _len13 - 1 : 0), _key13 = 1; _key13 < _len13; _key13++) {
-              fRouteProcessingFunctions[_key13 - 1] = arguments[_key13];
-            }
-            return this.head.apply(this, [pRoute, this.bodyParser()].concat(fRouteProcessingFunctions));
-          }
-          /*************************************************************************
-           * End of Service Route Creation Functions
-           */
-
-          // Programmatically invoke a route
-        }, {
-          key: "invoke",
-          value: function invoke(pMethod, pRoute, pData, fCallback) {
-            // The base class version of this does nothing
-            this.log.debug("Orator invoke called for route [".concat(pRoute, "] and landed on the base class; the service provider likely does not implement programmatic invoke capabilities."), pData);
-            return false;
-          }
-        }]);
-        return OratorServiceServerBase;
-      }(libFableServiceProviderBase);
-      module.exports = OratorServiceServerBase;
-    }, {
-      "fable-serviceproviderbase": 6
-    }],
-    34: [function (require, module, exports) {
+    81: [function (require, module, exports) {
+      /**
+       * Represents a synthesized server response for the Orator service server IPC.
+       *
+       * @class
+       */
       var OratorServiceServerIPCSynthesizedResponse = /*#__PURE__*/function () {
         function OratorServiceServerIPCSynthesizedResponse(pHandler, pLog, pRequestGUID) {
           _classCallCheck(this, OratorServiceServerIPCSynthesizedResponse);
@@ -4332,7 +6434,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           this.responseData = null;
           this.responseStatus = -1;
         }
-        _createClass(OratorServiceServerIPCSynthesizedResponse, [{
+
+        /**
+         * Sends data to the server.
+         * 
+         * @param {string|object} pData - The data to be sent. It can be either a string or an object.
+         * @returns {boolean} - Returns true if the data was successfully sent, false otherwise.
+         */
+        return _createClass(OratorServiceServerIPCSynthesizedResponse, [{
           key: "send",
           value: function send(pData) {
             if (typeof pData == 'string') {
@@ -4362,30 +6471,31 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             }
           }
         }]);
-        return OratorServiceServerIPCSynthesizedResponse;
       }();
       module.exports = OratorServiceServerIPCSynthesizedResponse;
     }, {}],
-    35: [function (require, module, exports) {
-      var libOratorServiceServerBase = require('./Orator-ServiceServer-Base.js');
+    82: [function (require, module, exports) {
+      var libOratorServiceServerBase = require('orator-serviceserver-base');
 
       // A synthesized response object, for simple IPC.
       var libOratorServiceServerIPCSynthesizedResponse = require('./Orator-ServiceServer-IPC-SynthesizedResponse.js');
-      // A simple constrainer for the find-my-way router since we aren't using any kind of headers to pass version or host
-      //const libOratorServiceServerIPCCustomConstrainer = require('./Orator-ServiceServer-IPC-RouterConstrainer.js');
 
       // This library is the default router for our services
       var libFindMyWay = require('find-my-way');
+
+      /**
+       * OratorServiceServerIPC class.
+       *
+       * @class
+       * @extends libOratorServiceServerBase
+       * @classdesc Represents an IPC service server for Orator.
+       */
       var OratorServiceServerIPC = /*#__PURE__*/function (_libOratorServiceServ) {
-        _inherits(OratorServiceServerIPC, _libOratorServiceServ);
-        var _super6 = _createSuper(OratorServiceServerIPC);
         function OratorServiceServerIPC(pFable, pOptions, pServiceHash) {
           var _this8;
           _classCallCheck(this, OratorServiceServerIPC);
-          _this8 = _super6.call(this, pFable, pOptions, pServiceHash);
+          _this8 = _callSuper(this, OratorServiceServerIPC, [pFable, pOptions, pServiceHash]);
           _this8.router = libFindMyWay(_this8.options);
-          //this.router.addConstraintStrategy(libOratorServiceServerIPCCustomConstrainer);
-
           _this8.ServiceServerType = 'IPC';
           _this8.URL = 'IPC';
           _this8.Port = 0;
@@ -4394,7 +6504,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           _this8.postBehaviorFunctions = [];
           return _this8;
         }
-        _createClass(OratorServiceServerIPC, [{
+        _inherits(OratorServiceServerIPC, _libOratorServiceServ);
+        return _createClass(OratorServiceServerIPC, [{
           key: "use",
           value: function use(fHandlerFunction) {
             return this.addPreBehaviorFunction(fHandlerFunction);
@@ -4402,7 +6513,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }, {
           key: "addPreBehaviorFunction",
           value: function addPreBehaviorFunction(fHandlerFunction) {
-            if (!_get(_getPrototypeOf(OratorServiceServerIPC.prototype), "use", this).call(this, fHandlerFunction)) {
+            if (!_superPropGet(OratorServiceServerIPC, "use", this, 3)([fHandlerFunction])) {
               this.log.error("IPC provider failed to map USE handler function!");
               return false;
             }
@@ -4425,7 +6536,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             }
             tmpAnticipate.wait(function (pError) {
               if (pError) {
-                _this9.log.error("IPC Provider preBehaviorFunction ".concat(pFunctionIndex, " failed with error: ").concat(pError), pError);
+                _this9.log.error("IPC Provider preBehaviorFunction failed with error: ".concat(pError), pError);
               }
               return fNext(pError);
             });
@@ -4433,7 +6544,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }, {
           key: "addPostBehaviorFunction",
           value: function addPostBehaviorFunction(fHandlerFunction) {
-            if (!_get(_getPrototypeOf(OratorServiceServerIPC.prototype), "use", this).call(this, fHandlerFunction)) {
+            if (!_superPropGet(OratorServiceServerIPC, "use", this, 3)([fHandlerFunction])) {
               this.log.error("IPC provider failed to map USE handler function!");
               return false;
             }
@@ -4443,10 +6554,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }, {
           key: "executePostBehaviorFunctions",
           value: function executePostBehaviorFunctions(pRequest, pResponse, fNext) {
-            var _this10 = this;
+            var _this0 = this;
             var tmpAnticipate = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration('Anticipate');
             var _loop4 = function _loop4() {
-              var tmpPostBehaviorFunction = _this10.postBehaviorFunctions[i];
+              var tmpPostBehaviorFunction = _this0.postBehaviorFunctions[i];
               tmpAnticipate.anticipate(function (fStageComplete) {
                 return tmpPostBehaviorFunction(pRequest, pResponse, fStageComplete);
               });
@@ -4456,7 +6567,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             }
             tmpAnticipate.wait(function (pError) {
               if (pError) {
-                _this10.log.error("IPC Provider postBehaviorFunction ".concat(pFunctionIndex, " failed with error: ").concat(pError), pError);
+                _this0.log.error("IPC Provider postBehaviorFunction failed with error: ".concat(pError), pError);
               }
               return fNext(pError);
             });
@@ -4487,12 +6598,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }, {
           key: "buildFindMyWayHandler",
           value: function buildFindMyWayHandler(pRouteFunctionArray) {
-            var _this11 = this;
+            var _this1 = this;
             var tmpRouteFunctionArray = pRouteFunctionArray;
             return function (pRequest, pResponse, pData) {
-              var tmpAnticipate = _this11.fable.serviceManager.instantiateServiceProviderWithoutRegistration('Anticipate');
+              var tmpAnticipate = _this1.fable.serviceManager.instantiateServiceProviderWithoutRegistration('Anticipate');
               tmpAnticipate.anticipate(function (fNext) {
-                return _this11.executePreBehaviorFunctions(pRequest, pResponse, fNext);
+                return _this1.executePreBehaviorFunctions(pRequest, pResponse, fNext);
               });
               var _loop5 = function _loop5() {
                 var tmpRouteFunction = tmpRouteFunctionArray[i];
@@ -4504,12 +6615,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
                 _loop5();
               }
               tmpAnticipate.anticipate(function (fStageComplete) {
-                return _this11.executePostBehaviorFunctions(pRequest, pResponse, fStageComplete);
+                return _this1.executePostBehaviorFunctions(pRequest, pResponse, fStageComplete);
               });
               return new Promise(function (fResolve, fReject) {
                 tmpAnticipate.wait(function (pBehaviorFunctionError) {
                   if (pBehaviorFunctionError) {
-                    _this11.log.error("IPC Provider behavior function ".concat(pFunctionIndex, " failed with error: ").concat(pBehaviorFunctionError), pBehaviorFunctionError);
+                    _this1.log.error("IPC Provider behavior function failed with error: ".concat(pBehaviorFunctionError), pBehaviorFunctionError);
                     return fReject(pBehaviorFunctionError);
                   }
                   return fResolve();
@@ -4526,59 +6637,115 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               return fNext();
             };
           }
+
+          /**
+           * Handles the HTTP GET request for a specific route.
+           *
+           * @param {string} pRoute - The route to handle.
+           * @param {...Function} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {Promise} A promise that resolves when the route processing is complete.
+           */
         }, {
           key: "doGet",
           value: function doGet(pRoute) {
-            for (var _len14 = arguments.length, fRouteProcessingFunctions = new Array(_len14 > 1 ? _len14 - 1 : 0), _key14 = 1; _key14 < _len14; _key14++) {
-              fRouteProcessingFunctions[_key14 - 1] = arguments[_key14];
+            for (var _len12 = arguments.length, fRouteProcessingFunctions = new Array(_len12 > 1 ? _len12 - 1 : 0), _key12 = 1; _key12 < _len12; _key12++) {
+              fRouteProcessingFunctions[_key12 - 1] = arguments[_key12];
             }
             return this.addRouteProcessor('GET', pRoute, Array.from(fRouteProcessingFunctions));
           }
+
+          /**
+           * Handles the PUT request for a specific route.
+           *
+           * @param {string} pRoute - The route to handle.
+           * @param {...Function} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {Promise} - A promise that resolves when the route processing is complete.
+           */
         }, {
           key: "doPut",
           value: function doPut(pRoute) {
-            for (var _len15 = arguments.length, fRouteProcessingFunctions = new Array(_len15 > 1 ? _len15 - 1 : 0), _key15 = 1; _key15 < _len15; _key15++) {
-              fRouteProcessingFunctions[_key15 - 1] = arguments[_key15];
+            for (var _len13 = arguments.length, fRouteProcessingFunctions = new Array(_len13 > 1 ? _len13 - 1 : 0), _key13 = 1; _key13 < _len13; _key13++) {
+              fRouteProcessingFunctions[_key13 - 1] = arguments[_key13];
             }
             return this.addRouteProcessor('PUT', pRoute, Array.from(fRouteProcessingFunctions));
           }
+
+          /**
+           * Handles the HTTP POST request for a specific route.
+           *
+           * @param {string} pRoute - The route to handle.
+           * @param {...Function} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {Promise} - A promise that resolves when the route processing is complete.
+           */
         }, {
           key: "doPost",
           value: function doPost(pRoute) {
-            for (var _len16 = arguments.length, fRouteProcessingFunctions = new Array(_len16 > 1 ? _len16 - 1 : 0), _key16 = 1; _key16 < _len16; _key16++) {
-              fRouteProcessingFunctions[_key16 - 1] = arguments[_key16];
+            for (var _len14 = arguments.length, fRouteProcessingFunctions = new Array(_len14 > 1 ? _len14 - 1 : 0), _key14 = 1; _key14 < _len14; _key14++) {
+              fRouteProcessingFunctions[_key14 - 1] = arguments[_key14];
             }
             return this.addRouteProcessor('POST', pRoute, Array.from(fRouteProcessingFunctions));
           }
+
+          /**
+           * Handles the HTTP DEL request for a specific route.
+           *
+           * @param {string} pRoute - The route to be deleted.
+           * @param {...Function} fRouteProcessingFunctions - The route processing functions to be added.
+           * @returns {Object} - The updated route processor object.
+           */
         }, {
           key: "doDel",
           value: function doDel(pRoute) {
-            for (var _len17 = arguments.length, fRouteProcessingFunctions = new Array(_len17 > 1 ? _len17 - 1 : 0), _key17 = 1; _key17 < _len17; _key17++) {
-              fRouteProcessingFunctions[_key17 - 1] = arguments[_key17];
+            for (var _len15 = arguments.length, fRouteProcessingFunctions = new Array(_len15 > 1 ? _len15 - 1 : 0), _key15 = 1; _key15 < _len15; _key15++) {
+              fRouteProcessingFunctions[_key15 - 1] = arguments[_key15];
             }
             return this.addRouteProcessor('DELETE', pRoute, Array.from(fRouteProcessingFunctions));
           }
+
+          /**
+           * Adds a PATCH route processor to the service server.
+           *
+           * @param {string} pRoute - The route to be processed.
+           * @param {...Function} fRouteProcessingFunctions - The route processing functions.
+           * @returns {boolean} - Returns true if the route processor was added successfully, false otherwise.
+           */
         }, {
           key: "doPatch",
           value: function doPatch(pRoute) {
-            for (var _len18 = arguments.length, fRouteProcessingFunctions = new Array(_len18 > 1 ? _len18 - 1 : 0), _key18 = 1; _key18 < _len18; _key18++) {
-              fRouteProcessingFunctions[_key18 - 1] = arguments[_key18];
+            for (var _len16 = arguments.length, fRouteProcessingFunctions = new Array(_len16 > 1 ? _len16 - 1 : 0), _key16 = 1; _key16 < _len16; _key16++) {
+              fRouteProcessingFunctions[_key16 - 1] = arguments[_key16];
             }
             return this.addRouteProcessor('PATCH', pRoute, Array.from(fRouteProcessingFunctions));
           }
+
+          /**
+           * Adds a route processor for the OPTIONS method.
+           *
+           * @param {string} pRoute - The route to add the processor to.
+           * @param {...Function} fRouteProcessingFunctions - The processing functions to be executed for the route.
+           * @returns {Object} - The updated Orator-ServiceServer-IPC object.
+           */
         }, {
           key: "doOpts",
           value: function doOpts(pRoute) {
-            for (var _len19 = arguments.length, fRouteProcessingFunctions = new Array(_len19 > 1 ? _len19 - 1 : 0), _key19 = 1; _key19 < _len19; _key19++) {
-              fRouteProcessingFunctions[_key19 - 1] = arguments[_key19];
+            for (var _len17 = arguments.length, fRouteProcessingFunctions = new Array(_len17 > 1 ? _len17 - 1 : 0), _key17 = 1; _key17 < _len17; _key17++) {
+              fRouteProcessingFunctions[_key17 - 1] = arguments[_key17];
             }
             return this.addRouteProcessor('OPTIONS', pRoute, Array.from(fRouteProcessingFunctions));
           }
+
+          /**
+           * Handles the HEAD request for a specific route.
+           *
+           * @param {string} pRoute - The route to handle.
+           * @param {...Function} fRouteProcessingFunctions - The processing functions to execute for the route.
+           * @returns {Promise} - A promise that resolves when the route processing is complete.
+           */
         }, {
           key: "doHead",
           value: function doHead(pRoute) {
-            for (var _len20 = arguments.length, fRouteProcessingFunctions = new Array(_len20 > 1 ? _len20 - 1 : 0), _key20 = 1; _key20 < _len20; _key20++) {
-              fRouteProcessingFunctions[_key20 - 1] = arguments[_key20];
+            for (var _len18 = arguments.length, fRouteProcessingFunctions = new Array(_len18 > 1 ? _len18 - 1 : 0), _key18 = 1; _key18 < _len18; _key18++) {
+              fRouteProcessingFunctions[_key18 - 1] = arguments[_key18];
             }
             return this.addRouteProcessor('HEAD', pRoute, Array.from(fRouteProcessingFunctions));
           }
@@ -4586,11 +6753,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
            * End of Service Route Creation Functions
            */
 
-          // Programmatically invoke a route
+          /**
+           * Invokes a method on the IPC provider.
+           *
+           * @param {string} pMethod - The method to invoke.
+           * @param {string} pRoute - The route to invoke.
+           * @param {any} pData - The data to pass to the method.
+           * @param {Function} fCallback - The callback function to handle the response.
+           * @throws {Error} Throws an error if invoked without a callback function.
+           */
         }, {
           key: "invoke",
           value: function invoke(pMethod, pRoute, pData, fCallback) {
-            var _this12 = this;
+            var _this10 = this;
             // If the data is skipped and a callback is parameter 3, do the right thing
             var tmpCallback = typeof fCallback == 'function' ? fCallback : typeof pData == 'function' ? pData : false;
             if (!tmpCallback) {
@@ -4620,11 +6795,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             tmpHandler.handler(tmpRequest, tmpSynthesizedResponseData, pData).then(function (pResults) {
               return tmpCallback(null, tmpSynthesizedResponseData.responseData, tmpSynthesizedResponseData, pResults);
             }, function (pError) {
-              _this12.log.trace('IPC Response Received', {
+              _this10.log.trace('IPC Response Received', {
                 Error: pError
               });
               if (pError) {
-                _this12.log.error("IPC Request Error Request GUID [".concat(tmpRequest.guid, "] handling route [").concat(pRoute, "]: ").concat(pError), {
+                _this10.log.error("IPC Request Error Request GUID [".concat(tmpRequest.guid, "] handling route [").concat(pRoute, "]: ").concat(pError), {
                   Error: pError,
                   Route: pRoute,
                   Data: pData
@@ -4634,15 +6809,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             });
           }
         }]);
-        return OratorServiceServerIPC;
       }(libOratorServiceServerBase);
       module.exports = OratorServiceServerIPC;
     }, {
-      "./Orator-ServiceServer-Base.js": 33,
-      "./Orator-ServiceServer-IPC-SynthesizedResponse.js": 34,
-      "find-my-way": 13
+      "./Orator-ServiceServer-IPC-SynthesizedResponse.js": 81,
+      "find-my-way": 30,
+      "orator-serviceserver-base": 65
     }],
-    36: [function (require, module, exports) {
+    83: [function (require, module, exports) {
       /**
       * Orator Service Abstraction
       *
@@ -4654,47 +6828,75 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
       var libFableServiceProviderBase = require('fable-serviceproviderbase');
       var libDefaultOratorServiceServer = require('./Orator-Default-ServiceServer.js');
+
+      // orator-static-server is lazy-loaded so that browser bundles using orator's
+      // IPC mode don't pay the cost of (or trip over) its server-only deps. Only
+      // setMimeHeader / addStaticRoute / addStaticRouteWithFallbacks need it, and
+      // none of those are reachable from IPC-only consumers.
+      var libOratorStaticServer = null;
+      var getOratorStaticServer = function getOratorStaticServer() {
+        if (!libOratorStaticServer) {
+          libOratorStaticServer = require('orator-static-server');
+        }
+        return libOratorStaticServer;
+      };
       var defaultOratorConfiguration = require('./Orator-Default-Configuration.js');
+
+      /**
+       * @class Orator
+       * @extends libFableServiceProviderBase
+       * 
+       * Represents the Orator service provider.
+       * 
+       * @param {Object} pFable - The Fable instance.
+       * @param {Object} pOptions - The options for the Orator service.
+       * @param {string} pServiceHash - The hash of the service.
+       */
       var Orator = /*#__PURE__*/function (_libFableServiceProvi2) {
-        _inherits(Orator, _libFableServiceProvi2);
-        var _super7 = _createSuper(Orator);
         function Orator(pFable, pOptions, pServiceHash) {
-          var _this13;
+          var _this11;
           _classCallCheck(this, Orator);
-          _this13 = _super7.call(this, pFable, pOptions, pServiceHash);
-          _this13.serviceType = 'Orator';
+          _this11 = _callSuper(this, Orator, [pFable, pOptions, pServiceHash]);
+          _this11.serviceType = 'Orator';
 
           // Create the empty, important logic containers
-          _this13.serviceServer = false;
-          _this13.serviceServerProvider = false;
-          if (typeof pServiceProvider !== 'undefined') {
-            _this13.serviceServerProvider = pServiceProvider;
-          }
+          _this11.serviceServer = false;
+          _this11.serviceServerProvider = false;
 
           // Now check to see that the ServicePort is set (this used to be APIServerPort)
-          if (!_this13.options.hasOwnProperty('ServicePort')) {
-            if (_this13.fable.settings.hasOwnProperty('APIServerPort')) {
+          if (!_this11.options.hasOwnProperty('ServicePort')) {
+            if (_this11.fable.settings.hasOwnProperty('APIServerPort')) {
               // Automatically migrate the legacy APIServerPort to ServicePort
-              _this13.options.ServicePort = _this13.fable.settings.APIServerPort;
+              _this11.options.ServicePort = _this11.fable.settings.APIServerPort;
             } else {
               // Default to whatever the ... default is!
-              _this13.options.ServicePort = defaultOratorConfiguration.ServicePort;
+              _this11.options.ServicePort = defaultOratorConfiguration.ServicePort;
             }
           }
 
           // Now check to see that the Product name is set
-          if (!_this13.options.hasOwnProperty('Product')) {
-            _this13.options.Product = defaultOratorConfiguration.Product;
+          if (!_this11.options.hasOwnProperty('Product')) {
+            _this11.options.Product = defaultOratorConfiguration.Product;
           }
-          return _this13;
+          return _this11;
         }
-        _createClass(Orator, [{
+
+        /**
+         * Lifecycle event that executes before initializing the service.  For overloading.
+         */
+        _inherits(Orator, _libFableServiceProvi2);
+        return _createClass(Orator, [{
           key: "onBeforeInitialize",
           value: function onBeforeInitialize() {
             if (this.fable.settings.LogNoisiness > 3) {
               this.log.trace("Orator [".concat(this.UUID, "]::[").concat(this.Hash, "] ").concat(this.options.Product, " onBeforeInitialize:"));
             }
           }
+          /**
+           * Lifecycle event that executes before initializing the service.  For overloading.
+           * 
+           * @param {Function} fNext - The callback function to be called after the actions are executed.
+           */
         }, {
           key: "onBeforeInitializeAsync",
           value: function onBeforeInitializeAsync(fNext) {
@@ -4728,12 +6930,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               this.log.trace("Orator [".concat(this.UUID, "]::[").concat(this.Hash, "] ").concat(this.options.Product, " onInitialize:"));
             }
           }
+          /**
+           * Lifecycle event that executes at the moment of initializing the service.  For overloading.
+           *
+           * @param {Function} fNext - The callback function to be executed after initialization.
+           */
         }, {
           key: "onInitializeAsync",
           value: function onInitializeAsync(fNext) {
             this.onInitialize();
             return fNext();
           }
+
+          /**
+           * Lifecycle event that executes after initializing the service.  For overloading.
+           */
         }, {
           key: "onAfterInitialize",
           value: function onAfterInitialize() {
@@ -4741,17 +6952,28 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               this.log.trace("Orator [".concat(this.UUID, "]::[").concat(this.Hash, "] ").concat(this.options.Product, " onAfterInitialize:"));
             }
           }
+          /**
+           * Lifecycle event that executes after initializing the service.  For overloading.
+           * @param {Function} fNext - The callback function to be called after executing onAfterInitialize.
+           * @returns {Promise} - A promise that resolves when the callback function is called.
+           */
         }, {
           key: "onAfterInitializeAsync",
           value: function onAfterInitializeAsync(fNext) {
             this.onAfterInitialize();
             return fNext();
           }
+
+          /**
+           * Initializes the Orator instance.
+           *
+           * @param {Function} fCallback - The callback function to be executed after initialization.
+           */
         }, {
           key: "initialize",
           value: function initialize(fCallback) {
-            var _this14 = this;
-            // I hate this -- is there a reason to not require a callback?
+            var _this12 = this;
+            // I hate this -- as long as we want to be "mostly" backwards compatible it needs to do it though
             var tmpCallback = typeof fCallback === 'function' ? fCallback : function () {};
             if (!this.initializeTimestamp) {
               var tmpAnticipate = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration('Anticipate');
@@ -4762,9 +6984,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               tmpAnticipate.anticipate(this.onInitializeAsync.bind(this));
               tmpAnticipate.anticipate(this.onAfterInitializeAsync.bind(this));
               tmpAnticipate.wait(function (pError) {
-                _this14.initializeTimestamp = _this14.fable.log.getTimeStamp();
-                if (_this14.fable.LogNoisiness > 2) {
-                  _this14.log.trace("Orator [".concat(_this14.UUID, "]::[").concat(_this14.Hash, "] ").concat(_this14.options.Product, " initialization steps complete."));
+                _this12.initializeTimestamp = _this12.fable.log.getTimeStamp();
+                if (_this12.fable.LogNoisiness > 2) {
+                  _this12.log.trace("Orator [".concat(_this12.UUID, "]::[").concat(_this12.Hash, "] ").concat(_this12.options.Product, " initialization steps complete."));
                 }
                 return tmpCallback(pError);
               });
@@ -4774,30 +6996,55 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
               return tmpCallback();
             }
           }
+
+          /**
+           * Lifecycle event that executes before starting the service.  For overloading.
+           *
+           * @param {Function} fNext - The function to be executed before starting the service.
+           * @returns {Promise} A promise that resolves when the function is completed.
+           */
         }, {
           key: "onBeforeStartService",
           value: function onBeforeStartService(fNext) {
             return fNext();
           }
+          /**
+           * Lifecycle event that executes when the service starts.  For overloading.
+           * 
+           * @param {Function} fNext - The callback function to be called after the service starts.
+           * @returns {Promise} A promise that resolves when the service starts successfully, or rejects with an error.
+           */
         }, {
           key: "onStartService",
           value: function onStartService(fNext) {
-            var _this15 = this;
+            var _this13 = this;
             this.onAfterInitialize();
             return this.serviceServer.listen(this.options.ServicePort, function (pError) {
-              _this15.log.info("".concat(_this15.serviceServer.Name, " listening at ").concat(_this15.serviceServer.URL, " port ").concat(_this15.serviceServer.Port));
+              _this13.log.info("".concat(_this13.serviceServer.Name, " listening on port ").concat(_this13.options.ServicePort));
               return fNext(pError);
             });
           }
+          /**
+           * Lifecycle event that executes after starting the service.  For overloading.
+           *
+           * @param {Function} fNext - The callback function to be executed after the service starts.
+           * @returns {Promise} - A promise that resolves when the callback function is completed.
+           */
         }, {
           key: "onAfterStartService",
           value: function onAfterStartService(fNext) {
             return fNext();
           }
+
+          /**
+           * Starts the service.
+           * 
+           * @param {Function} fNext - The callback function to be executed after the service has started.
+           */
         }, {
           key: "startService",
           value: function startService(fNext) {
-            var _this16 = this;
+            var _this14 = this;
             var tmpNext = typeof fNext === 'function' ? fNext : function () {};
             var tmpAnticipate = this.fable.serviceManager.instantiateServiceProviderWithoutRegistration('Anticipate');
             if (this.fable.LogNoisiness > 3) {
@@ -4812,13 +7059,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             tmpAnticipate.anticipate(this.onStartService.bind(this));
             tmpAnticipate.anticipate(this.onAfterStartService.bind(this));
             tmpAnticipate.wait(function (pError) {
-              _this16.startServiceTimestamp = _this16.fable.log.getTimeStamp();
-              if (_this16.fable.LogNoisiness > 2) {
-                _this16.log.trace("Orator [".concat(_this16.UUID, "]::[").concat(_this16.Hash, "] ").concat(_this16.options.Product, " startService steps complete."));
+              _this14.startServiceTimestamp = _this14.fable.log.getTimeStamp();
+              if (_this14.fable.LogNoisiness > 2) {
+                _this14.log.trace("Orator [".concat(_this14.UUID, "]::[").concat(_this14.Hash, "] ").concat(_this14.options.Product, " startService steps complete."));
               }
               return tmpNext(pError);
             });
           }
+
+          /**
+           * Stops the service server.
+           * 
+           * @param {Function} fCallback - The callback function to be executed after the service server is stopped.
+           * @returns {void}
+           */
         }, {
           key: "stopService",
           value: function stopService(fCallback) {
@@ -4835,6 +7089,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             }
             return this.serviceServer.close(tmpCallback);
           }
+
+          /**
+           * Programmatically invokes a method on the service server.
+           *
+           * @param {string} pMethod - The method to invoke.
+           * @param {string} pRoute - The route to invoke.
+           * @param {any} pData - The data to send with the invocation.
+           * @param {Function} fCallback - The callback function to execute after the invocation.
+           * @returns {any} - The result of the invocation.
+           */
         }, {
           key: "invoke",
           value: function invoke(pMethod, pRoute, pData, fCallback) {
@@ -4843,47 +7107,154 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           }
 
           /*
-           * Legacy Orator Functions
+           * Legacy Orator / Backwards Compatibility Functions
            *************************************************************************/
+          /**
+           * Starts the web server.
+           *
+           * @param {Function} fNext - The callback function to be executed after the web server starts.
+           * @returns {Promise} A promise that resolves when the web server has started.
+           */
         }, {
           key: "startWebServer",
           value: function startWebServer(fNext) {
             return this.startService(fNext);
           }
 
-          // For legacy purposes
+          /**
+           * Stops the web server.
+           *
+           * @param {Function} fNext - The callback function to be called after the web server is stopped.
+           * @returns {Promise} A promise that resolves when the web server is stopped.
+           */
         }, {
           key: "stopWebServer",
           value: function stopWebServer(fNext) {
             return this.stopService(fNext);
           }
 
-          // For legacy purposes
+          /**
+           * Retrieves the web server instance.
+           * 
+           * @returns {WebServer} The web server instance.
+           */
         }, {
           key: "getWebServer",
           value: function getWebServer() {
             // The old behavior was to lazily construct the service the first time 
             // this accessor function is called.
             if (!this.serviceServer) {
-              this.initializeServiceServer();
+              this.initialize();
             }
             return this.serviceServer;
           }
           /*************************************************************************
            * End of Legacy Orator Functions
            */
+
+          /*
+           * Backwards Compatibility: setMimeHeader and oldLibMime
+           *
+           * These used to live directly on Orator but now live on OratorStaticServer.
+           * These thin wrappers delegate to the OratorStaticServer instance so that
+           * any code calling orator.setMimeHeader() or reading orator.oldLibMime
+           * continues to work without changes.
+           *************************************************************************/
+          /**
+           * @deprecated Use fable.OratorStaticServer.oldLibMime instead.
+           */
+        }, {
+          key: "oldLibMime",
+          get: function get() {
+            if (this.fable.OratorStaticServer) {
+              return this.fable.OratorStaticServer.oldLibMime;
+            }
+            return false;
+          }
+
+          /**
+           * @deprecated Use fable.OratorStaticServer.setMimeHeader() instead.
+           */
+        }, {
+          key: "setMimeHeader",
+          value: function setMimeHeader(pFileName, pResponse) {
+            if (!this.fable.OratorStaticServer) {
+              // Force auto-registration so the method is available
+              if (!this.fable.serviceManager.servicesMap.hasOwnProperty('OratorStaticServer')) {
+                this.fable.serviceManager.addServiceType('OratorStaticServer', getOratorStaticServer());
+              }
+              this.fable.serviceManager.instantiateServiceProvider('OratorStaticServer', {}, 'OratorStaticServer-AutoInit');
+            }
+            return this.fable.OratorStaticServer.setMimeHeader(pFileName, pResponse);
+          }
+
+          /**
+           * Serve a static folder, optionally with magic subdomain masking.
+           * Delegates to the OratorStaticServer service provider.
+           *
+           * @param {string} pFilePath The path on disk that we are serving files from.
+           * @param {string?} pDefaultFile (optional) The default file served if no specific file is requested.
+           * @param {string?} pRoute (optional) The route matcher that will be used. Defaults to everything.
+           * @param {string?} pRouteStrip (optional) If provided, this prefix will be removed from URL paths before being served.
+           * @param {object?} pParams (optional) Additional parameters to pass to serve-static.
+           * @return {boolean} true if the handler was successfully installed, otherwise false.
+           */
+        }, {
+          key: "addStaticRoute",
+          value: function addStaticRoute(pFilePath, pDefaultFile, pRoute, pRouteStrip, pParams) {
+            // Auto-register the OratorStaticServer service type if it hasn't been registered yet
+            if (!this.fable.serviceManager.servicesMap.hasOwnProperty('OratorStaticServer')) {
+              this.fable.serviceManager.addServiceType('OratorStaticServer', getOratorStaticServer());
+            }
+
+            // Auto-instantiate a default OratorStaticServer instance if none exists
+            if (!this.fable.OratorStaticServer) {
+              this.fable.serviceManager.instantiateServiceProvider('OratorStaticServer', {}, 'OratorStaticServer-AutoInit');
+            }
+            return this.fable.OratorStaticServer.addStaticRoute(pFilePath, pDefaultFile, pRoute, pRouteStrip, pParams);
+          }
+
+          /**
+           * Register a static-file route with a per-file CDN fallback map.
+           *
+           * Behaves like addStaticRoute for every local hit. For any request whose
+           * relative path is a key in pFallbackMap and whose file isn't present
+           * on disk, responds with 302 to the mapped URL instead of a 404. Any
+           * request whose relative path isn't in the map behaves exactly as
+           * addStaticRoute would (local hit → stream, local miss → 404).
+           *
+           * @param {string} pFilePath The path on disk that we are serving files from.
+           * @param {string?} pDefaultFile (optional) The default file served if no specific file is requested.
+           * @param {string?} pRoute (optional) The route matcher that will be used. Defaults to everything.
+           * @param {string?} pRouteStrip (optional) If provided, this prefix will be removed from URL paths before being served.
+           * @param {object?} pParams (optional) Additional parameters to pass to serve-static.
+           * @param {Object<string,string>?} pFallbackMap (optional) Map of relative path (under the route prefix) to absolute URL for CDN fallback.
+           * @return {boolean} true if the handler was successfully installed, otherwise false.
+           */
+        }, {
+          key: "addStaticRouteWithFallbacks",
+          value: function addStaticRouteWithFallbacks(pFilePath, pDefaultFile, pRoute, pRouteStrip, pParams, pFallbackMap) {
+            if (!this.fable.serviceManager.servicesMap.hasOwnProperty('OratorStaticServer')) {
+              this.fable.serviceManager.addServiceType('OratorStaticServer', getOratorStaticServer());
+            }
+            if (!this.fable.OratorStaticServer) {
+              this.fable.serviceManager.instantiateServiceProvider('OratorStaticServer', {}, 'OratorStaticServer-AutoInit');
+            }
+            return this.fable.OratorStaticServer.addStaticRouteWithFallbacks(pFilePath, pDefaultFile, pRoute, pRouteStrip, pParams, pFallbackMap);
+          }
         }]);
-        return Orator;
       }(libFableServiceProviderBase);
       module.exports = Orator;
-      module.exports.ServiceServerBase = require('./Orator-ServiceServer-Base.js');
+      module.exports.ServiceServerBase = require('orator-serviceserver-base');
       module.exports.ServiceServerIPC = require('./Orator-ServiceServer-IPC.js');
     }, {
-      "./Orator-Default-Configuration.js": 31,
-      "./Orator-Default-ServiceServer.js": 32,
-      "./Orator-ServiceServer-Base.js": 33,
-      "./Orator-ServiceServer-IPC.js": 35,
-      "fable-serviceproviderbase": 6
+      "./Orator-Default-Configuration.js": 79,
+      "./Orator-Default-ServiceServer.js": 80,
+      "./Orator-ServiceServer-IPC.js": 82,
+      "fable-serviceproviderbase": 23,
+      "orator-serviceserver-base": 65,
+      "orator-static-server": 5
     }]
-  }, {}, [36])(36);
+  }, {}, [83])(83);
 });
+//# sourceMappingURL=orator.compatible.js.map
