@@ -1,1 +1,1 @@
-body { font-family: sans-serif; color: #333; }
+body { font-family: sans-serif; color: var(--theme-color-text-primary, #333); }
