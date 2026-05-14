@@ -53,7 +53,7 @@
     "homepage": "https://github.com/stevenvelozo/orator",
     "devDependencies": {
         "fable": "^3.1.72",
-        "pict-docuserve": "^0.1.5",
+        "pict-docuserve": "^1.0.1",
         "quackage": "^1.2.3"
     },
     "dependencies": {
