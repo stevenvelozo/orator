@@ -1,104 +1,97 @@
 {
-	"Generated": "2026-04-10T17:23:32.342Z",
+	"Generated": "2026-05-22T05:40:56.549Z",
+	"Mode": "module",
 	"GitHubOrg": "stevenvelozo",
 	"DefaultBranch": "master",
-	"Groups": [
-		{
-			"Name": ".config",
-			"Key": ".config",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "code-server",
-					"Repo": "code-server",
-					"Group": ".config",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				},
-				{
-					"Name": "configstore",
-					"Repo": "configstore",
-					"Group": ".config",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Debug",
-			"Key": "debug",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "site",
-					"Repo": "site",
-					"Group": "debug",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Dist",
-			"Key": "dist",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "indoctrinate_content_staging",
-					"Repo": "indoctrinate_content_staging",
-					"Group": "dist",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Docs",
-			"Key": "docs",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "css",
-					"Repo": "css",
-					"Group": "docs",
-					"Branch": "master",
-					"HasDocs": true,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": [
-						"css/docuserve.css"
-					]
-				}
-			]
-		},
-		{
-			"Name": "Test",
-			"Key": "test",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "static_content",
-					"Repo": "static_content",
-					"Group": "test",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		}
-	]
+	"Module": {
+		"Name": "orator",
+		"Repo": "orator",
+		"Group": "",
+		"Branch": "master",
+		"HasDocs": true,
+		"HasCover": true,
+		"Sidebar": [
+			{
+				"Title": "Getting Started",
+				"Children": [
+					{
+						"Title": "Introduction",
+						"Path": "README.md"
+					},
+					{
+						"Title": "Getting Started",
+						"Path": "getting-started.md"
+					},
+					{
+						"Title": "Architecture",
+						"Path": "architecture.md"
+					}
+				]
+			},
+			{
+				"Title": "Core Concepts",
+				"Children": [
+					{
+						"Title": "Service Servers",
+						"Path": "service-servers.md"
+					},
+					{
+						"Title": "Lifecycle Hooks",
+						"Path": "lifecycle-hooks.md"
+					},
+					{
+						"Title": "Static File Serving",
+						"Path": "static-files.md"
+					}
+				]
+			},
+			{
+				"Title": "Service Server Implementations",
+				"Children": [
+					{
+						"Title": "IPC Server",
+						"Path": "ipc-server.md"
+					},
+					{
+						"Title": "Restify Server",
+						"Path": "restify-server.md"
+					}
+				]
+			},
+			{
+				"Title": "Advanced",
+				"Children": [
+					{
+						"Title": "HTTP Proxy",
+						"Path": "http-proxy.md"
+					},
+					{
+						"Title": "Configuration Reference",
+						"Path": "configuration.md"
+					}
+				]
+			}
+		],
+		"DocFiles": [
+			".nojekyll",
+			"README.md",
+			"_brand.json",
+			"_cover.md",
+			"_sidebar.md",
+			"_version.json",
+			"architecture.md",
+			"configuration.md",
+			"getting-started.md",
+			"http-proxy.md",
+			"index.html",
+			"ipc-server.md",
+			"lifecycle-hooks.md",
+			"restify-server.md",
+			"retold-catalog.json",
+			"retold-keyword-index.json",
+			"service-servers.md",
+			"static-files.md"
+		]
+	},
+	"Groups": []
 }

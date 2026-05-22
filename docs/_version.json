@@ -1,7 +1,7 @@
 {
 	"Name": "orator",
-	"Version": "6.0.4",
+	"Version": "6.1.2",
 	"Description": "Unopinionated API http server abstraction - REST or IPC",
-	"GeneratedAt": "2026-04-10T17:23:32.626Z",
-	"GitCommit": "36cbb4d"
+	"GeneratedAt": "2026-05-22T05:40:56.701Z",
+	"GitCommit": "7fcddb1"
 }
