@@ -1,5 +1,7 @@
 # Orator
 
+> **[&#9654; Read the Orator Documentation](https://stevenvelozo.github.io/orator/)** &mdash; interactive docs with the full API reference.
+
 > An unopinionated API server abstraction for REST and IPC services
 
 Orator is not an attempt to reinvent the wheel. Nor do we want to make a car with five of them. Orator is a thin abstraction layer over service server implementations (like Restify), providing a consistent interface for building API servers. You can spin up a web server in a single simple line, and configuration is managed through a consistent JSON format -- so as you begin to have 10 or 15 or 5,000 microservices, you don't have a bunch of boilerplate API server code laying around.
