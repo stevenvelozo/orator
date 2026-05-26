@@ -20,7 +20,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/stevenvelozo/orator.git"
+        "url": "https://github.com/fable-retold/orator.git"
     },
     "keywords": [
         "rest",
@@ -30,7 +30,7 @@
     "author": "Steven Velozo <steven@velozo.com> (http://velozo.com/)",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/stevenvelozo/orator/issues"
+        "url": "https://github.com/fable-retold/orator/issues"
     },
     "mocha": {
         "diff": true,
@@ -50,7 +50,7 @@
             "lib/vendor"
         ]
     },
-    "homepage": "https://github.com/stevenvelozo/orator",
+    "homepage": "https://github.com/fable-retold/orator",
     "devDependencies": {
         "fable": "^3.1.72",
         "pict-docuserve": "^1.3.3",

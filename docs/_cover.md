@@ -7,5 +7,5 @@
 - Built-in static file serving with subdomain routing
 - First-class Fable service provider with lifecycle management
 
-[GitHub](https://github.com/stevenvelozo/orator)
+[GitHub](https://github.com/fable-retold/orator)
 [Get Started](#orator)

@@ -1,6 +1,6 @@
 # Orator
 
-> **[&#9654; Read the Orator Documentation](https://stevenvelozo.github.io/orator/)** &mdash; interactive docs with the full API reference.
+> **[&#9654; Read the Orator Documentation](https://fable-retold.github.io/orator/)** &mdash; interactive docs with the full API reference.
 
 > An unopinionated API server abstraction for REST and IPC services
 
@@ -78,10 +78,10 @@ npx docsify-cli serve docs
 
 ## Related Packages
 
-- [orator-serviceserver-restify](https://github.com/stevenvelozo/orator-serviceserver-restify) - Restify service server implementation
-- [orator-serviceserver-base](https://github.com/stevenvelozo/orator-serviceserver-base) - Abstract service server base class
-- [orator-static-server](https://github.com/stevenvelozo/orator-static-server) - Static file serving
-- [fable](https://github.com/stevenvelozo/fable) - Application services framework
+- [orator-serviceserver-restify](https://github.com/fable-retold/orator-serviceserver-restify) - Restify service server implementation
+- [orator-serviceserver-base](https://github.com/fable-retold/orator-serviceserver-base) - Abstract service server base class
+- [orator-static-server](https://github.com/fable-retold/orator-static-server) - Static file serving
+- [fable](https://github.com/fable-retold/fable) - Application services framework
 
 ## License
 
