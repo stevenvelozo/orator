@@ -42,4 +42,4 @@ For each prefix in `RequestPrefixList`, the proxy registers GET, PUT, POST, and 
 
 ## Related
 
-- [orator-http-proxy documentation](https://github.com/fable-retold/orator-http-proxy)
+- [orator-http-proxy documentation](https://fable-retold.github.io/orator-http-proxy/)

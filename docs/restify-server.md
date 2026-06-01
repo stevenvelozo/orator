@@ -78,5 +78,5 @@ const tmpRestifyServer = _Fable.Orator.serviceServer.server;
 
 ## Related
 
-- [orator-serviceserver-restify documentation](https://github.com/fable-retold/orator-serviceserver-restify)
+- [orator-serviceserver-restify documentation](https://fable-retold.github.io/orator-serviceserver-restify/)
 - [Restify documentation](https://restify.com/)
