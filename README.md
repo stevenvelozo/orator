@@ -1,6 +1,6 @@
 # Orator
 
-> **[&#9654; Read the Orator Documentation](https://fable-retold.github.io/orator/)** &mdash; interactive docs with the full API reference.
+> **[Read the Orator Documentation](https://fable-retold.github.io/orator/)** - interactive docs with the full API reference.
 
 > An unopinionated API server abstraction for REST and IPC services
 
