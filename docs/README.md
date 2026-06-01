@@ -134,7 +134,7 @@ npm test
 
 ## Related Packages
 
-- [orator-serviceserver-base](https://github.com/fable-retold/orator-serviceserver-base) - Abstract base class for service servers
+- [orator-serviceserver-base](https://fable-retold.github.io/orator-serviceserver-base/) - Abstract base class for service servers
 - [orator-serviceserver-restify](https://fable-retold.github.io/orator-serviceserver-restify/) - Restify service server implementation
 - [orator-http-proxy](https://fable-retold.github.io/orator-http-proxy/) - HTTP proxy pass-through for Orator
 - [orator-static-server](https://fable-retold.github.io/orator-static-server/) - Static file serving module

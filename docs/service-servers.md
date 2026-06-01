@@ -84,4 +84,4 @@ tmpServiceServer.use(
 
 ## Building Custom Service Servers
 
-You can create your own service server implementation by extending `orator-serviceserver-base`. See the [orator-serviceserver-base documentation](https://github.com/fable-retold/orator-serviceserver-base) for the interface contract.
+You can create your own service server implementation by extending `orator-serviceserver-base`. See the [orator-serviceserver-base documentation](https://fable-retold.github.io/orator-serviceserver-base/) for the interface contract.
