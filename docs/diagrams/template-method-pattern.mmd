@@ -1,0 +1,3 @@
+Base: get(pRoute, ...) -> validates pRoute -> calls doGet(pRoute, ...)
+  └── Restify: doGet(pRoute, ...) -> this.server.get(pRoute, ...)
+  └── IPC: doGet(pRoute, ...) -> this.addRouteProcessor('GET', pRoute, ...)

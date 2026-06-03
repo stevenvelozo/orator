@@ -58,14 +58,8 @@ npm install orator
 
 Orator follows the Fable service provider pattern. You register it with a Fable instance, and it orchestrates one or more service server implementations to handle incoming requests. If you don't provide a service server, Orator will automatically set up its built-in IPC server -- which is useful for testing and in-process communication where no network traffic is needed.
 
-```
-Fable (Core)
-  └── Orator (Service Orchestration)
-        └── Service Server (Restify, IPC, or custom)
-              ├── Route Registration (GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD)
-              ├── Middleware Pipeline
-              └── Static File Serving
-```
+<!-- bespoke diagram: edit diagrams/how-it-works.mmd or .hints.json, then: npx pict-renderer-graph build modules/orator/orator/docs -->
+![How It Works](diagrams/how-it-works.svg)
 
 ## Configuration
 
