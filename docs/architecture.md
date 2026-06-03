@@ -4,27 +4,8 @@ Orator's design separates the concerns of service lifecycle management from the 
 
 ## Layered Design
 
-```
-┌─────────────────────────────────────────────┐
-│                   Fable                     │
-│        (Configuration, Logging, DI)         │
-└─────────────────────┬───────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────┐
-│                  Orator                     │
-│    (Lifecycle, Static Files, Invocation)    │
-└─────────────────────┬───────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────┐
-│        OratorServiceServerBase              │
-│     (Abstract Route & Middleware API)       │
-└───────┬─────────────┬───────────────────────┘
-        │             │
-┌───────▼──────┐ ┌────▼──────────────┐
-│  IPC Server  │ │  Restify Server   │
-│  (built-in)  │ │  (network HTTP)   │
-└──────────────┘ └───────────────────┘
-```
+<!-- bespoke diagram: edit diagrams/layered-design.mmd or .hints.json, then: npx pict-renderer-graph build modules/orator/orator/docs -->
+![Layered Design](diagrams/layered-design.svg)
 
 ### Fable Layer
 

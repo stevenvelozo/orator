@@ -1,0 +1,5 @@
+graph TD
+    Fable["Fable<br/>(Configuration, Logging, DI)"] --> Orator["Orator<br/>(Lifecycle, Static Files, Invocation)"]
+    Orator --> Base["OratorServiceServerBase<br/>(Abstract Route & Middleware API)"]
+    Base --> IPC["IPC Server<br/>(built-in)"]
+    Base --> Restify["Restify Server<br/>(network HTTP)"]
